@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-jetty:run</actionName>
+            <displayName>jetty:run</displayName>
+            <goals>
+                <goal>jetty:run</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-build as release</actionName>
+            <displayName>build as release</displayName>
+            <activatedProfiles>
+                <activatedProfile>release</activatedProfile>
+            </activatedProfiles>
+            <goals>
+                <goal>install</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-jetty:run with release</actionName>
+            <displayName>jetty:run-war</displayName>
+            <goals>
+                <goal>jetty:run-war</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-install</actionName>
+            <displayName>install</displayName>
+            <goals>
+                <goal>install</goal>
+            </goals>
+        </action>
+    </actions>
