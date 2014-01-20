@@ -497,6 +497,10 @@
                 <configuration>
                     <webApp>
                         <contextPath>/comker-app</contextPath>
+                        <resourceBases>
+                            <resourceBase>src/main/webapp</resourceBase>
+                            <resourceBase>src/main/resources/META-INF/resources</resourceBase>
+                        </resourceBases>
                     </webApp>
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <jettyXml>src/main/etc/jetty.xml</jettyXml>
