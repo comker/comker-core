@@ -3,8 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <artifactId>comker-core</artifactId>
-    <groupId>net.cokkee.comker</groupId>
+    <artifactId>cokkee-comker</artifactId>
+    <groupId>net.cokkee</groupId>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <version>1.0.0</version>
@@ -63,7 +63,7 @@
 
         <dependency>
             <groupId>net.cokkee</groupId>
-            <artifactId>gonsole</artifactId>
+            <artifactId>cokkee-gonsole</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -261,7 +261,7 @@
         </dependency>
 
         <dependency>
-            <groupId>xstream</groupId>
+            <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.2.2</version>
             <scope>compile</scope>
@@ -314,12 +314,6 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-xc</artifactId>
             <version>1.9.11</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-            <version>1.2</version>
         </dependency>
 
         <!-- http://code.google.com/p/json-simple/ -->
