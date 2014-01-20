@@ -17,16 +17,6 @@ public class ComkerAbstractItem  extends ComkerObject {
     public static final String NULL = "--null--";
     public static final String EMPTY = "";
 
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public void exportTo(ComkerAbstractItem target) {
@@ -36,36 +26,6 @@ public class ComkerAbstractItem  extends ComkerObject {
 
     public void importFrom(ComkerAbstractItem source) {
         if (source == null) return;
-    }
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ComkerAbstractItem other = (ComkerAbstractItem) obj;
-        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
-        return hash;
-    }
-
-    public boolean checkId() {
-        return (this.getId() != null &&
-                !this.getId().equals(ComkerAbstractItem.EMPTY) &&
-                !this.getId().equals(ComkerAbstractItem.NULL));
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

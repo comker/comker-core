@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="comkerAppDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.drupalex.comker.dao.VlfAppDao</value>
+        </property>
+        <property name="interceptorNames">
+            <list></list>
+        </property>
+        <property name="target" ref="comkerAppDaoHibernate" />
+    </bean>
+
+    <bean id="comkerAppDaoHibernate" class="net.drupalex.comker.dao.hibernate.VlfAppDaoHibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
+
+    <bean id="comkerLogActionDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.drupalex.comker.entities.bo.VlfLogAction$Dao</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+            </list>
+        </property>
+        <property name="target" ref="comkerLogActionDaoHibernate" />
+    </bean>
+
+    <bean id="comkerLogActionDaoHibernate" class="net.drupalex.comker.entities.bo.VlfLogAction$DaoHibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
+
+</beans>

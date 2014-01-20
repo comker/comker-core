@@ -17,7 +17,7 @@
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
-    <jaxrs:server id="comkerApiService" address="/api">
+    <jaxrs:server id="comkerApiService" address="/comker/api">
         <jaxrs:serviceBeans>
             <ref bean="comkerQuestionResource" />
         </jaxrs:serviceBeans>
@@ -30,11 +30,9 @@
         </jaxrs:features>
     </jaxrs:server>
 
-    <!-- JSON mapper -->
     <bean id="comkerJsonProvider"
             class="net.cokkee.comker.util.ComkerJacksonJaxbJsonProvider" />
 
-    <!-- Exception mapper -->
     <bean id="comkerExceptionMapper"
             class="net.cokkee.comker.api.ComkerExceptionMapper" />
 

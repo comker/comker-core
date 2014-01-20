@@ -5,18 +5,16 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         version="2.5">
 
-    <display-name>viLawFiling Application</display-name>
+    <display-name>Comker Application</display-name>
+    
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:META-INF/comker/resource-context.xml
-            classpath:META-INF/swagger/application-context.xml
-            </param-value>
+        <param-value>WEB-INF/application-context.xml</param-value>
     </context-param>
 
     <context-param>
         <param-name>log4jConfigLocation</param-name>
-        <param-value>classpath:META-INF/comker/log4j.properties</param-value>
+        <param-value>WEB-INF/log4j.properties</param-value>
     </context-param>
 
     <listener>
@@ -61,7 +59,7 @@
 
     <servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>
-        <url-pattern>/ws/comker/*</url-pattern>
+        <url-pattern>/ws/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
