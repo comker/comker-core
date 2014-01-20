@@ -1,17 +1,17 @@
 package net.cokkee.comker.model.po;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -23,21 +23,20 @@ import org.hibernate.annotations.GenericGenerator;
 uniqueConstraints = @UniqueConstraint(columnNames = "f_authority"))
 public class ComkerPermission extends ComkerAbstractItem {
 
-    private Long id;
+    private String id;
+    private String authority;
+    private List<ComkerRoleJoinPermission> roleJoinPermission = new LinkedList<ComkerRoleJoinPermission>();
 
     @Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name = "f_id", unique = true, nullable = false)
-    public Long getId() {
+	@Column(name = "f_id", unique = true, nullable = false, length = 36)
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     
-    private String authority;
-
     @Column(name = "f_authority", unique = true, nullable = false, length = 36)
     public String getAuthority() {
         return authority;
@@ -45,6 +44,15 @@ public class ComkerPermission extends ComkerAbstractItem {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.permission")
+    public List<ComkerRoleJoinPermission> getRoleJoinPermission() {
+        return roleJoinPermission;
+    }
+
+    public void setRoleJoinPermission(List<ComkerRoleJoinPermission> roleJoinPermission) {
+        this.roleJoinPermission = roleJoinPermission;
     }
 
     public interface Dao {

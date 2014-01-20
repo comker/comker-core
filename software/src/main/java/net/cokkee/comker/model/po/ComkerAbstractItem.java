@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.po;
 
-import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import net.cokkee.comker.model.ComkerObject;
@@ -16,17 +15,6 @@ public class ComkerAbstractItem  extends ComkerObject {
 
     public static final String NULL = "--null--";
     public static final String EMPTY = "";
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    public void exportTo(ComkerAbstractItem target) {
-        if (target == null) return;
-        target.importFrom(this);
-    }
-
-    public void importFrom(ComkerAbstractItem source) {
-        if (source == null) return;
-    }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -62,22 +50,6 @@ public class ComkerAbstractItem  extends ComkerObject {
          * @return validator supported Class Object
          */
         protected abstract Class getValidatorSupportClass();
-    }
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    @XmlType(name = "comkerResultList")
-    public static class ResultList implements Serializable {
-
-        private int total = -1;
-
-        public int getTotal() {
-            return total;
-        }
-
-        public void setTotal(int total) {
-            this.total = total;
-        }
     }
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

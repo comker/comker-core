@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
             http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd">
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <!--
+    <bean id="comkerTransactionManager"
+            class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="comkerEntityManagerFactory" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="comkerTransactionManager" />
+
+    <bean id="comkerEntityManagerFactory"
+            class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="comkerDataSource" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="showSql" value="true" />
+            </bean>
+        </property>
+        
+    </bean>
+    -->
+
+    <!--
+    <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence-booking.xml"/>
+    -->
+    
     <bean id="comkerTransactionManager"
             class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
@@ -15,6 +42,9 @@
         <property name="annotatedClasses">
             <list>
                 <value>net.cokkee.comker.model.po.ComkerPermission</value>
+                <value>net.cokkee.comker.model.po.ComkerRole</value>
+                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermission</value>
+                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -26,5 +56,5 @@
         </property>
         <property name="dataSource" ref="comkerDataSource"/>
     </bean>
-    
+
 </beans>

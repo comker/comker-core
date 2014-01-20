@@ -17,6 +17,8 @@ software/src/main/java/net/cokkee/comker/model/po/ComkerAnswer.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerPermission.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerQuestion.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerRole.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerRoleJoinPermission.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerRoleJoinPermissionPk.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerStorageManager.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerStorageManagerImpl.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerAddHeaderFilter.java -text
