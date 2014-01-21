@@ -5,33 +5,32 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="comkerAppDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <bean id="comkerRoleDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
-            <value>net.drupalex.comker.dao.VlfAppDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list></list>
-        </property>
-        <property name="target" ref="comkerAppDaoHibernate" />
-    </bean>
-
-    <bean id="comkerAppDaoHibernate" class="net.drupalex.comker.dao.hibernate.VlfAppDaoHibernate">
-        <property name="sessionFactory" ref="comkerSessionFactory"/>
-    </bean>
-
-    <bean id="comkerLogActionDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="proxyInterfaces">
-            <value>net.drupalex.comker.entities.bo.VlfLogAction$Dao</value>
+            <value>net.cokkee.comker.dao.RoleDao</value>
         </property>
         <property name="interceptorNames">
             <list>
             </list>
         </property>
-        <property name="target" ref="comkerLogActionDaoHibernate" />
+        <property name="target" ref="comkerRoleDaoHibernate" />
     </bean>
-
-    <bean id="comkerLogActionDaoHibernate" class="net.drupalex.comker.entities.bo.VlfLogAction$DaoHibernate">
+    <bean id="comkerRoleDaoHibernate" class="net.cokkee.comker.dao.RoleDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
+    <bean id="comkerPermissionDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.dao.PermissionDao</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+            </list>
+        </property>
+        <property name="target" ref="comkerPermissionDaoHibernate" />
+    </bean>
+    <bean id="comkerPermissionDaoHibernate" class="net.cokkee.comker.dao.PermissionDao$Hibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
+    
 </beans>

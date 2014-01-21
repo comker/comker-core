@@ -6,6 +6,8 @@ software/pom.xml -text
 software/src/main/etc/jetty.xml -text
 software/src/main/java/net/cokkee/comker/api/ComkerExceptionMapper.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerQuestionResource.java -text
+software/src/main/java/net/cokkee/comker/dao/PermissionDao.java -text
+software/src/main/java/net/cokkee/comker/dao/RoleDao.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
