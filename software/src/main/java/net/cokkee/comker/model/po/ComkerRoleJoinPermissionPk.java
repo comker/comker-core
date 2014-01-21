@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package net.cokkee.comker.model.po;
 
 import java.io.Serializable;
@@ -16,6 +11,14 @@ import javax.persistence.ManyToOne;
  */
 @Embeddable
 public class ComkerRoleJoinPermissionPk implements Serializable {
+
+    public ComkerRoleJoinPermissionPk() {
+    }
+
+    public ComkerRoleJoinPermissionPk(ComkerRole role, ComkerPermission permission) {
+        this.role = role;
+        this.permission = permission;
+    }
 
     private ComkerRole role;
     private ComkerPermission permission;

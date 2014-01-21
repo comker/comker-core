@@ -23,7 +23,7 @@ public class ComkerRole extends ComkerAbstractItem {
     private String code;
     private String name;
     private String description;
-    private List<ComkerRoleJoinPermission> roleJoinPermission = new LinkedList<ComkerRoleJoinPermission>();
+    private List<ComkerRoleJoinPermission> roleJoinPermissionList = new LinkedList<ComkerRoleJoinPermission>();
 
     @Id
 	@Column(name = "f_id", unique = true, nullable = false, length = 36)
@@ -63,11 +63,22 @@ public class ComkerRole extends ComkerAbstractItem {
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role")
-    public List<ComkerRoleJoinPermission> getRoleJoinPermission() {
-        return roleJoinPermission;
+    public List<ComkerRoleJoinPermission> getRoleJoinPermissionList() {
+        return roleJoinPermissionList;
     }
 
-    public void setRoleJoinPermission(List<ComkerRoleJoinPermission> roleJoinPermission) {
-        this.roleJoinPermission = roleJoinPermission;
+    public void setRoleJoinPermissionList(List<ComkerRoleJoinPermission> roleJoinPermission) {
+        this.roleJoinPermissionList = roleJoinPermission;
+    }
+
+    // addPermission sets up bidirectional relationship
+    public void addPermission(ComkerPermission permission) {
+        ComkerRoleJoinPermission roleJoinPermission = new ComkerRoleJoinPermission();
+
+        roleJoinPermission.setPk(new ComkerRoleJoinPermissionPk(this, permission));
+        roleJoinPermission.setRole(this);
+        roleJoinPermission.setPermission(permission);
+        
+        roleJoinPermissionList.add(roleJoinPermission);
     }
 }
