@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="comkerBeanPostPublisher" class="net.cokkee.comker.util.ComkerBootstrapPublisher" />
+
+    <bean id="comkerBeanPostInitializer" class="net.cokkee.comker.util.ComkerBootstrapInitializer">
+        <property name="initializationService" ref="comkerInitializationService"/>
+    </bean>
+    
+    <bean id="comkerInitializationService"
+            class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.service.ComkerInitializationService</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+            </list>
+        </property>
+        <property name="target" ref="comkerInitializationServiceImpl" />
+    </bean>
+    
+    <bean id="comkerInitializationServiceImpl"
+            class="net.cokkee.comker.service.ComkerInitializationService$Impl">
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="permissionDao" ref="comkerPermissionDao" />
+    </bean>
+</beans>

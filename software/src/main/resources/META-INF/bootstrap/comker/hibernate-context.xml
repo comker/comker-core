@@ -8,6 +8,43 @@
             http://www.springframework.org/schema/tx
             http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <bean id="comkerTransactionAdvisor"
+            class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+        <constructor-arg>
+            <ref bean="comkerTransactionInterceptor" />
+        </constructor-arg>
+    </bean>
+
+    <bean id="comkerTransactionInterceptor"
+            class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="comkerTransactionManager" />
+        <property name="transactionAttributeSource">
+            <ref bean="comkerTransactionAttributeSource"/>
+        </property>
+    </bean>
+
+    <bean id="comkerTransactionAttributeSource"
+            class="org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource">
+        <property name="properties">
+            <props>
+                <prop key="find*">PROPAGATION_REQUIRED</prop>
+                <prop key="save*">PROPAGATION_REQUIRED</prop>
+                <prop key="attach*">PROPAGATION_REQUIRED</prop>
+                <prop key="detach*">PROPAGATION_REQUIRED</prop>
+                <prop key="switch*">PROPAGATION_REQUIRED</prop>
+                <prop key="assign*">PROPAGATION_REQUIRED</prop>
+                <prop key="edit*">PROPAGATION_REQUIRED</prop>
+                <prop key="create*">PROPAGATION_REQUIRED</prop>
+                <prop key="insert*">PROPAGATION_REQUIRED</prop>
+                <prop key="update*">PROPAGATION_REQUIRED</prop>
+                <prop key="delete*">PROPAGATION_REQUIRED</prop>
+                <prop key="trash*">PROPAGATION_REQUIRED</prop>
+                <prop key="untrash*">PROPAGATION_REQUIRED</prop>
+                <prop key="upload*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    
     <!--
     <bean id="comkerTransactionManager"
             class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -31,7 +68,7 @@
     <!--
     <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence-booking.xml"/>
     -->
-    
+
     <bean id="comkerTransactionManager"
             class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="comkerSessionFactory"/>

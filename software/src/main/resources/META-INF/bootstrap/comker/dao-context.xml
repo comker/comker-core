@@ -7,7 +7,7 @@
 
     <bean id="comkerRoleDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
-            <value>net.cokkee.comker.dao.RoleDao</value>
+            <value>net.cokkee.comker.dao.ComkerRoleDao</value>
         </property>
         <property name="interceptorNames">
             <list>
@@ -15,21 +15,22 @@
         </property>
         <property name="target" ref="comkerRoleDaoHibernate" />
     </bean>
-    <bean id="comkerRoleDaoHibernate" class="net.cokkee.comker.dao.RoleDao$Hibernate">
+    <bean id="comkerRoleDaoHibernate" class="net.cokkee.comker.dao.ComkerRoleDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
     <bean id="comkerPermissionDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
-            <value>net.cokkee.comker.dao.PermissionDao</value>
+            <value>net.cokkee.comker.dao.ComkerPermissionDao</value>
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerTransactionAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerPermissionDaoHibernate" />
     </bean>
-    <bean id="comkerPermissionDaoHibernate" class="net.cokkee.comker.dao.PermissionDao$Hibernate">
+    <bean id="comkerPermissionDaoHibernate" class="net.cokkee.comker.dao.ComkerPermissionDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
     

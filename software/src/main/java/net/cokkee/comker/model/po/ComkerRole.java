@@ -5,10 +5,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -26,6 +28,8 @@ public class ComkerRole extends ComkerAbstractItem {
     private List<ComkerRoleJoinPermission> roleJoinPermissionList = new LinkedList<ComkerRoleJoinPermission>();
 
     @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@Column(name = "f_id", unique = true, nullable = false, length = 36)
     public String getId() {
         return id;

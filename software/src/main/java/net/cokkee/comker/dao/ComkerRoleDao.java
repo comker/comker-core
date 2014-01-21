@@ -8,11 +8,11 @@ import org.hibernate.SessionFactory;
  *
  * @author drupalex
  */
-public interface RoleDao {
+public interface ComkerRoleDao {
 
     List<ComkerRole> findAll();
 
-    public static class Hibernate implements RoleDao {
+    public static class Hibernate implements ComkerRoleDao {
 
         private SessionFactory sessionFactory;
 
