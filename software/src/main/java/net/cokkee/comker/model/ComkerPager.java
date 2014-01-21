@@ -2,6 +2,7 @@ package net.cokkee.comker.model;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 /**
@@ -13,6 +14,8 @@ public class ComkerPager implements Serializable {
 
     public static final Integer DEFAULT_START = new Integer(0);
     public static final Integer DEFAULT_LIMIT = new Integer(10);
+
+    public static final ComkerPager ONE = new ComkerPager(DEFAULT_START, new Integer(1));
 
     public ComkerPager() {
     }
@@ -83,6 +86,17 @@ public class ComkerPager implements Serializable {
             }
             if (filter.getLimit() != null) {
                 query.setMaxResults(filter.getLimit());
+            }
+        }
+    }
+
+    public static void apply(Criteria c, ComkerPager filter) {
+        if (filter != null) {
+            if (filter.getStart() != null) {
+                c.setFirstResult(filter.getStart());
+            }
+            if (filter.getLimit() != null) {
+                c.setMaxResults(filter.getLimit());
             }
         }
     }

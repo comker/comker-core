@@ -25,7 +25,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerTransactionAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerPermissionDaoHibernate" />

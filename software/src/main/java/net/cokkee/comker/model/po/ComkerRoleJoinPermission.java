@@ -20,7 +20,17 @@ import javax.persistence.Transient;
 })
 public class ComkerRoleJoinPermission extends ComkerAbstractItem {
 
-    private ComkerRoleJoinPermissionPk pk = new ComkerRoleJoinPermissionPk();
+    public ComkerRoleJoinPermission() {
+        super();
+        this.pk = new ComkerRoleJoinPermissionPk();
+    }
+
+    public ComkerRoleJoinPermission(ComkerRole role, ComkerPermission permission) {
+        super();
+        this.pk = new ComkerRoleJoinPermissionPk(role, permission);
+    }
+
+    private ComkerRoleJoinPermissionPk pk;
 
     @EmbeddedId
     public ComkerRoleJoinPermissionPk getPk() {

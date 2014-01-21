@@ -34,7 +34,6 @@ public class ComkerPermission extends ComkerAbstractItem {
 
     private String id;
     private String authority;
-    private List<ComkerRoleJoinPermission> roleJoinPermission = new LinkedList<ComkerRoleJoinPermission>();
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -55,14 +54,5 @@ public class ComkerPermission extends ComkerAbstractItem {
 
     public void setAuthority(String authority) {
         this.authority = authority;
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.permission")
-    public List<ComkerRoleJoinPermission> getRoleJoinPermission() {
-        return roleJoinPermission;
-    }
-
-    public void setRoleJoinPermission(List<ComkerRoleJoinPermission> roleJoinPermission) {
-        this.roleJoinPermission = roleJoinPermission;
     }
 }

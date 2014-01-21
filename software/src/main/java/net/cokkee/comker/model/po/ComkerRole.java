@@ -21,6 +21,17 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "comker_role")
 public class ComkerRole extends ComkerAbstractItem {
 
+    public ComkerRole() {
+        super();
+    }
+
+    public ComkerRole(String code, String name, String description) {
+        super();
+        this.code = code;
+        this.name = name;
+        this.description = description;
+    }
+
     private String id;
     private String code;
     private String name;
@@ -66,7 +77,7 @@ public class ComkerRole extends ComkerAbstractItem {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.role")
     public List<ComkerRoleJoinPermission> getRoleJoinPermissionList() {
         return roleJoinPermissionList;
     }
