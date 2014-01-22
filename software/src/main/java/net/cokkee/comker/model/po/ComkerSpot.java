@@ -36,7 +36,10 @@ public class ComkerSpot extends ComkerAbstractItem {
     private String code;
     private String name;
     private String description;
-    private List<ComkerSpotJoinModule> spotJoinModuleList = new LinkedList<ComkerSpotJoinModule>();
+    private List<ComkerSpotJoinModule> spotJoinModuleList = 
+            new LinkedList<ComkerSpotJoinModule>();
+    private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
+            new LinkedList<ComkerCrewJoinRoleWithSpot>();
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -86,14 +89,12 @@ public class ComkerSpot extends ComkerAbstractItem {
         this.spotJoinModuleList = spotJoinModule;
     }
 
-    // addModule sets up bidirectional relationship
-    public void addModule(ComkerModule module) {
-        ComkerSpotJoinModule spotJoinModule = new ComkerSpotJoinModule();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.spot")
+    public List<ComkerCrewJoinRoleWithSpot> getCrewJoinRoleWithSpotList() {
+        return crewJoinRoleWithSpotList;
+    }
 
-        spotJoinModule.setPk(new ComkerSpotJoinModulePk(this, module));
-        spotJoinModule.setSpot(this);
-        spotJoinModule.setModule(module);
-        
-        spotJoinModuleList.add(spotJoinModule);
+    public void setCrewJoinRoleWithSpotList(List<ComkerCrewJoinRoleWithSpot> item) {
+        this.crewJoinRoleWithSpotList = item;
     }
 }

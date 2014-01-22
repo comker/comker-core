@@ -42,6 +42,10 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     void removeRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
 
+    Set<String> getCodeOfGlobalRole(ComkerCrew crew);
+
+    Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew);
+
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerCrewDao {
 
@@ -107,6 +111,38 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         public void removeGlobalRole(ComkerCrew crew, ComkerRole role) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.delete(new ComkerCrewJoinGlobalRole(crew, role));
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public Set<String> getCodeOfGlobalRole(ComkerCrew crew) {
+            Set<String> result = new HashSet<String>();
+
+            List<ComkerCrewJoinGlobalRole> joinGlobalRoles = crew.getCrewJoinGlobalRoleList();
+            for(ComkerCrewJoinGlobalRole item:joinGlobalRoles) {
+                result.add(item.getRole().getCode());
+            }
+
+            return result;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew) {
+            Map<String,Set<String>> result = new HashMap<String,Set<String>>();
+
+            List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpots = crew.getCrewJoinRoleWithSpotList();
+            for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpots) {
+                ComkerSpot spot = item.getSpot();
+                Set<String> roleSet = result.get(spot.getCode());
+                if (roleSet == null) {
+                    roleSet = new HashSet<String>();
+                    result.put(spot.getCode(), roleSet);
+                }
+                roleSet.add(item.getRole().getCode());
+            }
+
+            return result;
         }
     }
 }

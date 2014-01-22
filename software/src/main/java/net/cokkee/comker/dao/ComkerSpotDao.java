@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.po.ComkerCrew;
+import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
 
 import net.cokkee.comker.model.po.ComkerSpot;
 
@@ -33,6 +35,8 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
     ComkerSpot getByCode(String code);
 
     ComkerSpot save(ComkerSpot item);
+
+    Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot);
 
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerSpotDao {
@@ -76,6 +80,25 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
             return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot) {
+            Map<String,Set<String>> result = new HashMap<String,Set<String>>();
+
+            List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpots = spot.getCrewJoinRoleWithSpotList();
+            for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpots) {
+                ComkerCrew crew = item.getCrew();
+                Set<String> roleSet = result.get(crew.getName());
+                if (roleSet == null) {
+                    roleSet = new HashSet<String>();
+                    result.put(crew.getName(), roleSet);
+                }
+                roleSet.add(item.getRole().getCode());
+            }
+
+            return result;
         }
     }
 }

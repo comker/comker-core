@@ -30,9 +30,12 @@ public class ComkerCrew extends ComkerAbstractItem {
         this.name = name;
         this.description = description;
     }
+    
     private String id;
     private String name;
     private String description;
+    private List<ComkerCrewJoinGlobalRole> crewJoinGlobalRoleList =
+            new LinkedList<ComkerCrewJoinGlobalRole>();
     private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
             new LinkedList<ComkerCrewJoinRoleWithSpot>();
 
@@ -66,7 +69,16 @@ public class ComkerCrew extends ComkerAbstractItem {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.crew")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew")
+    public List<ComkerCrewJoinGlobalRole> getCrewJoinGlobalRoleList() {
+        return crewJoinGlobalRoleList;
+    }
+
+    public void setCrewJoinGlobalRoleList(List<ComkerCrewJoinGlobalRole> item) {
+        this.crewJoinGlobalRoleList = item;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew")
     public List<ComkerCrewJoinRoleWithSpot> getCrewJoinRoleWithSpotList() {
         return crewJoinRoleWithSpotList;
     }
@@ -75,6 +87,7 @@ public class ComkerCrew extends ComkerAbstractItem {
         this.crewJoinRoleWithSpotList = item;
     }
 
+    @Deprecated
     public void addRoleWithSpot(ComkerRole role, ComkerSpot spot) {
         ComkerCrewJoinRoleWithSpot item = new ComkerCrewJoinRoleWithSpot();
 
