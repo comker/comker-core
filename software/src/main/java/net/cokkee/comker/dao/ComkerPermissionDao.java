@@ -23,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerPermissionDao {
 
-    public static final String FIELD_AUTHORITY = "authority";
-
     ComkerPermission find(String query, Map<String,Object> params);
     
     ComkerPermission findWhere(Map<String,Object> params);
@@ -108,6 +106,7 @@ public interface ComkerPermissionDao {
         }
 
         @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerPermission get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
             return (ComkerPermission) session.get(ComkerPermission.class, id);

@@ -6,10 +6,12 @@ import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
+import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.po.ComkerUser;
 
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,16 @@ public interface ComkerInitializationService {
     void initSampleData();
 
     public static class Impl implements ComkerInitializationService {
+
+        private ComkerUserDao userDao = null;
+
+        public ComkerUserDao getUserDao() {
+            return userDao;
+        }
+
+        public void setUserDao(ComkerUserDao userDao) {
+            this.userDao = userDao;
+        }
 
         private ComkerSpotDao spotDao = null;
 
@@ -67,12 +79,19 @@ public interface ComkerInitializationService {
 
         //----------------------------------------------------------------------
 
+        private Map<String,ComkerUser> sampleUsers = new HashMap<String,ComkerUser>();
         private Map<String,ComkerSpot> sampleSpots = new HashMap<String,ComkerSpot>();
         private Map<String,ComkerCrew> sampleCrews = new HashMap<String,ComkerCrew>();
         private Map<String,ComkerRole> sampleRoles = new HashMap<String,ComkerRole>();
         private Map<String,ComkerPermission> samplePermissions = new HashMap<String,ComkerPermission>();
 
         public Impl() {
+            ComkerUser user;
+            user = new ComkerUser("demo@buocnho.com", "BNA02101", "dobietday", "Nguyễn Minh Tân");
+            sampleUsers.put(user.getEmail(), user);
+            user = new ComkerUser("demo@pctu.edu.vn", "PCT11371", "nopassword", "Phạm Ngọc Hùng");
+            sampleUsers.put(user.getEmail(), user);
+
             ComkerSpot spot;
             spot = new ComkerSpot("buocnho.com", "Buocnho Training & Technology", "");
             sampleSpots.put(spot.getCode(), spot);
@@ -117,6 +136,34 @@ public interface ComkerInitializationService {
             initSampleRoles();
             initSampleSpots();
             initSampleCrews();
+            initSampleUsers();
+        }
+
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        private void initSampleUsers() {
+            for(String email: sampleUsers.keySet()) {
+                getOrCreateUser(email);
+            }
+            getUserDao().addCrew(
+                    getUserDao().getByEmail("demo@buocnho.com"),
+                    getCrewDao().getByName("Administrators (buocnho.com)"));
+            getUserDao().addCrew(
+                    getUserDao().getByEmail("demo@buocnho.com"),
+                    getCrewDao().getByName("Members (pctu.edu.vn)"));
+            getUserDao().addCrew(
+                    getUserDao().getByEmail("demo@pctu.edu.vn"),
+                    getCrewDao().getByName("Members (pctu.edu.vn)"));
+        }
+
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        private ComkerUser getOrCreateUser(String email) {
+            ComkerUser item = getUserDao().getByEmail(email);
+            if (item == null) {
+                item = sampleUsers.get(email);
+                if (item == null) return null;
+                getUserDao().save(item);
+            }
+            return item;
         }
 
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

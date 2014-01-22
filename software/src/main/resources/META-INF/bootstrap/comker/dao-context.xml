@@ -5,6 +5,23 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="comkerUserDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.dao.ComkerUserDao</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+            </list>
+        </property>
+        <property name="target" ref="comkerUserDaoHibernate" />
+    </bean>
+
+    <bean id="comkerUserDaoHibernate" class="net.cokkee.comker.dao.ComkerUserDao$Hibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+        <property name="crewDao" ref="comkerCrewDaoHibernate"/>
+    </bean>
+
+
     <bean id="comkerSpotDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
             <value>net.cokkee.comker.dao.ComkerSpotDao</value>

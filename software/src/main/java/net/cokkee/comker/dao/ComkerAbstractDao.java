@@ -15,6 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerAbstractDao {
 
+    public static final String FIELD_AUTHORITY = "authority";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_CODE = "code";
+    public static final String FIELD_EMAIL = "email";
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_FULLNAME = "fullname";
+
     Integer count(String query, Map<String,Object> params);
     
     List findAll(String query, Map<String,Object> params, ComkerPager filter);

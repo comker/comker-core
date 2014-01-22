@@ -26,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerRoleDao extends ComkerAbstractDao {
 
-    public static final String FIELD_CODE = "code";
-
     ComkerRole findWhere(Map<String,Object> params);
 
     Set<String> getAuthorities(String id);

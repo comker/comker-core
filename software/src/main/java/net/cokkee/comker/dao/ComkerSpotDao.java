@@ -26,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerSpotDao extends ComkerAbstractDao {
 
-    public static final String FIELD_CODE = "code";
-
     ComkerSpot findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);

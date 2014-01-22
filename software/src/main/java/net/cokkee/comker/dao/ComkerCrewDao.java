@@ -26,8 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerCrewDao extends ComkerAbstractDao {
 
-    public static final String FIELD_NAME = "name";
-
     ComkerCrew findWhere(Map<String,Object> params);
 
     ComkerCrew getByName(String name);
@@ -44,7 +42,11 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     Set<String> getCodeOfGlobalRole(ComkerCrew crew);
 
+    void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew);
+
     Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew);
+
+    void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew);
 
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerCrewDao {
@@ -117,32 +119,42 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Set<String> getCodeOfGlobalRole(ComkerCrew crew) {
             Set<String> result = new HashSet<String>();
-
-            List<ComkerCrewJoinGlobalRole> joinGlobalRoles = crew.getCrewJoinGlobalRoleList();
-            for(ComkerCrewJoinGlobalRole item:joinGlobalRoles) {
-                result.add(item.getRole().getCode());
-            }
-
+            collectCodeOfGlobalRole(result, crew);
             return result;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew) {
+            if (bag == null) return;
+            List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
+            for(ComkerCrewJoinGlobalRole item:list) {
+                bag.add(item.getRole().getCode());
+            }
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew) {
             Map<String,Set<String>> result = new HashMap<String,Set<String>>();
+            collectCodeOfSpotWithRole(result, crew);
+            return result;
+        }
 
-            List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpots = crew.getCrewJoinRoleWithSpotList();
-            for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpots) {
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew) {
+            if (bag == null) return;
+            List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
+            for(ComkerCrewJoinRoleWithSpot item:list) {
                 ComkerSpot spot = item.getSpot();
-                Set<String> roleSet = result.get(spot.getCode());
+                Set<String> roleSet = bag.get(spot.getCode());
                 if (roleSet == null) {
                     roleSet = new HashSet<String>();
-                    result.put(spot.getCode(), roleSet);
+                    bag.put(spot.getCode(), roleSet);
                 }
                 roleSet.add(item.getRole().getCode());
             }
-
-            return result;
         }
     }
 }

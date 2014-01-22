@@ -93,6 +93,9 @@
                 <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk</value>
                 <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot</value>
                 <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpotPk</value>
+                <value>net.cokkee.comker.model.po.ComkerUser</value>
+                <value>net.cokkee.comker.model.po.ComkerUserJoinCrew</value>
+                <value>net.cokkee.comker.model.po.ComkerUserJoinCrewPk</value>
             </list>
         </property>
         <property name="hibernateProperties">

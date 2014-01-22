@@ -11,6 +11,7 @@ software/src/main/java/net/cokkee/comker/dao/ComkerCrewDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerPermissionDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerRoleDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSpotDao.java -text
+software/src/main/java/net/cokkee/comker/dao/ComkerUserDao.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
@@ -34,6 +35,9 @@ software/src/main/java/net/cokkee/comker/model/po/ComkerRoleJoinPermissionPk.jav
 software/src/main/java/net/cokkee/comker/model/po/ComkerSpot.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerSpotJoinModule.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerSpotJoinModulePk.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerUser.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrew.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrewPk.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerInitializationService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerStorageManager.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerStorageManagerImpl.java -text
