@@ -25,6 +25,8 @@
     
     <bean id="comkerInitializationServiceImpl"
             class="net.cokkee.comker.service.ComkerInitializationService$Impl">
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="crewDao" ref="comkerCrewDao" />
         <property name="roleDao" ref="comkerRoleDao" />
         <property name="permissionDao" ref="comkerPermissionDao" />
     </bean>

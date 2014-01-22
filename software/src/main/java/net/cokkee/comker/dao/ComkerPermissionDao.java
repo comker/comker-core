@@ -1,5 +1,6 @@
 package net.cokkee.comker.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,31 +31,21 @@ public interface ComkerPermissionDao {
 
     Integer count();
 
-    Integer count(String query, Map<String,Object> params);
-
     Integer countWhere(Map<String,Object> params);
 
-    List findAll(String query, Map<String,Object> params, ComkerPager filter);
+    List findAll(ComkerPager filter);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
     ComkerPermission get(String id);
+
+    ComkerPermission getByAuthority(String authority);
 
     ComkerPermission save(ComkerPermission item);
 
     
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerPermissionDao {
-
-        private SessionFactory sessionFactory;
-
-        public SessionFactory getSessionFactory() {
-            return sessionFactory;
-        }
-
-        public void setSessionFactory(SessionFactory sessionFactory) {
-            this.sessionFactory = sessionFactory;
-        }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -85,13 +76,11 @@ public interface ComkerPermissionDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public Integer count(String query, Map<String,Object> params) {
+        public List findAll(ComkerPager filter) {
             Session session = this.getSessionFactory().getCurrentSession();
-            Query q = session.createQuery("SELECT COUNT(*) " + query);
-            for(Map.Entry<String,Object> param : params.entrySet()) {
-                q.setParameter(param.getKey(), param.getValue());
-            }
-            return ((Long) q.uniqueResult()).intValue();
+            Criteria c = session.createCriteria(ComkerPermission.class);
+            ComkerPager.apply(c, filter);
+            return c.list();
         }
 
         @Override
@@ -104,17 +93,6 @@ public interface ComkerPermissionDao {
             }
             c.setProjection(Projections.rowCount());
             return ((Long) c.uniqueResult()).intValue();
-        }
-
-        @Override
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public List findAll(String query, Map<String,Object> params, ComkerPager filter) {
-            Query q = getSessionFactory().getCurrentSession().createQuery(query);
-            for(Map.Entry<String,Object> param : params.entrySet()) {
-                q.setParameter(param.getKey(), param.getValue());
-            }
-            ComkerPager.apply(q, filter);
-            return q.list();
         }
 
         @Override
@@ -133,6 +111,14 @@ public interface ComkerPermissionDao {
         public ComkerPermission get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
             return (ComkerPermission) session.get(ComkerPermission.class, id);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public ComkerPermission getByAuthority(String authority) {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put(FIELD_AUTHORITY, authority);
+            return findWhere(params);
         }
 
         @Override

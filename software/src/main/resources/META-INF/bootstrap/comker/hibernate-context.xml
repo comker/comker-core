@@ -84,11 +84,13 @@
                 <value>net.cokkee.comker.model.po.ComkerRole</value>
                 <value>net.cokkee.comker.model.po.ComkerRoleJoinPermission</value>
                 <value>net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk</value>
-                <value>net.cokkee.comker.model.po.ComkerSpot</value>
                 <value>net.cokkee.comker.model.po.ComkerModule</value>
+                <value>net.cokkee.comker.model.po.ComkerSpot</value>
                 <value>net.cokkee.comker.model.po.ComkerSpotJoinModule</value>
                 <value>net.cokkee.comker.model.po.ComkerSpotJoinModulePk</value>
                 <value>net.cokkee.comker.model.po.ComkerCrew</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk</value>
                 <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot</value>
                 <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpotPk</value>
             </list>

@@ -21,7 +21,7 @@ public class ComkerBootstrapInitializer implements ApplicationListener<ComkerBoo
 
     @Override
     public void onApplicationEvent(ComkerBootstrapEvent e) {
-        getInitializationService().initDefaultRolesAndPermissions();
+        getInitializationService().initSampleData();
     }
 
     @Override

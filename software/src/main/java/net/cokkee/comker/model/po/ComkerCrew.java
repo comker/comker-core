@@ -21,17 +21,25 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "comker_crew")
 public class ComkerCrew extends ComkerAbstractItem {
 
+    public ComkerCrew() {
+        super();
+    }
+
+    public ComkerCrew(String name, String description) {
+        super();
+        this.name = name;
+        this.description = description;
+    }
     private String id;
     private String name;
     private String description;
-
     private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
             new LinkedList<ComkerCrewJoinRoleWithSpot>();
 
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-	@Column(name = "f_id", unique = true, nullable = false, length = 36)
+    @Column(name = "f_id", unique = true, nullable = false, length = 36)
     public String getId() {
         return id;
     }
@@ -65,5 +73,16 @@ public class ComkerCrew extends ComkerAbstractItem {
 
     public void setCrewJoinRoleWithSpotList(List<ComkerCrewJoinRoleWithSpot> item) {
         this.crewJoinRoleWithSpotList = item;
+    }
+
+    public void addRoleWithSpot(ComkerRole role, ComkerSpot spot) {
+        ComkerCrewJoinRoleWithSpot item = new ComkerCrewJoinRoleWithSpot();
+
+        item.setPk(new ComkerCrewJoinRoleWithSpotPk(this, role, spot));
+        item.setCrew(this);
+        item.setRole(role);
+        item.setSpot(spot);
+
+        getCrewJoinRoleWithSpotList().add(item);
     }
 }
