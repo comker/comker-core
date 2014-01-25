@@ -60,12 +60,7 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public Set<String> getAuthorities(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
-            ComkerRole role = (ComkerRole) session.load(ComkerRole.class, id);
-            Set<String> authorities = new HashSet<String>();
-            for(ComkerRoleJoinPermission rjp:role.getRoleJoinPermissionList()) {
-                authorities.add(rjp.getPermission().getAuthority());
-            }
-            return authorities;
+            return getAuthorities((ComkerRole) session.load(ComkerRole.class, id));
         }
 
         @Override
@@ -73,8 +68,8 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
         public Set<String> getAuthorities(ComkerRole role) {
             Session session = this.getSessionFactory().getCurrentSession();
             Set<String> authorities = new HashSet<String>();
-            for(ComkerRoleJoinPermission rjp:role.getRoleJoinPermissionList()) {
-                authorities.add(rjp.getPermission().getAuthority());
+            for(ComkerRoleJoinPermission item:role.getRoleJoinPermissionList()) {
+                authorities.add(item.getPermission().getAuthority());
             }
             return authorities;
         }

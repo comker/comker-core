@@ -1,7 +1,9 @@
 package net.cokkee.comker.model.po;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -45,7 +50,9 @@ public class ComkerUser extends ComkerAbstractItem {
 
     private List<ComkerUserJoinCrew> userJoinCrewList =
             new LinkedList<ComkerUserJoinCrew>();
-    
+
+    private Set<String> idsOfCrewList = new HashSet<String>();
+
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -94,6 +101,16 @@ public class ComkerUser extends ComkerAbstractItem {
         this.fullname = fullname;
     }
 
+    @Column(name = "f_enabled", unique = false, nullable = false)
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
     public List<ComkerUserJoinCrew> getUserJoinCrewList() {
         return userJoinCrewList;
@@ -101,5 +118,14 @@ public class ComkerUser extends ComkerAbstractItem {
 
     public void setUserJoinCrewList(List<ComkerUserJoinCrew> list) {
         this.userJoinCrewList = list;
+    }
+
+    @Transient
+    public Set<String> getIdsOfCrewList() {
+        return idsOfCrewList;
+    }
+
+    public void setIdsOfCrewList(Set<String> crewIdList) {
+        this.idsOfCrewList = crewIdList;
     }
 }

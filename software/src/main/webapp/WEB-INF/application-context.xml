@@ -18,11 +18,12 @@
         http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
-  
-    <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
-    <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
-    <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
+
     <import resource="classpath:META-INF/bootstrap/comker/hibernate-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
     <import resource="classpath:META-INF/bootstrap/gonsole/attachment-context.xml" />
   
     <context:component-scan base-package="net.cokkee.comker" />
@@ -30,6 +31,32 @@
     <bean id="swaggerResourceJSON" class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
     <bean id="swaggerApiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
     <bean id="swaggerResourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+
+    <bean id="jaxbProvider"
+            class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
+    </bean>
+
+    <bean id="jsonProvider"
+            class="org.apache.cxf.jaxrs.provider.JSONProvider">
+        <property name="dropRootElement" value="true"/>
+        <property name="dropCollectionWrapperElement" value="true" />
+        <property name="supportUnwrapped" value="true"/>
+        <property name="serializeAsArray" value="true"/>
+        <property name="arrayKeys" ref="jsonKeys"/>
+        <property name="produceMediaTypes" ref="jsonTypes"/>
+        <property name="consumeMediaTypes" ref="jsonTypes"/>
+    </bean>
+
+    <util:list id="jsonKeys">
+        <value>valueSet</value>
+        <value>idsOfCrewList</value>
+        <value>idsOfGlobalRoleList</value>
+        <value>idsOfSpotWithRoleList</value>
+    </util:list>
+
+    <util:list id="jsonTypes">
+        <value>application/json</value>
+    </util:list>
 
     <bean id="swaggerJsonProvider"
       class="net.cokkee.comker.util.ComkerJacksonJaxbJsonProvider" />
@@ -48,11 +75,14 @@
 
     <jaxrs:server id="comkerApiService" address="/comker/api">
         <jaxrs:serviceBeans>
+            <ref bean="comkerUserResource" />
+            <ref bean="comkerCrewResource" />
             <ref bean="comkerQuestionResource" />
             <ref bean="swaggerResourceJSON" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="swaggerJsonProvider" />
+            <ref bean="jaxbProvider" />
+            <ref bean="jsonProvider" />
             <ref bean="swaggerExceptionMapper" />
             <ref bean="swaggerResourceWriter" />
             <ref bean="swaggerApiWriter" />

@@ -51,6 +51,7 @@
 
     <bean id="comkerCrewDaoHibernate" class="net.cokkee.comker.dao.ComkerCrewDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
+        <property name="roleDao" ref="comkerRoleDaoHibernate"/>
     </bean>
 
 

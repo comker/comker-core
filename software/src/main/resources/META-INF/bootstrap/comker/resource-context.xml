@@ -5,6 +5,18 @@
             http://www.springframework.org/schema/beans 
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="comkerUserResource"
+            class="net.cokkee.comker.api.ComkerUserResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="userDao" ref="comkerUserDao" />
+    </bean>
+
+    <bean id="comkerCrewResource"
+            class="net.cokkee.comker.api.ComkerCrewResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="crewDao" ref="comkerCrewDao" />
+    </bean>
+
     <bean id="comkerQuestionResource"
             class="net.cokkee.comker.api.ComkerQuestionResource">
         <property name="storageManager" ref="comkerStorageManager" />

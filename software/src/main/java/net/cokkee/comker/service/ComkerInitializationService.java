@@ -12,7 +12,8 @@ import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.model.po.ComkerUser;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,8 @@ public interface ComkerInitializationService {
     void initSampleData();
 
     public static class Impl implements ComkerInitializationService {
+
+        private final Logger log = LoggerFactory.getLogger(Impl.class);
 
         private ComkerUserDao userDao = null;
 
@@ -86,6 +89,10 @@ public interface ComkerInitializationService {
         private Map<String,ComkerPermission> samplePermissions = new HashMap<String,ComkerPermission>();
 
         public Impl() {
+            if (log.isDebugEnabled()) {
+                log.debug("ComkerInitializationService.constructor() - create Comker* objects");
+            }
+
             ComkerUser user;
             user = new ComkerUser("demo@buocnho.com", "BNA02101", "dobietday", "Nguyễn Minh Tân");
             sampleUsers.put(user.getEmail(), user);
@@ -132,6 +139,10 @@ public interface ComkerInitializationService {
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void initSampleData() {
+            if (log.isDebugEnabled()) {
+                log.debug("ComkerInitializationService.initSampleData() - start");
+            }
+
             initSamplePermissions();
             initSampleRoles();
             initSampleSpots();
@@ -141,6 +152,9 @@ public interface ComkerInitializationService {
 
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         private void initSampleUsers() {
+            if (log.isDebugEnabled()) {
+                log.debug("ComkerInitializationService.initSampleUsers() - start");
+            }
             for(String email: sampleUsers.keySet()) {
                 getOrCreateUser(email);
             }

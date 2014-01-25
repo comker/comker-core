@@ -85,15 +85,4 @@ public class ComkerRole extends ComkerAbstractItem {
     public void setRoleJoinPermissionList(List<ComkerRoleJoinPermission> roleJoinPermission) {
         this.roleJoinPermissionList = roleJoinPermission;
     }
-
-    // addPermission sets up bidirectional relationship
-    public void addPermission(ComkerPermission permission) {
-        ComkerRoleJoinPermission roleJoinPermission = new ComkerRoleJoinPermission();
-
-        roleJoinPermission.setPk(new ComkerRoleJoinPermissionPk(this, permission));
-        roleJoinPermission.setRole(this);
-        roleJoinPermission.setPermission(permission);
-        
-        roleJoinPermissionList.add(roleJoinPermission);
-    }
 }

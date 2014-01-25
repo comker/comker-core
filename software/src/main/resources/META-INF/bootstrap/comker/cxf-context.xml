@@ -19,6 +19,8 @@
 
     <jaxrs:server id="comkerApiService" address="/comker/api">
         <jaxrs:serviceBeans>
+            <ref bean="comkerUserResource" />
+            <ref bean="comkerCrewResource" />
             <ref bean="comkerQuestionResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>

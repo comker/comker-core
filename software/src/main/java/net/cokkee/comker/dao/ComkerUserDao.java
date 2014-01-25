@@ -40,10 +40,12 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     void removeCrew(ComkerUser user, ComkerCrew crew);
 
-    Set<String> getCodeOfGlobalRole(ComkerUser user);
+    Set<String> getCodeOfGlobalPermission(ComkerUser user);
 
-    Map<String,Set<String>> getCodeOfSpotWithRole(ComkerUser user);
+    Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerUser user);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerUserDao {
 
@@ -57,6 +59,8 @@ public interface ComkerUserDao extends ComkerAbstractDao {
             this.crewDao = crewDao;
         }
 
+        //----------------------------------------------------------------------
+        
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerUser findWhere(Map<String, Object> params) {
@@ -65,9 +69,9 @@ public interface ComkerUserDao extends ComkerAbstractDao {
             for(Map.Entry<String,Object> param : params.entrySet()) {
                 c.add(Restrictions.eq(param.getKey(), param.getValue()));
             }
-            List result = c.list();
-            if (result.isEmpty()) return null;
-            return (ComkerUser)result.get(0);
+            ComkerUser item = (ComkerUser)c.uniqueResult();
+            loadAggregationRefs(item);
+            return item;
         }
 
         @Override
@@ -79,14 +83,21 @@ public interface ComkerUserDao extends ComkerAbstractDao {
                 c.add(Restrictions.eq(param.getKey(), param.getValue()));
             }
             ComkerPager.apply(c, filter);
-            return c.list();
+            List list = c.list();
+
+            for(Object item:list) {
+                loadAggregationRefs((ComkerUser) item);
+            }
+            return list;
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerUser get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
-            return (ComkerUser) session.get(ComkerUser.class, id);
+            ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
+            loadAggregationRefs(item);
+            return item;
         }
 
         @Override
@@ -114,13 +125,13 @@ public interface ComkerUserDao extends ComkerAbstractDao {
         }
 
         @Override
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public Set<String> getCodeOfGlobalRole(ComkerUser user) {
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Set<String> getCodeOfGlobalPermission(ComkerUser user) {
             Set<String> result = new HashSet<String>();
 
             List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
             for(ComkerUserJoinCrew item:list) {
-                getCrewDao().collectCodeOfGlobalRole(result, item.getCrew());
+                getCrewDao().collectCodeOfGlobalPermission(result, item.getCrew());
             }
             return result;
         }
@@ -145,15 +156,27 @@ public interface ComkerUserDao extends ComkerAbstractDao {
         }
 
         @Override
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public Map<String,Set<String>> getCodeOfSpotWithRole(ComkerUser user) {
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerUser user) {
             Map<String,Set<String>> result = new HashMap<String,Set<String>>();
 
             List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
             for(ComkerUserJoinCrew item:list) {
-                getCrewDao().collectCodeOfSpotWithRole(result, item.getCrew());
+                getCrewDao().collectCodeOfSpotWithPermission(result, item.getCrew());
             }
             return result;
+        }
+
+        //----------------------------------------------------------------------
+
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        private void loadAggregationRefs(ComkerUser user) {
+            if (user == null) return;
+            user.getIdsOfCrewList().clear();
+            List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
+            for(ComkerUserJoinCrew item:list) {
+                user.getIdsOfCrewList().add(item.getCrew().getId());
+            }
         }
     }
 }
