@@ -77,6 +77,9 @@
         <jaxrs:serviceBeans>
             <ref bean="comkerUserResource" />
             <ref bean="comkerCrewResource" />
+            <ref bean="comkerSpotResource" />
+            <ref bean="comkerRoleResource" />
+            <ref bean="comkerPermissionResource" />
             <ref bean="comkerQuestionResource" />
             <ref bean="swaggerResourceJSON" />
         </jaxrs:serviceBeans>

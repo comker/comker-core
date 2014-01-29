@@ -10,6 +10,7 @@ import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
 
 import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.po.ComkerSpotJoinModule;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -29,6 +30,8 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
     ComkerSpot findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
+
+    ComkerSpot get(String id);
 
     ComkerSpot getByCode(String code);
 
@@ -66,10 +69,21 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public ComkerSpot get(String id) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            ComkerSpot item = (ComkerSpot) session.get(ComkerSpot.class, id);
+            loadAggregationRefs(item);
+            return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerSpot getByCode(String code) {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put(FIELD_CODE, code);
-            return findWhere(params);
+            ComkerSpot item = findWhere(params);
+            loadAggregationRefs(item);
+            return item;
         }
 
         @Override
@@ -97,6 +111,18 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
             }
 
             return result;
+        }
+
+        //----------------------------------------------------------------------
+
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        private void loadAggregationRefs(ComkerSpot spot) {
+            if (spot == null) return;
+            spot.getIdsOfModuleList().clear();
+            List<ComkerSpotJoinModule> list = spot.getSpotJoinModuleList();
+            for(ComkerSpotJoinModule item:list) {
+                spot.getIdsOfModuleList().add(item.getModule().getId());
+            }
         }
     }
 }

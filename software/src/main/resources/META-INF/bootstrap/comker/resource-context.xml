@@ -17,6 +17,24 @@
         <property name="crewDao" ref="comkerCrewDao" />
     </bean>
 
+    <bean id="comkerSpotResource"
+            class="net.cokkee.comker.api.ComkerSpotResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="spotDao" ref="comkerSpotDao" />
+    </bean>
+
+    <bean id="comkerRoleResource"
+            class="net.cokkee.comker.api.ComkerRoleResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="roleDao" ref="comkerRoleDao" />
+    </bean>
+
+    <bean id="comkerPermissionResource"
+            class="net.cokkee.comker.api.ComkerPermissionResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="permissionDao" ref="comkerPermissionDao" />
+    </bean>
+
     <bean id="comkerQuestionResource"
             class="net.cokkee.comker.api.ComkerQuestionResource">
         <property name="storageManager" ref="comkerStorageManager" />

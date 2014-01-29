@@ -17,6 +17,18 @@ public interface ComkerSessionService {
     Map<String, Object> getCrewListCriteria();
 
     ComkerPager getCrewListPager();
+
+    Map<String, Object> getSpotListCriteria();
+
+    ComkerPager getSpotListPager();
+
+    Map<String, Object> getRoleListCriteria();
+
+    ComkerPager getRoleListPager();
+
+    Map<String, Object> getPermissionListCriteria();
+
+    ComkerPager getPermissionListPager();
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -62,6 +74,54 @@ public interface ComkerSessionService {
         @Override
         public ComkerPager getCrewListPager() {
             return crewListPager;
+        }
+
+        //----------------------------------------------------------------------
+
+        private Map<String,Object> spotListCriteria = new HashMap<String, Object>();
+
+        @Override
+        public Map<String, Object> getSpotListCriteria() {
+            return spotListCriteria;
+        }
+
+        private ComkerPager spotListPager = new ComkerPager();
+
+        @Override
+        public ComkerPager getSpotListPager() {
+            return spotListPager;
+        }
+
+        //----------------------------------------------------------------------
+
+        private Map<String,Object> roleListCriteria = new HashMap<String, Object>();
+
+        @Override
+        public Map<String, Object> getRoleListCriteria() {
+            return roleListCriteria;
+        }
+
+        private ComkerPager roleListPager = new ComkerPager();
+
+        @Override
+        public ComkerPager getRoleListPager() {
+            return roleListPager;
+        }
+
+        //----------------------------------------------------------------------
+
+        private Map<String,Object> permissionListCriteria = new HashMap<String, Object>();
+
+        @Override
+        public Map<String, Object> getPermissionListCriteria() {
+            return permissionListCriteria;
+        }
+
+        private ComkerPager permissionListPager = new ComkerPager();
+
+        @Override
+        public ComkerPager getPermissionListPager() {
+            return permissionListPager;
         }
     }
 }

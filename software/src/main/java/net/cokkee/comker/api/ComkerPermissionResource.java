@@ -6,19 +6,19 @@ import java.util.List;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import net.cokkee.comker.dao.ComkerCrewDao;
+import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.po.ComkerCrew;
+import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Api(value = "/crew", description = "Crew API")
-@javax.ws.rs.Path("/crew")
-public class ComkerCrewResource {
+@Api(value = "/permission", description = "Permission API")
+@javax.ws.rs.Path("/permission")
+public class ComkerPermissionResource {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerCrewResource.class);
+    private static Logger log = LoggerFactory.getLogger(ComkerPermissionResource.class);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -32,14 +32,14 @@ public class ComkerCrewResource {
         this.sessionService = sessionService;
     }
 
-    private ComkerCrewDao crewDao = null;
+    private ComkerPermissionDao permissionDao = null;
 
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
+    public ComkerPermissionDao getPermissionDao() {
+        return permissionDao;
     }
 
-    public void setCrewDao(ComkerCrewDao crewDao) {
-        this.crewDao = crewDao;
+    public void setPermissionDao(ComkerPermissionDao permissionDao) {
+        this.permissionDao = permissionDao;
     }
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,24 +48,24 @@ public class ComkerCrewResource {
     @javax.ws.rs.Path("/crud")
     @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
-        value = "List all of crews",
-        notes = "Returns list of crews",
-        response = ComkerCrew.class,
+        value = "List all of permissions",
+        notes = "Returns list of permissions",
+        response = ComkerPermission.class,
         responseContainer = "List")
-    public Response getCrewList() {
+    public Response getPermissionList() {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerCrewResource.getCrewList() - started");
+            log.debug("ComkerPermissionResource.getPermissionList() - started");
         }
-        List result = getCrewDao().findAllWhere(
-                getSessionService().getCrewListCriteria(),
-                getSessionService().getCrewListPager());
+        List result = getPermissionDao().findAllWhere(
+                getSessionService().getPermissionListCriteria(),
+                getSessionService().getPermissionListPager());
         
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
-                    "ComkerCrewResource.getCrewList() - the list had {0} items.",
+                    "ComkerPermissionResource.getPermissionList() - the list had {0} items.",
                     new Object[] {result.size()}));
         }
-        final GenericEntity<List<ComkerCrew>> entity = new GenericEntity<List<ComkerCrew>>(result) {};
+        final GenericEntity<List<ComkerPermission>> entity = new GenericEntity<List<ComkerPermission>>(result) {};
         return Response.ok(entity).build();
     }
 
@@ -73,19 +73,19 @@ public class ComkerCrewResource {
     @javax.ws.rs.Path("/crud/{id}")
     @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
-        value = "Find crew by ID",
-        notes = "Returns a crew by ID (UUID)",
-    response = ComkerCrew.class)
+        value = "Find permission by ID",
+        notes = "Returns a permission by ID (UUID)",
+    response = ComkerPermission.class)
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
-        @ApiResponse(code = 404, message = "Crew not found")})
-    public Response getCrewItem(
-            @ApiParam(value = "ID of crew that needs to be fetched", required = true)
+        @ApiResponse(code = 404, message = "Permission not found")})
+    public Response getPermissionItem(
+            @ApiParam(value = "ID of permission that needs to be fetched", required = true)
             @javax.ws.rs.PathParam("id") String id)
                     throws ComkerObjectNotFoundException {
-        ComkerCrew item = getCrewDao().get(id);
+        ComkerPermission item = getPermissionDao().get(id);
         if (item == null) {
-            throw new ComkerObjectNotFoundException(404, "Crew not found");
+            throw new ComkerObjectNotFoundException(404, "Permission not found");
         }
         return Response.ok().entity(item).build();
     }

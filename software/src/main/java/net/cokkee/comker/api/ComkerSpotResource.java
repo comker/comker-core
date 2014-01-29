@@ -6,19 +6,19 @@ import java.util.List;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import net.cokkee.comker.dao.ComkerCrewDao;
+import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.po.ComkerCrew;
+import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Api(value = "/crew", description = "Crew API")
-@javax.ws.rs.Path("/crew")
-public class ComkerCrewResource {
+@Api(value = "/spot", description = "Spot API")
+@javax.ws.rs.Path("/spot")
+public class ComkerSpotResource {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerCrewResource.class);
+    private static Logger log = LoggerFactory.getLogger(ComkerSpotResource.class);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -32,14 +32,14 @@ public class ComkerCrewResource {
         this.sessionService = sessionService;
     }
 
-    private ComkerCrewDao crewDao = null;
+    private ComkerSpotDao spotDao = null;
 
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
+    public ComkerSpotDao getSpotDao() {
+        return spotDao;
     }
 
-    public void setCrewDao(ComkerCrewDao crewDao) {
-        this.crewDao = crewDao;
+    public void setSpotDao(ComkerSpotDao spotDao) {
+        this.spotDao = spotDao;
     }
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,24 +48,24 @@ public class ComkerCrewResource {
     @javax.ws.rs.Path("/crud")
     @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
-        value = "List all of crews",
-        notes = "Returns list of crews",
-        response = ComkerCrew.class,
+        value = "List all of spots",
+        notes = "Returns list of spots",
+        response = ComkerSpot.class,
         responseContainer = "List")
-    public Response getCrewList() {
+    public Response getSpotList() {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerCrewResource.getCrewList() - started");
+            log.debug("ComkerSpotResource.getSpotList() - started");
         }
-        List result = getCrewDao().findAllWhere(
-                getSessionService().getCrewListCriteria(),
-                getSessionService().getCrewListPager());
+        List result = getSpotDao().findAllWhere(
+                getSessionService().getSpotListCriteria(),
+                getSessionService().getSpotListPager());
         
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
-                    "ComkerCrewResource.getCrewList() - the list had {0} items.",
+                    "ComkerSpotResource.getSpotList() - the list had {0} items.",
                     new Object[] {result.size()}));
         }
-        final GenericEntity<List<ComkerCrew>> entity = new GenericEntity<List<ComkerCrew>>(result) {};
+        final GenericEntity<List<ComkerSpot>> entity = new GenericEntity<List<ComkerSpot>>(result) {};
         return Response.ok(entity).build();
     }
 
@@ -73,19 +73,19 @@ public class ComkerCrewResource {
     @javax.ws.rs.Path("/crud/{id}")
     @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
-        value = "Find crew by ID",
-        notes = "Returns a crew by ID (UUID)",
-    response = ComkerCrew.class)
+        value = "Find spot by ID",
+        notes = "Returns a spot by ID (UUID)",
+    response = ComkerSpot.class)
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
-        @ApiResponse(code = 404, message = "Crew not found")})
-    public Response getCrewItem(
-            @ApiParam(value = "ID of crew that needs to be fetched", required = true)
+        @ApiResponse(code = 404, message = "Spot not found")})
+    public Response getSpotItem(
+            @ApiParam(value = "ID of spot that needs to be fetched", required = true)
             @javax.ws.rs.PathParam("id") String id)
                     throws ComkerObjectNotFoundException {
-        ComkerCrew item = getCrewDao().get(id);
+        ComkerSpot item = getSpotDao().get(id);
         if (item == null) {
-            throw new ComkerObjectNotFoundException(404, "Crew not found");
+            throw new ComkerObjectNotFoundException(404, "Spot not found");
         }
         return Response.ok().entity(item).build();
     }

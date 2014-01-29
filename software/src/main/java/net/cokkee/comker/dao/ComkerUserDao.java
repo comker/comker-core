@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerUser;
@@ -34,7 +35,13 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     ComkerUser getByUsername(String username);
 
+    ComkerUser create(ComkerUser item);
+
     ComkerUser save(ComkerUser item);
+
+    void delete(ComkerUser item);
+
+    void delete(String id);
 
     void addCrew(ComkerUser user, ComkerCrew crew);
 
@@ -118,10 +125,43 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerUser create(ComkerUser item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+
+            if (getByUsername(item.getUsername()) != null) {
+                throw new ComkerFieldDuplicatedException(400, "Username has already existed");
+            }
+
+            if (getByEmail(item.getEmail()) != null) {
+                throw new ComkerFieldDuplicatedException(400, "Email has already existed");
+            }
+
+            session.save(item);
+            
+            return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public ComkerUser save(ComkerUser item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
             return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(ComkerUser item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.delete(item);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(String id) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
+            session.delete(item);
         }
 
         @Override

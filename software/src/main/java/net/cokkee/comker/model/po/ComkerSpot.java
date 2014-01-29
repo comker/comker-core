@@ -1,7 +1,9 @@
 package net.cokkee.comker.model.po;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,7 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -40,6 +44,8 @@ public class ComkerSpot extends ComkerAbstractItem {
             new LinkedList<ComkerSpotJoinModule>();
     private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
             new LinkedList<ComkerCrewJoinRoleWithSpot>();
+
+    private Set<String> idsOfModuleList = new HashSet<String>();
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -89,6 +95,7 @@ public class ComkerSpot extends ComkerAbstractItem {
         this.spotJoinModuleList = spotJoinModule;
     }
 
+    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.spot")
     public List<ComkerCrewJoinRoleWithSpot> getCrewJoinRoleWithSpotList() {
         return crewJoinRoleWithSpotList;
@@ -96,5 +103,14 @@ public class ComkerSpot extends ComkerAbstractItem {
 
     public void setCrewJoinRoleWithSpotList(List<ComkerCrewJoinRoleWithSpot> item) {
         this.crewJoinRoleWithSpotList = item;
+    }
+
+    @Transient
+    public Set<String> getIdsOfModuleList() {
+        return idsOfModuleList;
+    }
+
+    public void setIdsOfModuleList(Set<String> idsOfModuleList) {
+        this.idsOfModuleList = idsOfModuleList;
     }
 }
