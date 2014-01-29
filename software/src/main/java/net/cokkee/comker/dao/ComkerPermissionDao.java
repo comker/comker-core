@@ -41,6 +41,7 @@ public interface ComkerPermissionDao {
 
     ComkerPermission save(ComkerPermission item);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerPermissionDao {

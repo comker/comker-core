@@ -62,6 +62,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerCrewDao {
 

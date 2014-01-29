@@ -39,6 +39,8 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerSpotDao {
 

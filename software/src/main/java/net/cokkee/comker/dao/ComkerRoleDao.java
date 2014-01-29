@@ -45,6 +45,8 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
     void removePermission(ComkerRole role, ComkerPermission permission);
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerRoleDao {
 
