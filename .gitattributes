@@ -66,6 +66,8 @@ software/src/main/resources/META-INF/bootstrap/comker/hibernate-context.xml -tex
 software/src/main/resources/META-INF/bootstrap/comker/resource-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/service-context.xml -text
+software/src/main/resources/META-INF/resources/comker/app/locales/en/common.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/en/user.json -text
 software/src/main/resources/META-INF/resources/comker/app/models/userCollection.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userFilter.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userObject.js -text
@@ -99,8 +101,8 @@ software/src/main/resources/META-INF/resources/comker/lib/bootstrap/img/glyphico
 software/src/main/resources/META-INF/resources/comker/lib/bootstrap/img/glyphicons-halflings.png -text
 software/src/main/resources/META-INF/resources/comker/lib/bootstrap/js/bootstrap.js -text
 software/src/main/resources/META-INF/resources/comker/lib/bootstrap/js/bootstrap.min.js -text
-software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next-1.7.1.js -text
-software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next-1.7.1.min.js -text
+software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next-min.js -text
+software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next.js -text
 software/src/main/resources/META-INF/resources/comker/lib/jquery/1.10.2/jquery-1.10.2.min.js -text
 software/src/main/resources/META-INF/resources/comker/lib/jquery/1.8.3/jquery.js -text
 software/src/main/resources/META-INF/resources/comker/lib/json2/1.0.0/json2.js -text

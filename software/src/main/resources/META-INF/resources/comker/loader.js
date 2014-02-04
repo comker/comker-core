@@ -5,7 +5,14 @@ require.config({
         backbone: 'lib/backbone/1.1.0-amdjs/backbone',
         logging: 'app/utils/loggingStarter',
         log4javascript: 'lib/log4javascript/1.4.6/log4javascript',
-        bootstrap: 'lib/bootstrap/js/bootstrap.min'
+        bootstrap: 'lib/bootstrap/js/bootstrap.min',
+        i18n: 'lib/i18next/1.7.1/i18next'
+    },
+    shim: {
+        'i18n' : {
+            deps: ['jquery'],
+            exports: 'i18n'
+        }
     }
 });
 

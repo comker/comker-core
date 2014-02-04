@@ -2,10 +2,11 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'i18n',
     'utils',
     'app/models/userCollection',
     'app/views/userObjectView',
-], function($, _, Backbone, Coke, UserCollection, UserObjectView) {
+], function($, _, Backbone, i18n, Coke, UserCollection, UserObjectView) {
 
     var UserCollectionView = Backbone.View.extend({
         el: '#content',
@@ -98,6 +99,7 @@ define([
                 that.$el.find(".panelMessage").empty();
                 that.$el.find(".panelContent").html(strg);
                 that.$el.find("#panelDialog").slideDown("fast", function() {});
+                that.$el.i18n();
             });
         },
 
@@ -118,6 +120,7 @@ define([
                 that.$el.find(".panelMessage").empty();
                 that.$el.find(".panelContent").html(strg);
                 that.$el.find("#panelDialog").slideDown("fast", function() {});
+                that.$el.i18n();
             });
         },
 

@@ -55,6 +55,15 @@ define([
         return x !== undefined;
     }
 
+    //------------------------------------------------------- i18n configuration
+    tool.i18nConfig = {
+        lang: 'en',
+        debug: true,
+        fallbackLng: false,
+        load:'unspecific',
+        resGetPath: "app/locales/__lng__/__ns__.json"
+    }
+
     //------------------------------------------------------------------- Return
     return tool;
 });

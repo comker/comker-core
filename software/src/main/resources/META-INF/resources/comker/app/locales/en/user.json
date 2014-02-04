@@ -1,0 +1,12 @@
+{
+    "home": "Homepage",
+    "user": {
+        "collection": {
+            "title": "Users Collection"
+        },
+        "form": {
+            "fullname": "Fullname",
+            "email": "E-mail"
+        }
+    }
+}

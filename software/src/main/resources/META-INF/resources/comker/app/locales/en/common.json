@@ -1,0 +1,10 @@
+{
+    "button": {
+        "add": {
+            "label": "Add"
+        },
+        "cancel": {
+            "label": "Cancel"
+        }
+    }
+}

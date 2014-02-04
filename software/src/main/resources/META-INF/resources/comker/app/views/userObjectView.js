@@ -2,9 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'i18n',
     'utils',
     'app/models/userObject',
-], function($, _, Backbone, Coke, UserObject) {
+], function($, _, Backbone, i18n, Coke, UserObject) {
 
     var UserObjectView = Backbone.View.extend({
         tagName: 'div',
@@ -28,6 +29,7 @@ define([
             Coke.TemplateManager.get('user', function(tmpl) {
                 var $tmpl = tmpl(that.model.toJSON());
                 that.$el.html($tmpl);
+                that.$el.i18n();
             });
             return this;
         },
@@ -63,6 +65,7 @@ define([
                 that.$el.find(".user-message").empty();
                 that.$el.find(".user-content").html($tmpl);
                 that.$el.find(".user-dialog").slideDown("fast", function() {});
+                that.$el.i18n();
             });
         },
 
@@ -84,6 +87,7 @@ define([
                 that.$el.find(".user-message").empty();
                 that.$el.find(".user-content").html($tmpl);
                 that.$el.find(".user-dialog").slideDown("fast", function() {});
+                that.$el.i18n();
             });
         },
 
@@ -127,6 +131,7 @@ define([
                 that.$el.find(".user-message").empty();
                 that.$el.find(".user-content").html($tmpl);
                 that.$el.find(".user-dialog").slideDown("fast", function() {});
+                that.$el.i18n();
             });
         },
 

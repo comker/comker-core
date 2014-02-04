@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'i18n',
     'utils',
-], function($, _, Backbone, Coke){
+], function($, _, Backbone, i18n, Coke){
 
     var CollectionLayoutView = Backbone.View.extend({
         el: $("#page"),

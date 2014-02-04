@@ -2,9 +2,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'i18n',
     'utils',
     'app/views/homepageView',
-], function($, _, Backbone, Coke, HomepageView) {
+], function($, _, Backbone, i18n, Coke, HomepageView) {
     var HomepageRouter = Backbone.Router.extend({
         initialize: function(options) {
             options = options || {};
