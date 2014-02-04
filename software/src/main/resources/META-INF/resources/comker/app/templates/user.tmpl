@@ -1,0 +1,19 @@
+<div class="user-container">
+    <div class="user-overview">
+        <img src="<%= coverImage %>" class="img-polaroid" />
+        <ul>
+            <li class="useritem-title"><%= username %></li>
+            <li><%= fullname %></li>
+            <li><%= email %></li>
+            <li class="useritem-keywords"><%= enabled %></li>
+        </ul>
+
+        <button class="user-button delete btn btn-danger btn-small">Delete</button>
+        <button class="user-button update btn btn-info btn-small">Update</button>
+        <button class="user-button detail btn btn-info btn-small">Detail</button>
+    </div>
+    <div class="user-dialog">
+        <div class="user-message"></div>
+        <div class="user-content"></div>
+    </div>
+</div>

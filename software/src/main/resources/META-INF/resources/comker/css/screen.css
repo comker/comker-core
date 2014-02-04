@@ -1,0 +1,226 @@
+/* 
+    Document   : screen
+    Created on : Dec 24, 2013, 3:07:48 PM
+    Author     : drupalex
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    background-color: #eee;
+}
+
+.wrap {
+    width: 980px;
+    margin: 0 auto;
+}
+
+#page {
+    width: 980px;
+    margin: 0 auto;
+    padding: 0 40px 35px;
+    background: white;
+    moz-box-shadow: 3px 0 20px #000;
+    -webkit-box-shadow: 3px 0 20px #000;
+    box-shadow: 3px 0 20px #000;
+    margin-bottom: 50px;
+}
+
+#page #header {
+    padding-top: 40px;
+}
+
+#page #header h1 {
+    color: #2b81af;
+}
+
+#page #content {
+    display: inline-table;
+    width: 100%;
+}
+
+/**
+ * Style for a user
+ */
+
+.user-container {
+    outline: 1px solid #aaa;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.user-overview {
+    height: 130px;
+    width: 100%;
+    background-color: #fff;
+    margin-top: 5px;
+}
+
+.user-overview img {
+    float: left;
+    margin: 10px;
+    width: 85px;
+}
+
+.user-overview ul {
+    position: relative;
+    list-style-type: none;
+    padding-top: 10px;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.user-overview .user-button {
+    float: right;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 5px;
+    right: 10px;
+    bottom: 0;
+}
+
+.user-overview .useritem-title {
+    font-weight: bold;
+}
+
+.user-overview .useritem-keywords {
+    font-style: italic;
+}
+
+.user-dialog {
+    display: none;
+    border-top: 1px dashed silver;
+}
+
+.user-dialog .user-message {
+}
+
+.user-dialog .user-message .alert {
+    margin-bottom: 0px;
+}
+
+.user-dialog .user-content {
+    margin-bottom: 5px;
+    background-color: #EAEAEA;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+.user-dialog .user-content form {
+    margin: 0;
+}
+
+/**
+ * Add a new user Form
+ */
+
+ .user-x-form ul {
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+
+.user-x-form ul li {
+    display: inline;
+}
+
+/*
+.user-x-form button {
+    display: block;
+    margin: 5px 20px 10px 10px;
+    float: right;
+    clear: both;
+}
+*/
+.user-x-form div {
+}
+
+.user-x-form div:after {
+    content: "";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+    font-size: 0;
+    line-height: 0;
+}
+
+/*
+ *
+ */
+
+div.panelToggle {
+}
+
+div.panelToggle div.panelToolbar {
+    -moz-border-radius: 4px 4px 4px 4px;
+    background: repeat-x scroll 50% 50% #CCCCCC;
+    border: 1px solid #AAAAAA;
+    color: #222222;
+    font-weight: bold;
+    display: block;
+    height: 30px;
+}
+
+div.panelToggle div.panelToolbar ul {
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+
+div.panelToggle div.panelToolbar ul li {
+    display: inline;
+}
+
+div.panelToggle div.panelToolbar ul li button {
+    float: left;
+    margin: 3px;
+    margin-right: 4px;
+    min-width: 30px;
+}
+
+div.panelToggle div.panelToolbar div#status,
+div.panelToggle div.panelToolbar div#message {
+    display: inline;
+}
+
+div.panelToggle div.panelToolbar div#pagination {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+div.panelToggle div.panelDialog {
+    display: none;
+    background-color: #EAEAEA;
+    border: 1px dashed silver;
+}
+
+div.panelToggle div.panelMessage {
+}
+
+div.panelToggle div.panelMessage .alert {
+    margin-bottom: 0px;
+}
+
+div.panelToggle div.panelContent {
+    position: relative;
+    min-height: 50px;
+    background-color: #EAEAEA;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+div.panelToggle div.panelContent form {
+    margin-bottom: 0px;
+}
+
+.navbar .branxd {
+height: 40px;
+margin: 0 9px;
+border-right: 1px solid white;
+border-left: 1px solid #F2F2F2;
+}

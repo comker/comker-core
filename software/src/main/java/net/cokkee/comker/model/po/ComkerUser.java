@@ -73,7 +73,7 @@ public class ComkerUser extends ComkerAbstractItem {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     @Column(name = "f_username", unique = true, nullable = false, length = 64)
     public String getUsername() {
         return username;
