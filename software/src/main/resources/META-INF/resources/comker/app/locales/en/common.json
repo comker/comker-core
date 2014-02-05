@@ -3,8 +3,26 @@
         "add": {
             "label": "Add"
         },
+        "save": {
+            "label": "Save"
+        },
+        "close": {
+            "label": "Close"
+        },
         "cancel": {
             "label": "Cancel"
+        },
+        "filter": {
+            "label": "Filter"
+        },
+        "detail": {
+            "label": "Detail"
+        },
+        "update": {
+            "label": "Update"
+        },
+        "delete": {
+            "label": "Delete"
         }
     }
 }

@@ -1,5 +1,19 @@
 {
     "brand": {
         "label": "Administration"
+    },
+    "item": {
+        "home": {
+            "label": "Home"
+        },
+        "collection": {
+            "label": "Collection",
+            "user": {
+                "label": "Users"
+            },
+            "crew": {
+                "label": "Groups"
+            }
+        }
     }
 }
