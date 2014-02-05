@@ -107,7 +107,8 @@ software/src/main/resources/META-INF/resources/comker/lib/bootstrap/js/bootstrap
 software/src/main/resources/META-INF/resources/comker/lib/bootstrap/js/bootstrap.min.js -text
 software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next-min.js -text
 software/src/main/resources/META-INF/resources/comker/lib/i18next/1.7.1/i18next.js -text
-software/src/main/resources/META-INF/resources/comker/lib/jquery/1.10.2/jquery-1.10.2.min.js -text
+software/src/main/resources/META-INF/resources/comker/lib/jquery/1.10.2/jquery-min.js -text
+software/src/main/resources/META-INF/resources/comker/lib/jquery/1.10.2/jquery.js -text
 software/src/main/resources/META-INF/resources/comker/lib/jquery/1.8.3/jquery.js -text
 software/src/main/resources/META-INF/resources/comker/lib/json2/1.0.0/json2.js -text
 software/src/main/resources/META-INF/resources/comker/lib/log4javascript/1.4.6/log4javascript.js -text
