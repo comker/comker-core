@@ -6,13 +6,13 @@ define([
     'utils',
 ], function($, _, Backbone, i18n, Coke){
 
-    var HomepageView = Backbone.View.extend({
+    var HomeView = Backbone.View.extend({
         el: $("#page"),
 
         render: function() {
-            Coke.log.debug("run HomepageView.render()");
+            Coke.log.debug("run HomeView.render()");
             var that = this;
-            Coke.TemplateManager.get('homepage', function(tmpl) {
+            Coke.TemplateManager.get('home', function(tmpl) {
                 var $tmpl = tmpl({});
                 that.$el.html($tmpl);
                 that.$el.i18n();
@@ -20,5 +20,5 @@ define([
         }
     });
 
-    return HomepageView;
+    return HomeView;
 });

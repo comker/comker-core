@@ -80,7 +80,7 @@ define([
             var that = this;
             i18n.init(_.extend(Coke.i18nConfig, {
                 ns: {
-                    namespaces: ['common', 'user'],
+                    namespaces: ['common', 'navbar', 'user'],
                     defaultNs: 'user'
                 }
             }), function(t) {
@@ -90,9 +90,10 @@ define([
                 that.layoutView.render({afterTrigger: function() {
                     that.collectionView = new UserCollectionView({router: that});
                     that.collectionView.startup({afterTrigger: function() {
-                        if (callback != undefined) callback();
+                        if (_.isFunction(callback)) callback();
                     }});
                 }});
+                $('#navigation').i18n();
             });
         }
     });

@@ -3,14 +3,14 @@ define([
     'underscore',
     'backbone',
     'utils',
-    'app/routers/homepageRouter',
+    'app/routers/homeRouter',
     'app/routers/userRouter',
-], function($, _, Backbone, Coke, HomepageRouter, UserRouter){
+], function($, _, Backbone, Coke, HomeRouter, UserRouter) {
     var initialize = function() {
         Coke.log.debug('Start the application');
 
-        Coke.log.debug('Create HomepageRouter object');
-        var homepageRouter = new HomepageRouter();
+        Coke.log.debug('Create HomeRouter object');
+        var homeRouter = new HomeRouter();
 
         Coke.log.debug('Create UserRouter object');
         var userRouter = new UserRouter();

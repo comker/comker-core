@@ -67,14 +67,15 @@ software/src/main/resources/META-INF/bootstrap/comker/resource-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/service-context.xml -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/common.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/en/navbar.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/user.json -text
 software/src/main/resources/META-INF/resources/comker/app/models/userCollection.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userFilter.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userObject.js -text
-software/src/main/resources/META-INF/resources/comker/app/routers/homepageRouter.js -text
+software/src/main/resources/META-INF/resources/comker/app/routers/homeRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/routers/userRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/templates/collection-layout.tmpl -text
-software/src/main/resources/META-INF/resources/comker/app/templates/homepage.tmpl -text
+software/src/main/resources/META-INF/resources/comker/app/templates/home.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-create-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-delete-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-detail-form.tmpl -text
@@ -82,7 +83,7 @@ software/src/main/resources/META-INF/resources/comker/app/templates/user-filter-
 software/src/main/resources/META-INF/resources/comker/app/templates/user-update-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/views/collectionLayoutView.js -text
-software/src/main/resources/META-INF/resources/comker/app/views/homepageView.js -text
+software/src/main/resources/META-INF/resources/comker/app/views/homeView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/userCollectionView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/userObjectView.js -text
 software/src/main/resources/META-INF/resources/comker/css/screen.css -text

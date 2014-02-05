@@ -28,7 +28,7 @@ define([
             Coke.TemplateManager.get('collection-layout', function(tmpl) {
                 var $tmpl = tmpl({title: that.title});
                 that.$el.html($tmpl);
-                if (params.afterTrigger != undefined) {
+                if (_.isFunction(params.afterTrigger)) {
                     params.afterTrigger();
                 }
             });

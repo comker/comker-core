@@ -58,7 +58,7 @@ define([
             var beforeFinish = _.after(that.collection.length, function() {
                 that.stateRendered = true;
                 Coke.log.debug('run afterTrigger of UserCollectionView.render()');
-                if (params.afterTrigger != undefined) {
+                if (_.isFunction(params.afterTrigger)) {
                     params.afterTrigger();
                 }
                 Coke.log.debug('UserCollectionView.render() done!');
