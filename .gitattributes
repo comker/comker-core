@@ -69,6 +69,8 @@ software/src/main/resources/META-INF/bootstrap/comker/service-context.xml -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/common.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/navbar.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/user.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/vi/common.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/vi/navbar.json -text
 software/src/main/resources/META-INF/resources/comker/app/models/userCollection.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userFilter.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userObject.js -text
@@ -80,6 +82,7 @@ software/src/main/resources/META-INF/resources/comker/app/templates/user-create-
 software/src/main/resources/META-INF/resources/comker/app/templates/user-delete-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-detail-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-filter-form.tmpl -text
+software/src/main/resources/META-INF/resources/comker/app/templates/user-toolbar-buttons.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user-update-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/user.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/views/collectionLayoutView.js -text

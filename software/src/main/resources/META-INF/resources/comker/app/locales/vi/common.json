@@ -1,0 +1,58 @@
+{
+    "button": {
+        "add": {
+            "label": "Thêm"
+        },
+        "save": {
+            "label": "Lưu"
+        },
+        "close": {
+            "label": "Đóng"
+        },
+        "cancel": {
+            "label": "Quay lại"
+        },
+        "filter": {
+            "label": "Lọc tìm...",
+            "submit": {
+                "label": "Thực hiện"
+            },
+            "cancel": {
+                "label": "Hủy lệnh"
+            }
+        },
+        "create": {
+            "label": "Thêm mới...",
+            "submit": {
+                "label": "Thực hiện"
+            },
+            "cancel": {
+                "label": "Hủy lệnh"
+            }
+        },
+        "detail": {
+            "label": "Chi tiết...",
+            "cancel": {
+                "label": "Đóng lại"
+            }
+        },
+        "update": {
+            "label": "Sửa...",
+            "submit": {
+                "label": "Thực hiện"
+            },
+            "cancel": {
+                "label": "Hủy lệnh"
+            }
+        },
+        "delete": {
+            "label": "Xóa...",
+            "submit": {
+                "label": "Đồng ý"
+            },
+            "cancel": {
+                "label": "Hủy lệnh"
+            }
+        }
+    }
+}

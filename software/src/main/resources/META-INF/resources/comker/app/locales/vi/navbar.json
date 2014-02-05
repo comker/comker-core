@@ -1,0 +1,37 @@
+{
+    "brand": {
+        "label": "QUẢN TRỊ"
+    },
+    "item": {
+        "home": {
+            "label": "Trang chủ"
+        },
+        "collection": {
+            "label": "Danh mục",
+            "user": {
+                "label": "Người dùng"
+            },
+            "crew": {
+                "label": "Nhóm"
+            },
+            "spot": {
+                "label": "Tổ chức"
+            },
+            "role": {
+                "label": "Vai trò"
+            },
+            "permission": {
+                "label": "Quyền thực thi"
+            }
+        },
+        "tool": {
+            "label": "Công cụ"
+        },
+        "account": {
+            "label": "Tài khoản"
+        },
+        "logout": {
+            "label": "Thoát"
+        }
+    }
+}

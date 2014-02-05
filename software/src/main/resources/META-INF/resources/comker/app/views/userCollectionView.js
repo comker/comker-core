@@ -41,20 +41,20 @@ define([
         },
 
         render: function(params) {
+            var that = this;
             params = params || {};
 
             Coke.log.debug("run UserCollectionView.render()");
 
             if (this.$el.find("#panelToolbar").find("ul").is(':empty')) {
-                this.$el.find("#panelToolbar").find("ul")
-                    .append('<li><button class="btn btn-info btn-small filter">Filter</button></li>')
-                    .append('<li><button class="btn btn-info btn-small create">New user</button></li>');
+                Coke.TemplateManager.get('user-toolbar-buttons', function(strg) {
+                    that.$el.find("#panelToolbar").find("ul").html(strg);
+                });
             }
             this.$el.find('#panelDialog').slideUp("fast", function() {});
 
             this.$el.find("#panelMain").empty();
 
-            var that = this;
             var beforeFinish = _.after(that.collection.length, function() {
                 that.stateRendered = true;
                 Coke.log.debug('run afterTrigger of UserCollectionView.render()');
