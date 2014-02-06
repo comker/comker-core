@@ -37,7 +37,7 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     ComkerUser create(ComkerUser item);
 
-    ComkerUser save(ComkerUser item);
+    ComkerUser update(ComkerUser item);
 
     void delete(ComkerUser item);
 
@@ -143,7 +143,7 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public ComkerUser save(ComkerUser item) {
+        public ComkerUser update(ComkerUser item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
             return item;

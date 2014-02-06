@@ -175,7 +175,7 @@ public interface ComkerInitializationService {
             if (item == null) {
                 item = sampleUsers.get(email);
                 if (item == null) return null;
-                getUserDao().save(item);
+                getUserDao().update(item);
             }
             return item;
         }

@@ -138,7 +138,7 @@ public class ComkerUserResource {
             throw new ComkerInvalidParameterException(400, "Invalid ID supplied");
         }
 
-        ComkerUser current = getUserDao().get(id);
+        ComkerUser current = getUserDao().update(item);
         if (current == null) {
             throw new ComkerObjectNotFoundException(404, "User not found");
         }
