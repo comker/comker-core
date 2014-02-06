@@ -1,0 +1,10 @@
+{
+    "permission": {
+        "collection": {
+            "title": "Permissions Collection"
+        },
+        "description": {
+            "ROLE_SYSA": "This is the highest permission, that has the right for doing ALL of functions."
+        }
+    }
+}
