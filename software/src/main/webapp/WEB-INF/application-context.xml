@@ -48,6 +48,7 @@
     </bean>
 
     <util:list id="jsonKeys">
+        <value>permissions</value>
         <value>valueSet</value>
         <value>idsOfCrewList</value>
         <value>idsOfGlobalRoleList</value>
@@ -75,6 +76,7 @@
 
     <jaxrs:server id="comkerApiService" address="/comker/api">
         <jaxrs:serviceBeans>
+            <ref bean="comkerAuthResource" />
             <ref bean="comkerUserResource" />
             <ref bean="comkerCrewResource" />
             <ref bean="comkerSpotResource" />

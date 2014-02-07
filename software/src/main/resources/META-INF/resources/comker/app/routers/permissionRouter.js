@@ -47,23 +47,21 @@ define([
 
         renderPermissionPage: function(callback) {
             var that = this;
-            i18n.init(_.extend(Coke.i18nConfig, {
-                ns: {
-                    namespaces: ['common', 'navigation', 'permission'],
-                    defaultNs: 'permission'
-                }
-            }), function(t) {
-                that.layoutView = new CollectionLayoutView({
-                    title: t('permission.collection.title', {defaultValue: 'Permissions'})
-                });
-                that.layoutView.render({afterTrigger: function() {
-                    that.collectionView = new PermissionCollectionView({router: that});
-                    that.collectionView.startup({afterTrigger: function() {
-                        if (_.isFunction(callback)) callback();
+            Coke.startup({
+                i18nNamespaces: ['permission'],
+                afterTrigger: function(t, session) {
+                    that.layoutView = new CollectionLayoutView({
+                        title: t('permission:permission.collection.title', {defaultValue: 'Permissions'})
+                    });
+                    that.layoutView.render({afterTrigger: function() {
+                        that.collectionView = new PermissionCollectionView({router: that});
+                        that.collectionView.startup({afterTrigger: function() {
+                            if (_.isFunction(callback)) callback();
+                        }});
                     }});
-                }});
-                that.navigationView = new NavigationView();
-                that.navigationView.render();
+                    that.navigationView = new NavigationView();
+                    that.navigationView.render();
+                }
             });
         }
     });

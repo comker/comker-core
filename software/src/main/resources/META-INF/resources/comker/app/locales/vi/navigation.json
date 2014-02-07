@@ -17,6 +17,9 @@
             "spot": {
                 "label": "Tổ chức"
             },
+            "module": {
+                "label": "Phân hệ"
+            },
             "role": {
                 "label": "Vai trò"
             },

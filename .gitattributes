@@ -4,6 +4,7 @@ software/nb-configuration.xml -text
 software/nbactions.xml -text
 software/pom.xml -text
 software/src/main/etc/jetty.xml -text
+software/src/main/java/net/cokkee/comker/api/ComkerAuthResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerCrewResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerExceptionMapper.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerPermissionResource.java -text
@@ -26,6 +27,7 @@ software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionResponse.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerObject.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerPager.java -text
+software/src/main/java/net/cokkee/comker/model/ComkerSessionInfo.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerStatus.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerUserDetails.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAbstractItem.java -text
@@ -120,6 +122,7 @@ software/src/main/resources/META-INF/resources/comker/app/views/userObjectView.j
 software/src/main/resources/META-INF/resources/comker/css/auth-screen.css -text
 software/src/main/resources/META-INF/resources/comker/css/main-screen.css -text
 software/src/main/resources/META-INF/resources/comker/css/role-screen.css -text
+software/src/main/resources/META-INF/resources/comker/css/user-screen.css -text
 software/src/main/resources/META-INF/resources/comker/index.html -text
 software/src/main/resources/META-INF/resources/comker/lib/backbone.localStorage/1.1.0/backbone.localStorage.js -text
 software/src/main/resources/META-INF/resources/comker/lib/backbone/1.0.0/backbone.js -text

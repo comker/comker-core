@@ -79,23 +79,21 @@ define([
 
         renderUserPage: function(callback) {
             var that = this;
-            i18n.init(_.extend(Coke.i18nConfig, {
-                ns: {
-                    namespaces: ['common', 'navigation', 'user'],
-                    defaultNs: 'user'
-                }
-            }), function(t) {
-                that.layoutView = new CollectionLayoutView({
-                    title: t('user.collection.title', {defaultValue: 'Users'})
-                });
-                that.layoutView.render({afterTrigger: function() {
-                    that.collectionView = new UserCollectionView({router: that});
-                    that.collectionView.startup({afterTrigger: function() {
-                        if (_.isFunction(callback)) callback();
+            Coke.startup({
+                i18nNamespaces: ['user'],
+                afterTrigger: function(t, session) {
+                    that.layoutView = new CollectionLayoutView({
+                        title: t('user:user.collection.title', {defaultValue: 'Users'})
+                    });
+                    that.layoutView.render({afterTrigger: function() {
+                        that.collectionView = new UserCollectionView({router: that});
+                        that.collectionView.startup({afterTrigger: function() {
+                            if (_.isFunction(callback)) callback();
+                        }});
                     }});
-                }});
-                that.navigationView = new NavigationView();
-                that.navigationView.render();
+                    that.navigationView = new NavigationView();
+                    that.navigationView.render();
+                }
             });
         }
     });

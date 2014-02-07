@@ -20,15 +20,12 @@ define([
             var self = this;
             Coke.log.debug("run AuthRouter.onRouteLogin()");
 
-            i18n.init(_.extend(Coke.i18nConfig, {
-                ns: {
-                    namespaces: ['common', 'navigation', 'auth'],
-                    defaultNs: 'auth'
+            Coke.startup({
+                i18nNamespaces: ['auth'],
+                afterTrigger: function(t, session) {
+                    self.loginView = new AuthLoginView({router: self});
+                    self.loginView.render();
                 }
-            }), function(t) {
-                self.loginView = new AuthLoginView({router: self});
-                self.loginView.render();
-                $('#navigation').i18n();
             });
         }
     });

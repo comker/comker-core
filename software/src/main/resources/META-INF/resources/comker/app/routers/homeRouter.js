@@ -28,16 +28,14 @@ define([
 
         renderHomePage: function(callback) {
             var that = this;
-            i18n.init(_.extend(Coke.i18nConfig, {
-                ns: {
-                    namespaces: ['common', 'navigation'],
-                    defaultNs: 'common'
+            Coke.startup({
+                i18nNamespaces: ['home'],
+                afterTrigger: function(t, session) {
+                    that.homeView = new HomeView();
+                    that.homeView.render();
+                    that.navigationView = new NavigationView();
+                    that.navigationView.render();
                 }
-            }), function(t) {
-                that.homeView = new HomeView();
-                that.homeView.render();
-                that.navigationView = new NavigationView();
-                that.navigationView.render();
             });
         }
     });

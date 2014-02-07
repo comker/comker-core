@@ -193,7 +193,7 @@ public interface ComkerInitializationService {
             if (item == null) {
                 item = sampleSpots.get(code);
                 if (item == null) return null;
-                getSpotDao().save(item);
+                getSpotDao().update(item);
             }
             return item;
         }

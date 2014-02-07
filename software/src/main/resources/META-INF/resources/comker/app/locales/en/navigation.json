@@ -13,6 +13,18 @@
             },
             "crew": {
                 "label": "Groups"
+            },
+            "spot": {
+                "label": "Workspaces"
+            },
+            "module": {
+                "label": "Modules"
+            },
+            "role": {
+                "label": "Roles"
+            },
+            "permission": {
+                "label": "Permissions"
             }
         }
     }

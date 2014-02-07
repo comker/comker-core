@@ -5,6 +5,11 @@
             http://www.springframework.org/schema/beans 
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="comkerAuthResource"
+            class="net.cokkee.comker.api.ComkerAuthResource">
+        <property name="sessionService" ref="comkerSessionService" />
+    </bean>
+
     <bean id="comkerUserResource"
             class="net.cokkee.comker.api.ComkerUserResource">
         <property name="sessionService" ref="comkerSessionService" />

@@ -19,8 +19,12 @@
 
     <jaxrs:server id="comkerApiService" address="/comker/api">
         <jaxrs:serviceBeans>
+            <ref bean="comkerAuthResource" />
             <ref bean="comkerUserResource" />
             <ref bean="comkerCrewResource" />
+            <ref bean="comkerSpotResource" />
+            <ref bean="comkerRoleResource" />
+            <ref bean="comkerPermissionResource" />
             <ref bean="comkerQuestionResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
