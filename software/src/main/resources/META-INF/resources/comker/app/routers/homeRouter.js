@@ -4,8 +4,9 @@ define([
     'backbone',
     'i18n',
     'utils',
+    'app/views/navigationView',
     'app/views/homeView',
-], function($, _, Backbone, i18n, Coke, HomeView) {
+], function($, _, Backbone, i18n, Coke, NavigationView, HomeView) {
     var HomeRouter = Backbone.Router.extend({
         initialize: function(options) {
             options = options || {};
@@ -29,13 +30,14 @@ define([
             var that = this;
             i18n.init(_.extend(Coke.i18nConfig, {
                 ns: {
-                    namespaces: ['common', 'navbar'],
+                    namespaces: ['common', 'navigation'],
                     defaultNs: 'common'
                 }
             }), function(t) {
                 that.homeView = new HomeView();
                 that.homeView.render();
-                $('#navigation').i18n();
+                that.navigationView = new NavigationView();
+                that.navigationView.render();
             });
         }
     });

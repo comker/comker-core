@@ -3,13 +3,17 @@ define([
     'underscore',
     'backbone',
     'utils',
+    'app/routers/authRouter',
     'app/routers/homeRouter',
     'app/routers/permissionRouter',
     'app/routers/roleRouter',
     'app/routers/userRouter',
-], function($, _, Backbone, Coke, HomeRouter, PermissionRouter, RoleRouter, UserRouter) {
+], function($, _, Backbone, Coke, AuthRouter, HomeRouter, PermissionRouter, RoleRouter, UserRouter) {
     var initialize = function() {
         Coke.log.debug('Start the application');
+
+        Coke.log.debug('Create AuthRouter object');
+        var authRouter = new AuthRouter();
 
         Coke.log.debug('Create HomeRouter object');
         var homeRouter = new HomeRouter();

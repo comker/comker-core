@@ -4,9 +4,10 @@ define([
     'backbone',
     'i18n',
     'utils',
+    'app/views/navigationView',
     'app/views/collectionLayoutView',
     'app/views/userCollectionView',
-], function($, _, Backbone, i18n, Coke, CollectionLayoutView, UserCollectionView) {
+], function($, _, Backbone, i18n, Coke, NavigationView, CollectionLayoutView, UserCollectionView) {
 
     var UserRouter = Backbone.Router.extend({
         initialize: function(params) {
@@ -80,7 +81,7 @@ define([
             var that = this;
             i18n.init(_.extend(Coke.i18nConfig, {
                 ns: {
-                    namespaces: ['common', 'navbar', 'user'],
+                    namespaces: ['common', 'navigation', 'user'],
                     defaultNs: 'user'
                 }
             }), function(t) {
@@ -93,7 +94,8 @@ define([
                         if (_.isFunction(callback)) callback();
                     }});
                 }});
-                $('#navigation').i18n();
+                that.navigationView = new NavigationView();
+                that.navigationView.render();
             });
         }
     });

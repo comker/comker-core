@@ -4,9 +4,10 @@ define([
     'backbone',
     'i18n',
     'utils',
+    'app/views/navigationView',
     'app/views/collectionLayoutView',
     'app/views/permissionCollectionView',
-], function($, _, Backbone, i18n, Coke, CollectionLayoutView, PermissionCollectionView) {
+], function($, _, Backbone, i18n, Coke, NavigationView, CollectionLayoutView, PermissionCollectionView) {
 
     var PermissionRouter = Backbone.Router.extend({
         initialize: function(params) {
@@ -48,7 +49,7 @@ define([
             var that = this;
             i18n.init(_.extend(Coke.i18nConfig, {
                 ns: {
-                    namespaces: ['common', 'navbar', 'permission'],
+                    namespaces: ['common', 'navigation', 'permission'],
                     defaultNs: 'permission'
                 }
             }), function(t) {
@@ -61,7 +62,8 @@ define([
                         if (_.isFunction(callback)) callback();
                     }});
                 }});
-                $('#navigation').i18n();
+                that.navigationView = new NavigationView();
+                that.navigationView.render();
             });
         }
     });

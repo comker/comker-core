@@ -4,9 +4,10 @@ define([
     'backbone',
     'i18n',
     'utils',
+    'app/views/navigationView',
     'app/views/collectionLayoutView',
     'app/views/roleCollectionView',
-], function($, _, Backbone, i18n, Coke, CollectionLayoutView, RoleCollectionView) {
+], function($, _, Backbone, i18n, Coke, NavigationView, CollectionLayoutView, RoleCollectionView) {
 
     var RoleRouter = Backbone.Router.extend({
         initialize: function(params) {
@@ -78,7 +79,7 @@ define([
             var that = this;
             i18n.init(_.extend(Coke.i18nConfig, {
                 ns: {
-                    namespaces: ['common', 'navbar', 'role'],
+                    namespaces: ['common', 'navigation', 'role'],
                     defaultNs: 'role'
                 }
             }), function(t) {
@@ -91,7 +92,8 @@ define([
                         if (_.isFunction(callback)) callback();
                     }});
                 }});
-                $('#navigation').i18n();
+                that.navigationView = new NavigationView();
+                that.navigationView.render();
             });
         }
     });

@@ -116,6 +116,10 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
+    <bean id="comkerPasswordEncoder"
+            class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
+    </bean>
+
     <bean id="comkerUserDetailsService"
             class="net.cokkee.comker.service.ComkerUserDetailsService">
         <property name="userDao" ref="comkerUserDao"/>
