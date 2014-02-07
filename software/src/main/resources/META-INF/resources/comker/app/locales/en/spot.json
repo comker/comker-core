@@ -1,0 +1,12 @@
+{
+    "spot": {
+        "collection": {
+            "title": "Spots Collection"
+        },
+        "form": {
+            "name": "Name",
+            "code": "Code",
+            "description": "Description"
+        }
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "spot": {
+        "collection": {
+            "title": "Danh mục vùng hoạt động"
+        },
+        "form": {
+            "name": "Tên",
+            "code": "Mã",
+            "description": "Mô tả"
+        }
+    }
+}

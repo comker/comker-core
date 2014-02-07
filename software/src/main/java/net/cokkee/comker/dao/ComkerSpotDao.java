@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
@@ -35,7 +36,13 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     ComkerSpot getByCode(String code);
 
-    ComkerSpot save(ComkerSpot item);
+    ComkerSpot create(ComkerSpot item);
+
+    ComkerSpot update(ComkerSpot item);
+
+    void delete(ComkerSpot item);
+
+    void delete(String id);
 
     Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot);
 
@@ -90,10 +97,39 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public ComkerSpot save(ComkerSpot item) {
+        public ComkerSpot create(ComkerSpot item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+
+            if (getByCode(item.getCode()) != null) {
+                throw new ComkerFieldDuplicatedException(400, "Spot has already existed");
+            }
+
+            session.save(item);
+
+            return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerSpot update(ComkerSpot item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
             return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(ComkerSpot item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.delete(item);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(String id) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            ComkerSpot item = (ComkerSpot) session.get(ComkerSpot.class, id);
+            session.delete(item);
         }
 
         @Override

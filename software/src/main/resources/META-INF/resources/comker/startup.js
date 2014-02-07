@@ -7,8 +7,9 @@ define([
     'app/routers/homeRouter',
     'app/routers/permissionRouter',
     'app/routers/roleRouter',
+    'app/routers/spotRouter',
     'app/routers/userRouter',
-], function($, _, Backbone, Coke, AuthRouter, HomeRouter, PermissionRouter, RoleRouter, UserRouter) {
+], function($, _, Backbone, Coke, AuthRouter, HomeRouter, PermissionRouter, RoleRouter, SpotRouter, UserRouter) {
     var initialize = function() {
         Coke.log.debug('Start the application');
 
@@ -23,6 +24,9 @@ define([
 
         Coke.log.debug('Create RoleRouter object');
         var roleRouter = new RoleRouter();
+
+        Coke.log.debug('Create SpotRouter object');
+        var spotRouter = new SpotRouter();
 
         Coke.log.debug('Create UserRouter object');
         var userRouter = new UserRouter();
