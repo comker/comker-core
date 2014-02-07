@@ -4,7 +4,7 @@ define([
     'i18n',
     'log4javascript',
     'bootstrap',
-], function($, _, i18n, log4js, Bootstrap) {
+], function($, _, i18n, log4javascript, Bootstrap) {
     
     var tool = {};
 

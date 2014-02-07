@@ -12,6 +12,9 @@ require.config({
         'i18n' : {
             deps: ['jquery'],
             exports: 'i18n'
+        },
+        'log4javascript' : {
+            exports: 'log4javascript'
         }
     }
 });
