@@ -16,7 +16,7 @@ define([
             this.model.on('change', this.render, this);
 
             this.router = params.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run PermissionObjectView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run PermissionObjectView.initialize() - router not found");

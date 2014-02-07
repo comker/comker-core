@@ -16,7 +16,7 @@ define([
             this.model.on('change', this.render, this);
 
             this.router = params.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run RoleObjectView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run RoleObjectView.initialize() - router not found");
@@ -49,7 +49,7 @@ define([
 
         onDetailRole: function() {
             Coke.log.debug("run RoleObjectView.onDetailRole()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('role/detail/' + this.model.id);
             } else {
                 Coke.log.debug("run RoleObjectView.onDetailRole() - router not found");
@@ -71,7 +71,7 @@ define([
 
         onUpdateRole: function() {
             Coke.log.debug("run RoleObjectView.onUpdateRole()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('role/update/' + this.model.id);
             } else {
                 Coke.log.debug("run RoleObjectView.onUpdateRole() - router not found");
@@ -115,7 +115,7 @@ define([
 
         onDeleteRole: function() {
             Coke.log.debug("run RoleObjectView.onDeleteRole()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('role/delete/' + this.model.id);
             } else {
                 Coke.log.debug("run RoleObjectView.onDeleteRole() - router not found");

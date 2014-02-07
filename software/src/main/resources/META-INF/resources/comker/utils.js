@@ -52,12 +52,6 @@ define([
         return $('<div>', {'class': 'alert ' + type}).append(msg);
     }
 
-    //-------------------------------------------------------- utility functions
-    tool.isDefined = function(x) {
-        var undefined;
-        return x !== undefined;
-    }
-
     //------------------------------------------------------- i18n configuration
     tool.i18nConfig = {
         lang: 'en',

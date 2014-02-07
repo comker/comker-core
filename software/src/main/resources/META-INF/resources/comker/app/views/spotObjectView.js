@@ -16,7 +16,7 @@ define([
             this.model.on('change', this.render, this);
 
             this.router = params.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run SpotObjectView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run SpotObjectView.initialize() - router not found");
@@ -49,7 +49,7 @@ define([
 
         onDetailSpot: function() {
             Coke.log.debug("run SpotObjectView.onDetailSpot()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('spot/detail/' + this.model.id);
             } else {
                 Coke.log.debug("run SpotObjectView.onDetailSpot() - router not found");
@@ -71,7 +71,7 @@ define([
 
         onUpdateSpot: function() {
             Coke.log.debug("run SpotObjectView.onUpdateSpot()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('spot/update/' + this.model.id);
             } else {
                 Coke.log.debug("run SpotObjectView.onUpdateSpot() - router not found");
@@ -115,7 +115,7 @@ define([
 
         onDeleteSpot: function() {
             Coke.log.debug("run SpotObjectView.onDeleteSpot()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('spot/delete/' + this.model.id);
             } else {
                 Coke.log.debug("run SpotObjectView.onDeleteSpot() - router not found");

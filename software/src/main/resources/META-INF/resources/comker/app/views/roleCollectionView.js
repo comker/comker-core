@@ -20,7 +20,7 @@ define([
             this.stateRendered = false;
 
             this.router = options.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run RoleCollectionView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run RoleCollectionView.initialize() - router not found");
@@ -86,7 +86,7 @@ define([
 
         onCreateRole: function() {
             Coke.log.debug("run RoleCollectionView.onCreateRole()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('role/create');
             } else {
                 Coke.log.debug("run RoleCollectionView.onCreateRole() - router not found");
@@ -107,7 +107,7 @@ define([
 
         onFilterRole: function() {
             Coke.log.debug("run RoleCollectionView.onFilterRole()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('role/filter');
             } else {
                 Coke.log.debug("run RoleCollectionView.onFilterRole() - router not found");

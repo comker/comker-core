@@ -20,7 +20,7 @@ define([
             this.stateRendered = false;
 
             this.router = options.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run UserCollectionView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run UserCollectionView.initialize() - router not found");
@@ -86,7 +86,7 @@ define([
 
         onCreateUser: function() {
             Coke.log.debug("run UserCollectionView.onCreateUser()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('user/create');
             } else {
                 Coke.log.debug("run UserCollectionView.onCreateUser() - router not found");
@@ -107,7 +107,7 @@ define([
 
         onFilterUser: function() {
             Coke.log.debug("run UserCollectionView.onFilterUser()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('user/filter');
             } else {
                 Coke.log.debug("run UserCollectionView.onFilterUser() - router not found");

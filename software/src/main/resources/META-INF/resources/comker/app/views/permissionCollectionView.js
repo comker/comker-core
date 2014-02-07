@@ -20,7 +20,7 @@ define([
             this.stateRendered = false;
 
             this.router = options.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run PermissionCollectionView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run PermissionCollectionView.initialize() - router not found");
@@ -88,7 +88,7 @@ define([
 
         onFilterPermission: function() {
             Coke.log.debug("run PermissionCollectionView.onFilterPermission()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('permission/filter');
             } else {
                 Coke.log.debug("run PermissionCollectionView.onFilterPermission() - router not found");

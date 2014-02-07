@@ -16,7 +16,7 @@ define([
             this.model.on('change', this.render, this);
 
             this.router = params.router;
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 Coke.log.debug("run UserObjectView.initialize() - router is defined");
             } else {
                 Coke.log.debug("run UserObjectView.initialize() - router not found");
@@ -49,7 +49,7 @@ define([
 
         onDetailUser: function() {
             Coke.log.debug("run UserObjectView.onDetailUser()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('user/detail/' + this.model.id);
             } else {
                 Coke.log.debug("run UserObjectView.onDetailUser() - router not found");
@@ -71,7 +71,7 @@ define([
 
         onUpdateUser: function() {
             Coke.log.debug("run UserObjectView.onUpdateUser()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('user/update/' + this.model.id);
             } else {
                 Coke.log.debug("run UserObjectView.onUpdateUser() - router not found");
@@ -115,7 +115,7 @@ define([
 
         onDeleteUser: function() {
             Coke.log.debug("run UserObjectView.onDeleteUser()");
-            if (Coke.isDefined(this.router)) {
+            if (_.isObject(this.router)) {
                 this.router.navigate('user/delete/' + this.model.id);
             } else {
                 Coke.log.debug("run UserObjectView.onDeleteUser() - router not found");

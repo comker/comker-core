@@ -13,7 +13,7 @@ define([
             params = params || {};
 
             this.title = params.title;
-            if (Coke.isDefined(this.title)) {
+            if (_.isString(this.title)) {
                 Coke.log.debug("run CollectionLayoutView.initialize() - title:" + this.title);
             } else {
                 Coke.log.debug("run CollectionLayoutView.initialize() - empty title");
