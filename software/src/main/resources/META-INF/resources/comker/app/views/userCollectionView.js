@@ -47,7 +47,7 @@ define([
             Coke.log.debug("run UserCollectionView.render()");
 
             if (this.$el.find("#panelToolbar").find("ul").is(':empty')) {
-                Coke.TemplateManager.get('user-toolbar-buttons', function(strg) {
+                Coke.TemplateManager.get('user-list-toolbar', function(strg) {
                     that.$el.find("#panelToolbar").find("ul").html(strg);
                 });
             }

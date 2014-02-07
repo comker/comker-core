@@ -26,7 +26,7 @@ define([
         render: function() {
             Coke.log.debug("run UserObjectView.render() for model#" + this.model.id);
             var that = this;
-            Coke.TemplateManager.get('user', function(tmpl) {
+            Coke.TemplateManager.get('user-list-item', function(tmpl) {
                 var $tmpl = tmpl(that.model.toJSON());
                 that.$el.html($tmpl);
                 that.$el.i18n();
@@ -95,7 +95,7 @@ define([
             Coke.log.debug("run UserObjectView.submitUpdateUser()");
             e.preventDefault();
             var formData = {};
-            $( '#updateUser div' ).children('input').each(function(i, el) {
+            $( '#formUpdateUser div' ).children('input').each(function(i, el) {
                 if( $(el).val() != '' ){
                     formData[el.id] = $(el).val();
                 }

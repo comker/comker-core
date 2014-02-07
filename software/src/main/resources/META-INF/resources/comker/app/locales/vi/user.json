@@ -1,0 +1,11 @@
+{
+    "user": {
+        "collection": {
+            "title": "Danh mục người dùng"
+        },
+        "form": {
+            "fullname": "Họ và tên",
+            "email": "Thư điện tử"
+        }
+    }
+}
