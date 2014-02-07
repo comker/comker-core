@@ -48,7 +48,9 @@ define([
 
             if (this.$el.find("#panelToolbar").find("ul").is(':empty')) {
                 Coke.TemplateManager.get('permission-list-toolbar', function(strg) {
-                    that.$el.find("#panelToolbar").find("ul").html(strg);
+                    var toolbarBox = that.$el.find("#panelToolbar").find("ul");
+                    toolbarBox.html(strg);
+                    toolbarBox.i18n();
                 });
             }
             this.$el.find('#panelDialog').slideUp("fast", function() {});
