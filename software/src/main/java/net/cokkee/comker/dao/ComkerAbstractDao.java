@@ -21,6 +21,7 @@ public interface ComkerAbstractDao {
     public static final String FIELD_EMAIL = "email";
     public static final String FIELD_USERNAME = "username";
     public static final String FIELD_FULLNAME = "fullname";
+    public static final String FIELD_DESCRIPTION = "description";
 
     Integer count(String query, Map<String,Object> params);
     

@@ -268,7 +268,7 @@ public interface ComkerInitializationService {
             if (item == null) {
                 item = sampleRoles.get(code);
                 if (item == null) return null;
-                getRoleDao().save(item);
+                getRoleDao().update(item);
             }
             return item;
         }

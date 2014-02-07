@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
 import net.cokkee.comker.model.po.ComkerPermission;
 
@@ -39,7 +40,13 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
     ComkerRole getByCode(String code);
 
-    ComkerRole save(ComkerRole item);
+    ComkerRole create(ComkerRole item);
+
+    ComkerRole update(ComkerRole item);
+
+    void delete(ComkerRole item);
+
+    void delete(String id);
 
     void addPermission(ComkerRole role, ComkerPermission permission);
 
@@ -117,10 +124,39 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public ComkerRole save(ComkerRole item) {
+        public ComkerRole create(ComkerRole item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+
+            if (getByCode(item.getCode()) != null) {
+                throw new ComkerFieldDuplicatedException(400, "Role has already existed");
+            }
+
+            session.save(item);
+
+            return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerRole update(ComkerRole item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
             return item;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(ComkerRole item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.delete(item);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(String id) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            ComkerRole item = (ComkerRole) session.get(ComkerRole.class, id);
+            session.delete(item);
         }
 
         @Override

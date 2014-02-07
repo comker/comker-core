@@ -47,7 +47,7 @@ define([
             Coke.log.debug("run PermissionCollectionView.render()");
 
             if (this.$el.find("#panelToolbar").find("ul").is(':empty')) {
-                Coke.TemplateManager.get('permission-toolbar-buttons', function(strg) {
+                Coke.TemplateManager.get('permission-list-toolbar', function(strg) {
                     that.$el.find("#panelToolbar").find("ul").html(strg);
                 });
             }

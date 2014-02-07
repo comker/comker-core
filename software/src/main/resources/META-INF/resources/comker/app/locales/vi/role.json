@@ -1,0 +1,12 @@
+{
+    "role": {
+        "collection": {
+            "title": "Danh mục vai trò"
+        },
+        "form": {
+            "name": "Tên vai trò",
+            "code": "Mã vai trò",
+            "description": "Mô tả"
+        }
+    }
+}

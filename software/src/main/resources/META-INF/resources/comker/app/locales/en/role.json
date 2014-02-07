@@ -1,0 +1,12 @@
+{
+    "role": {
+        "collection": {
+            "title": "Roles Collection"
+        },
+        "form": {
+            "name": "Name",
+            "code": "Code",
+            "description": "Description"
+        }
+    }
+}
