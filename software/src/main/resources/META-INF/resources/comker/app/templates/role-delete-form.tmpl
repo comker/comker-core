@@ -1,6 +1,6 @@
 <form action="#" id="formDeleteRole" class="form-horizontal role-x-form">
     <div>
-        <p>Are you sure you want to delete the role "<%=name%>" (Code: <%=code%>)?</p>
+        <p><% print(i18n.t("role:role.message.delete-confirmation", {name:name, code:code})) %></p>
         <ul>
             <li><button id="submit-delete-role" class="btn btn-primary" data-i18n="common:button.delete.submit.label">Submit</button></li>
             <li><button id="cancel-delete-role" class="btn btn-primary" data-i18n="common:button.delete.cancel.label">Cancel</button></li>

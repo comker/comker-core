@@ -7,6 +7,9 @@
             "name": "Tên vai trò",
             "code": "Mã vai trò",
             "description": "Mô tả"
+        },
+        "message": {
+            "delete-confirmation": "Bạn có thực sự muốn xóa vai trò có tên là \"__name__\" (mã: __code__)?"
         }
     }
 }

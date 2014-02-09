@@ -12,10 +12,10 @@
                 "label": "Người dùng"
             },
             "crew": {
-                "label": "Nhóm"
+                "label": "Nhóm người dùng"
             },
             "spot": {
-                "label": "Tổ chức"
+                "label": "Vùng hoạt động"
             },
             "module": {
                 "label": "Phân hệ"

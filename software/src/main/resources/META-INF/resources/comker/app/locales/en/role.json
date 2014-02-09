@@ -7,6 +7,9 @@
             "name": "Name",
             "code": "Code",
             "description": "Description"
+        },
+        "message": {
+            "delete-confirmation": "Are you sure you want to delete the role \"__name__\" (Code: __code__)?"
         }
     }
 }
