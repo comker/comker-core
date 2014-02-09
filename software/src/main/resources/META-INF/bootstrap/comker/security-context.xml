@@ -124,6 +124,9 @@
             class="net.cokkee.comker.service.ComkerUserDetailsService">
         <property name="userDao" ref="comkerUserDao"/>
     </bean>
-    
+
+    <bean id="comkerSecurityService"
+            class="net.cokkee.comker.service.impl.ComkerSecurityServiceImpl">
+    </bean>
 </beans>
 
