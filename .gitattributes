@@ -69,18 +69,22 @@ software/src/main/resources/META-INF/bootstrap/comker/resource-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/service-context.xml -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/common.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/en/crew.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/navigation.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/permission.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/role.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/spot.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/en/user.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/common.json -text
+software/src/main/resources/META-INF/resources/comker/app/locales/vi/crew.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/navigation.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/permission.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/role.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/spot.json -text
 software/src/main/resources/META-INF/resources/comker/app/locales/vi/user.json -text
 software/src/main/resources/META-INF/resources/comker/app/models/authCredentials.js -text
+software/src/main/resources/META-INF/resources/comker/app/models/crewCollection.js -text
+software/src/main/resources/META-INF/resources/comker/app/models/crewObject.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/permissionCollection.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/permissionObject.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/roleCollection.js -text
@@ -91,6 +95,7 @@ software/src/main/resources/META-INF/resources/comker/app/models/userCollection.
 software/src/main/resources/META-INF/resources/comker/app/models/userFilter.js -text
 software/src/main/resources/META-INF/resources/comker/app/models/userObject.js -text
 software/src/main/resources/META-INF/resources/comker/app/routers/authRouter.js -text
+software/src/main/resources/META-INF/resources/comker/app/routers/crewRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/routers/homeRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/routers/permissionRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/routers/roleRouter.js -text
@@ -98,6 +103,8 @@ software/src/main/resources/META-INF/resources/comker/app/routers/spotRouter.js 
 software/src/main/resources/META-INF/resources/comker/app/routers/userRouter.js -text
 software/src/main/resources/META-INF/resources/comker/app/templates/auth-login.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/collection-layout.tmpl -text
+software/src/main/resources/META-INF/resources/comker/app/templates/crew-list-item.tmpl -text
+software/src/main/resources/META-INF/resources/comker/app/templates/crew-list-toolbar.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/home.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/navigation.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/templates/permission-list-item.tmpl -text
@@ -118,6 +125,8 @@ software/src/main/resources/META-INF/resources/comker/app/templates/user-list-to
 software/src/main/resources/META-INF/resources/comker/app/templates/user-update-form.tmpl -text
 software/src/main/resources/META-INF/resources/comker/app/views/authLoginView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/collectionLayoutView.js -text
+software/src/main/resources/META-INF/resources/comker/app/views/crewCollectionView.js -text
+software/src/main/resources/META-INF/resources/comker/app/views/crewObjectView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/homeView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/navigationView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/permissionCollectionView.js -text
@@ -129,6 +138,7 @@ software/src/main/resources/META-INF/resources/comker/app/views/spotObjectView.j
 software/src/main/resources/META-INF/resources/comker/app/views/userCollectionView.js -text
 software/src/main/resources/META-INF/resources/comker/app/views/userObjectView.js -text
 software/src/main/resources/META-INF/resources/comker/css/auth-screen.css -text
+software/src/main/resources/META-INF/resources/comker/css/crew-screen.css -text
 software/src/main/resources/META-INF/resources/comker/css/main-screen.css -text
 software/src/main/resources/META-INF/resources/comker/css/role-screen.css -text
 software/src/main/resources/META-INF/resources/comker/css/spot-screen.css -text

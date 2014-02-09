@@ -1,0 +1,11 @@
+{
+    "crew": {
+        "collection": {
+            "title": "Groups Collection"
+        },
+        "form": {
+            "name": "Name",
+            "description": "Description"
+        }
+    }
+}

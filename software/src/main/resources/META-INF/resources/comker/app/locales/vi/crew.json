@@ -1,0 +1,11 @@
+{
+    "crew": {
+        "collection": {
+            "title": "Danh mục nhóm người dùng"
+        },
+        "form": {
+            "name": "Tên",
+            "description": "Mô tả"
+        }
+    }
+}

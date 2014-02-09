@@ -1,0 +1,103 @@
+/**
+ * Style for a crew
+ */
+
+.crew-container {
+    outline: 1px solid #aaa;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.crew-overview {
+    height: 110px;
+    width: 100%;
+    background-color: #fff;
+    margin-top: 5px;
+}
+
+.crew-overview img {
+    float: left;
+    margin: 10px;
+    width: 85px;
+}
+
+.crew-overview ul {
+    position: relative;
+    list-style-type: none;
+    padding-top: 10px;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.crew-overview .crew-button {
+    float: right;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 5px;
+    right: 10px;
+    bottom: 0;
+}
+
+.crew-overview .item-label {
+    font-style: italic;
+}
+
+.crew-dialog {
+    display: none;
+    border-top: 1px dashed silver;
+}
+
+.crew-dialog .crew-message {
+}
+
+.crew-dialog .crew-message .alert {
+    margin-bottom: 0px;
+}
+
+.crew-dialog .crew-content {
+    margin-bottom: 5px;
+    background-color: #EAEAEA;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+.crew-dialog .crew-content form {
+    margin: 0;
+}
+
+/**
+ * Add a new crew Form
+ */
+
+ .crew-x-form ul {
+    float: right;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+
+.crew-x-form ul li {
+    display: inline;
+}
+
+/*
+.crew-x-form button {
+    display: block;
+    margin: 5px 20px 10px 10px;
+    float: right;
+    clear: both;
+}
+*/
+.crew-x-form div {
+}
+
+.crew-x-form div:after {
+    content: "";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+    font-size: 0;
+    line-height: 0;
+}
