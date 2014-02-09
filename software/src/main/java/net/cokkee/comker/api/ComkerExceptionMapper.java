@@ -17,10 +17,6 @@ public class ComkerExceptionMapper implements ExceptionMapper<Exception> {
                     .status(e.getResponse().getStatus())
                     .entity(new ComkerExceptionResponse(ComkerExceptionResponse.ERROR, e.getMessage()))
                     .type("application/json").build();
-        } else if (exception instanceof com.fasterxml.jackson.core.JsonParseException) {
-            return Response
-                    .status(400)
-                    .entity(new ComkerExceptionResponse(ComkerExceptionResponse.ERROR, "bad input")).build();
         } else if (exception instanceof ComkerAbstractException) {
             ComkerAbstractException e = (ComkerAbstractException) exception;
             return Response

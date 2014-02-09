@@ -6,6 +6,9 @@
             <goals>
                 <goal>jetty:run</goal>
             </goals>
+            <activatedProfiles>
+                <activatedProfile>debug</activatedProfile>
+            </activatedProfiles>
         </action>
         <action>
             <actionName>CUSTOM-build as release</actionName>

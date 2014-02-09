@@ -24,6 +24,7 @@
     <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
+    
     <import resource="classpath:META-INF/bootstrap/gonsole/attachment-context.xml" />
   
     <context:component-scan base-package="net.cokkee.comker" />
@@ -32,22 +33,22 @@
     <bean id="swaggerApiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
     <bean id="swaggerResourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
 
-    <bean id="jaxbProvider"
+    <bean id="comkerJaxbProvider"
             class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
     </bean>
 
-    <bean id="jsonProvider"
+    <bean id="comkerJsonProvider"
             class="org.apache.cxf.jaxrs.provider.JSONProvider">
         <property name="dropRootElement" value="true"/>
         <property name="dropCollectionWrapperElement" value="true" />
         <property name="supportUnwrapped" value="true"/>
         <property name="serializeAsArray" value="true"/>
-        <property name="arrayKeys" ref="jsonKeys"/>
-        <property name="produceMediaTypes" ref="jsonTypes"/>
-        <property name="consumeMediaTypes" ref="jsonTypes"/>
+        <property name="arrayKeys" ref="comkerJsonKeys"/>
+        <property name="produceMediaTypes" ref="comkerJsonTypes"/>
+        <property name="consumeMediaTypes" ref="comkerJsonTypes"/>
     </bean>
 
-    <util:list id="jsonKeys">
+    <util:list id="comkerJsonKeys">
         <value>permissions</value>
         <value>valueSet</value>
         <value>idsOfCrewList</value>
@@ -55,12 +56,9 @@
         <value>idsOfSpotWithRoleList</value>
     </util:list>
 
-    <util:list id="jsonTypes">
+    <util:list id="comkerJsonTypes">
         <value>application/json</value>
     </util:list>
-
-    <bean id="swaggerJsonProvider"
-      class="net.cokkee.comker.util.ComkerJacksonJaxbJsonProvider" />
 
     <bean id="swaggerExceptionMapper"
       class="net.cokkee.comker.api.ComkerExceptionMapper" />
@@ -86,8 +84,8 @@
             <ref bean="swaggerResourceJSON" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="jaxbProvider" />
-            <ref bean="jsonProvider" />
+            <ref bean="comkerJaxbProvider" />
+            <ref bean="comkerJsonProvider" />
             <ref bean="swaggerExceptionMapper" />
             <ref bean="swaggerResourceWriter" />
             <ref bean="swaggerApiWriter" />
