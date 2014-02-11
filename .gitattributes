@@ -14,7 +14,7 @@ software/src/main/java/net/cokkee/comker/api/ComkerSpotResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerUserResource.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerAbstractDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerCrewDao.java -text
-software/src/main/java/net/cokkee/comker/dao/ComkerNavbarNodeDao.java -text
+software/src/main/java/net/cokkee/comker/dao/ComkerNavbarDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerPermissionDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerRoleDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSpotDao.java -text

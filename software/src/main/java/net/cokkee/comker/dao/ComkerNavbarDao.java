@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author drupalex
  */
-public interface ComkerNavbarNodeDao {
+public interface ComkerNavbarDao {
 
     Integer count();
 
@@ -34,7 +34,7 @@ public interface ComkerNavbarNodeDao {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     public static class Hibernate extends ComkerAbstractDao.Hibernate
-            implements ComkerNavbarNodeDao {
+            implements ComkerNavbarDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)

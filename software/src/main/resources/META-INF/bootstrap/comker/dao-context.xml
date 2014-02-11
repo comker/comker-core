@@ -87,18 +87,18 @@
     </bean>
 
 
-    <bean id="comkerNavbarNodeDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+    <bean id="comkerNavbarDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
-            <value>net.cokkee.comker.dao.ComkerNavbarNodeDao</value>
+            <value>net.cokkee.comker.dao.ComkerNavbarDao</value>
         </property>
         <property name="interceptorNames">
             <list>
             </list>
         </property>
-        <property name="target" ref="comkerNavbarNodeDaoHibernate" />
+        <property name="target" ref="comkerNavbarDaoHibernate" />
     </bean>
 
-    <bean id="comkerNavbarNodeDaoHibernate" class="net.cokkee.comker.dao.ComkerNavbarNodeDao$Hibernate">
+    <bean id="comkerNavbarDaoHibernate" class="net.cokkee.comker.dao.ComkerNavbarDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
