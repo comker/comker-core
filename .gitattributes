@@ -65,7 +65,6 @@ software/src/main/java/net/cokkee/comker/util/ComkerBootstrapPublisher.java -tex
 software/src/main/resources/META-INF/bootstrap/comker/attachment-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/cxf-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/dao-context.xml -text
-software/src/main/resources/META-INF/bootstrap/comker/hibernate-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/orm-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/resource-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text
