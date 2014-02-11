@@ -19,7 +19,7 @@
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
 
-    <import resource="classpath:META-INF/bootstrap/comker/hibernate-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
