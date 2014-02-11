@@ -61,7 +61,7 @@ define([
         resGetPath: "app/locales/__lng__/__ns__.json"
     }
 
-    tool.i18nNamespaces = ['common', 'navigation'];
+    tool.i18nNamespaces = ['common', 'navbar'];
 
     //------------------------------------------------ loadSession() & startup()
     tool.loadSession = function(callback) {

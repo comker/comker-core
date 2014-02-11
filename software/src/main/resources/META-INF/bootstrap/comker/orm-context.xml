@@ -96,7 +96,7 @@
                 <value>net.cokkee.comker.model.po.ComkerUser</value>
                 <value>net.cokkee.comker.model.po.ComkerUserJoinCrew</value>
                 <value>net.cokkee.comker.model.po.ComkerUserJoinCrewPk</value>
-                <value>net.cokkee.comker.model.po.ComkerNavigationNode</value>
+                <value>net.cokkee.comker.model.po.ComkerNavbarNode</value>
             </list>
         </property>
         <property name="hibernateProperties">

@@ -4,9 +4,9 @@ define([
     'backbone',
     'i18n',
     'utils',
-    'app/views/navigationView',
+    'app/views/navbarView',
     'app/views/homeView',
-], function($, _, Backbone, i18n, Coke, NavigationView, HomeView) {
+], function($, _, Backbone, i18n, Coke, NavbarView, HomeView) {
     var HomeRouter = Backbone.Router.extend({
         initialize: function(options) {
             options = options || {};
@@ -33,8 +33,8 @@ define([
                 afterTrigger: function(t, session) {
                     that.homeView = new HomeView();
                     that.homeView.render();
-                    that.navigationView = new NavigationView();
-                    that.navigationView.render();
+                    that.navbarView = new NavbarView();
+                    that.navbarView.render();
                 }
             });
         }

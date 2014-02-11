@@ -4,10 +4,10 @@ define([
     'backbone',
     'i18n',
     'utils',
-    'app/views/navigationView',
+    'app/views/navbarView',
     'app/views/collectionLayoutView',
     'app/views/crewCollectionView',
-], function($, _, Backbone, i18n, Coke, NavigationView, CollectionLayoutView, CrewCollectionView) {
+], function($, _, Backbone, i18n, Coke, NavbarView, CollectionLayoutView, CrewCollectionView) {
 
     var CrewRouter = Backbone.Router.extend({
         initialize: function(params) {
@@ -89,8 +89,8 @@ define([
                             if (_.isFunction(callback)) callback();
                         }});
                     }});
-                    that.navigationView = new NavigationView();
-                    that.navigationView.render();
+                    that.navbarView = new NavbarView();
+                    that.navbarView.render();
                 }
             });
         }
