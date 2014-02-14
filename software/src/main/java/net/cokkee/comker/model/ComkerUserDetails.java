@@ -2,11 +2,8 @@ package net.cokkee.comker.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -15,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class ComkerUserDetails  implements UserDetails {
 
-    static final GrantedAuthority NO_ROLE = new GrantedAuthorityImpl("NO_ROLE");
+    static final GrantedAuthority NO_ROLE = new SimpleGrantedAuthority("NO_ROLE");
 
     public ComkerUserDetails(String username, String password, Collection<GrantedAuthority> authorities) {
         this.username = username;
@@ -30,7 +27,7 @@ public class ComkerUserDetails  implements UserDetails {
 
         if (authorityArray != null && authorityArray.length > 0) {
             for (int i=0; i<authorityArray.length; i++) {
-                authorities.add(new GrantedAuthorityImpl(authorityArray[i]));
+                authorities.add(new SimpleGrantedAuthority(authorityArray[i]));
             }
         } else {
             authorities.add(NO_ROLE);

@@ -1,5 +1,6 @@
 package net.cokkee.comker.service;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +14,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
@@ -85,6 +86,13 @@ public class ComkerUserDetailsService implements UserDetailsService {
             }
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format("authorities of user {0}:", new Object[] {username}));
+            for(String authority:authoritySet) {
+                log.debug(MessageFormat.format(" + {0}", new Object[] {authority}));
+            }
+        }
+
         ComkerUserDetails userDetails = new ComkerUserDetails(
                 user.getUsername(), user.getPassword(),
                 createGrantedAuthorities(authoritySet));
@@ -95,7 +103,7 @@ public class ComkerUserDetailsService implements UserDetailsService {
     private static Collection<GrantedAuthority> createGrantedAuthorities(Collection<String> authorities) {
         Collection<GrantedAuthority> ga = new HashSet<GrantedAuthority>();
         for(String authority: authorities) {
-            ga.add(new GrantedAuthorityImpl(authority));
+            ga.add(new SimpleGrantedAuthority(authority));
         }
         return ga;
     }
@@ -133,8 +141,11 @@ public class ComkerUserDetailsService implements UserDetailsService {
         UserDetails user = getPrincipal();
         if (user == null) return;
 
+        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+        authorities.addAll(user.getAuthorities());
+
         ComkerUserDetails userDetails = new ComkerUserDetails(
-                user.getUsername(), encodedPassword, user.getAuthorities());
+                user.getUsername(), encodedPassword, authorities);
         
         UsernamePasswordAuthenticationToken newToken =
                 new UsernamePasswordAuthenticationToken(userDetails, password);

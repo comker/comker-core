@@ -54,6 +54,12 @@
         <appender-ref ref="Console"/>
     </logger>
 
+    <logger name="org.springframework.security">
+        <level value="debug"/>
+        <appender-ref ref="RollingFile"/>
+        <appender-ref ref="Console"/>
+    </logger>
+
     <root>
         <level value="fatal"/>
         <appender-ref ref="TextFile"/>

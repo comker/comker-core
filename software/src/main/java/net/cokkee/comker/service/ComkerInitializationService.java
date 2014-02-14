@@ -3,17 +3,20 @@ package net.cokkee.comker.service;
 import java.util.HashMap;
 import java.util.Map;
 import net.cokkee.comker.dao.ComkerCrewDao;
+import net.cokkee.comker.dao.ComkerNavbarDao;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.model.po.ComkerCrew;
+import net.cokkee.comker.model.po.ComkerNavbarNode;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.model.po.ComkerUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +82,28 @@ public interface ComkerInitializationService {
             this.permissionDao = permissionDao;
         }
 
+        
+        private ComkerNavbarDao navbarDao = null;
 
+        public ComkerNavbarDao getNavbarDao() {
+            return navbarDao;
+        }
+
+        public void setNavbarDao(ComkerNavbarDao navbarDao) {
+            this.navbarDao = navbarDao;
+        }
+
+        
+        private MessageDigestPasswordEncoder passwordEncoder = null;
+
+        public MessageDigestPasswordEncoder getPasswordEncoder() {
+            return passwordEncoder;
+        }
+
+        public void setPasswordEncoder(MessageDigestPasswordEncoder passwordEncoder) {
+            this.passwordEncoder = passwordEncoder;
+        }
+        
         //----------------------------------------------------------------------
 
         private Map<String,ComkerUser> sampleUsers = new HashMap<String,ComkerUser>();
@@ -87,6 +111,7 @@ public interface ComkerInitializationService {
         private Map<String,ComkerCrew> sampleCrews = new HashMap<String,ComkerCrew>();
         private Map<String,ComkerRole> sampleRoles = new HashMap<String,ComkerRole>();
         private Map<String,ComkerPermission> samplePermissions = new HashMap<String,ComkerPermission>();
+        private Map<String,ComkerNavbarNode> sampleNavbars = new HashMap<String,ComkerNavbarNode>();
 
         public Impl() {
             if (log.isDebugEnabled()) {
@@ -94,9 +119,9 @@ public interface ComkerInitializationService {
             }
 
             ComkerUser user;
-            user = new ComkerUser("demo@buocnho.com", "BNA02101", "dobietday", "Nguyễn Minh Tân");
+            user = new ComkerUser("demo@buocnho.com", "BNA00001", "dobietday", "Nguyễn Minh Tân");
             sampleUsers.put(user.getEmail(), user);
-            user = new ComkerUser("demo@pctu.edu.vn", "PCT11371", "nopassword", "Phạm Ngọc Hùng");
+            user = new ComkerUser("demo@pctu.edu.vn", "PCT00001", "nopassword", "Phạm Ngọc Hùng");
             sampleUsers.put(user.getEmail(), user);
 
             ComkerSpot spot;
@@ -106,9 +131,11 @@ public interface ComkerInitializationService {
             sampleSpots.put(spot.getCode(), spot);
 
             ComkerCrew crew;
-            crew = new ComkerCrew("Administrators (buocnho.com)", "Nhóm quản trị của buocnho.com");
+            crew = new ComkerCrew("Administrators", "Nhóm quản trị hệ thống");
             sampleCrews.put(crew.getName(), crew);
-            crew = new ComkerCrew("Administrators (pctu.edu.vn)", "Nhóm quản trị của pctu.edu.vn");
+            crew = new ComkerCrew("Managers (buocnho.com)", "Nhóm quản trị của buocnho.com");
+            sampleCrews.put(crew.getName(), crew);
+            crew = new ComkerCrew("Managers (pctu.edu.vn)", "Nhóm quản trị của pctu.edu.vn");
             sampleCrews.put(crew.getName(), crew);
             crew = new ComkerCrew("Members (pctu.edu.vn)", "Nhóm thành viên của pctu.edu.vn");
             sampleCrews.put(crew.getName(), crew);
@@ -118,19 +145,19 @@ public interface ComkerInitializationService {
             sampleCrews.put(crew.getName(), crew);
 
             ComkerRole role;
-            role = new ComkerRole("Administrator", "Quản trị", "Quản lý hệ thống");
+            role = new ComkerRole("Administrator", "Quản lý Spot", "Quản lý vùng hoạt động");
             sampleRoles.put(role.getCode(), role);
-            role = new ComkerRole("Manager", "Quản lý site", "Người quản lý một site");
+            role = new ComkerRole("Manager", "Quản lý Site", "Người quản lý một site");
             sampleRoles.put(role.getCode(), role);
             role = new ComkerRole("Member", "Thành viên", "Người dùng thông thường");
             sampleRoles.put(role.getCode(), role);
 
             ComkerPermission permission;
-            permission = new ComkerPermission("ROLE_SYSA");
+            permission = new ComkerPermission("PERM_COMKER_SYSA");
             samplePermissions.put(permission.getAuthority(), permission);
-            permission = new ComkerPermission("ROLE_USER");
+            permission = new ComkerPermission("PERM_COMKER_USER");
             samplePermissions.put(permission.getAuthority(), permission);
-            permission = new ComkerPermission("ROLE_TEST");
+            permission = new ComkerPermission("PERM_COMKER_TEST");
             samplePermissions.put(permission.getAuthority(), permission);
         }
 
@@ -160,10 +187,13 @@ public interface ComkerInitializationService {
             }
             getUserDao().addCrew(
                     getUserDao().getByEmail("demo@buocnho.com"),
-                    getCrewDao().getByName("Administrators (buocnho.com)"));
+                    getCrewDao().getByName("Managers (buocnho.com)"));
             getUserDao().addCrew(
                     getUserDao().getByEmail("demo@buocnho.com"),
                     getCrewDao().getByName("Members (pctu.edu.vn)"));
+            getUserDao().addCrew(
+                    getUserDao().getByEmail("demo@pctu.edu.vn"),
+                    getCrewDao().getByName("Administrators"));
             getUserDao().addCrew(
                     getUserDao().getByEmail("demo@pctu.edu.vn"),
                     getCrewDao().getByName("Members (pctu.edu.vn)"));
@@ -174,6 +204,7 @@ public interface ComkerInitializationService {
             ComkerUser item = getUserDao().getByEmail(email);
             if (item == null) {
                 item = sampleUsers.get(email);
+                item.setPassword(getPasswordEncoder().encodePassword(item.getPassword(), null));
                 if (item == null) return null;
                 getUserDao().update(item);
             }
@@ -205,11 +236,11 @@ public interface ComkerInitializationService {
             }
 
             getCrewDao().addRoleWithSpot(
-                    getCrewDao().getByName("Administrators (buocnho.com)"),
+                    getCrewDao().getByName("Managers (buocnho.com)"),
                     getRoleDao().getByCode("Administrator"),
                     getSpotDao().getByCode("buocnho.com"));
             getCrewDao().addRoleWithSpot(
-                    getCrewDao().getByName("Administrators (pctu.edu.vn)"),
+                    getCrewDao().getByName("Managers (pctu.edu.vn)"),
                     getRoleDao().getByCode("Administrator"),
                     getSpotDao().getByCode("pctu.edu.vn"));
 
@@ -222,6 +253,12 @@ public interface ComkerInitializationService {
                     getRoleDao().getByCode("Member"),
                     getSpotDao().getByCode("pctu.edu.vn"));
 
+            getCrewDao().addGlobalRole(
+                    getCrewDao().getByName("Administrators"),
+                    getRoleDao().getByCode("Administrator"));
+            getCrewDao().addGlobalRole(
+                    getCrewDao().getByName("Administrators"),
+                    getRoleDao().getByCode("Member"));
             getCrewDao().addGlobalRole(
                     getCrewDao().getByName("Public"),
                     getRoleDao().getByCode("Member"));
@@ -245,21 +282,21 @@ public interface ComkerInitializationService {
             }
             getRoleDao().addPermission(
                     getRoleDao().getByCode("Administrator"),
-                    getPermissionDao().getByAuthority("ROLE_SYSA"));
+                    getPermissionDao().getByAuthority("PERM_COMKER_SYSA"));
             getRoleDao().addPermission(
                     getRoleDao().getByCode("Administrator"),
-                    getPermissionDao().getByAuthority("ROLE_USER"));
+                    getPermissionDao().getByAuthority("PERM_COMKER_USER"));
 
             getRoleDao().addPermission(
                     getRoleDao().getByCode("Manager"),
-                    getPermissionDao().getByAuthority("ROLE_USER"));
+                    getPermissionDao().getByAuthority("PERM_COMKER_USER"));
 
             getRoleDao().addPermission(
                     getRoleDao().getByCode("Member"),
-                    getPermissionDao().getByAuthority("ROLE_USER"));
+                    getPermissionDao().getByAuthority("PERM_COMKER_USER"));
             getRoleDao().addPermission(
                     getRoleDao().getByCode("Member"),
-                    getPermissionDao().getByAuthority("ROLE_TEST"));
+                    getPermissionDao().getByAuthority("PERM_COMKER_TEST"));
         }
 
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
