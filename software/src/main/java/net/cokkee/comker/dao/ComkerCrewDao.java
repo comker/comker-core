@@ -15,6 +15,8 @@ import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 import org.hibernate.Criteria;
+import org.hibernate.LockMode;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -197,6 +199,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfGlobalPermission(Set<String> bag, ComkerCrew crew) {
             if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(crew);
             List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
             for(ComkerCrewJoinGlobalRole item:list) {
                 bag.addAll(getRoleDao().getAuthorities(item.getRole()));
@@ -215,6 +219,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew) {
             if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(crew);
             List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
             for(ComkerCrewJoinRoleWithSpot item:list) {
                 ComkerSpot spot = item.getSpot();
@@ -239,6 +245,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew) {
             if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(crew);
             List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
             for(ComkerCrewJoinRoleWithSpot item:list) {
                 ComkerSpot spot = item.getSpot();
