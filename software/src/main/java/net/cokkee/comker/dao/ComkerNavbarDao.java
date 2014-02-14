@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.cokkee.comker.model.ComkerPager;
 import net.cokkee.comker.model.po.ComkerNavbarNode;
 
 import org.hibernate.Criteria;
@@ -25,7 +24,13 @@ public interface ComkerNavbarDao {
 
     Integer count();
 
-    List findNavbarList();
+    ComkerNavbarNode getNavbarTree();
+
+    ComkerNavbarNode getNavbarTree(Map<String,Object> params);
+
+    List getNavbarList();
+    
+    List getNavbarList(Map<String,Object> params);
 
     ComkerNavbarNode get(String id);
 
@@ -47,7 +52,32 @@ public interface ComkerNavbarDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public List findNavbarList() {
+        public ComkerNavbarNode getNavbarTree() {
+            return getNavbarTree(new HashMap<String,Object>());
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public ComkerNavbarNode getNavbarTree(Map<String,Object> params) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerNavbarNode.class);
+            c.add(Restrictions.isNull(FIELD_PARENT));
+            ComkerNavbarNode root = (ComkerNavbarNode) c.uniqueResult();
+
+            
+
+            return root;
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List getNavbarList() {
+            return getNavbarList(new HashMap<String,Object>());
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List getNavbarList(Map<String,Object> params) {
             Session session = this.getSessionFactory().getCurrentSession();
             Criteria c = session.createCriteria(ComkerNavbarNode.class);
             return c.list();
