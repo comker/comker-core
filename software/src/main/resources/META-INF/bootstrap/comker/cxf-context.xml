@@ -25,6 +25,7 @@
             <ref bean="comkerSpotResource" />
             <ref bean="comkerRoleResource" />
             <ref bean="comkerPermissionResource" />
+            <ref bean="comkerNavbarResource" />
             <ref bean="comkerQuestionResource" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>

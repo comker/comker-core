@@ -7,6 +7,7 @@ software/src/main/etc/jetty.xml -text
 software/src/main/java/net/cokkee/comker/api/ComkerAuthResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerCrewResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerExceptionMapper.java -text
+software/src/main/java/net/cokkee/comker/api/ComkerNavbarResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerPermissionResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerQuestionResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerRoleResource.java -text

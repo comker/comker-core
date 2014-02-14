@@ -18,6 +18,7 @@
         http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
     <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
@@ -67,8 +68,8 @@
         <property name="resourcePackage" value="net.cokkee.comker.api" />
         <property name="version" value="1.0.0" />
         <property name="basePath" value="ws/comker/api" />
-        <property name="title" value="Comker Core Module" />
-        <property name="description" value="Comker Core module provides System and Administration."/>
+        <property name="title" value="Comker Module" />
+        <property name="description" value="Comker module provides System Monitor and Administration."/>
         <property name="scan" value="true" />
     </bean>
 
@@ -80,6 +81,7 @@
             <ref bean="comkerSpotResource" />
             <ref bean="comkerRoleResource" />
             <ref bean="comkerPermissionResource" />
+            <ref bean="comkerNavbarResource" />
             <ref bean="comkerQuestionResource" />
             <ref bean="swaggerResourceJSON" />
         </jaxrs:serviceBeans>

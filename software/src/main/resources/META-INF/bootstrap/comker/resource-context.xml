@@ -40,6 +40,12 @@
         <property name="permissionDao" ref="comkerPermissionDao" />
     </bean>
 
+    <bean id="comkerNavbarResource"
+            class="net.cokkee.comker.api.ComkerNavbarResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="navbarDao" ref="comkerNavbarDao" />
+    </bean>
+
     <bean id="comkerQuestionResource"
             class="net.cokkee.comker.api.ComkerQuestionResource">
         <property name="storageManager" ref="comkerStorageManager" />
