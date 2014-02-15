@@ -316,11 +316,12 @@
 
     <bean id="comkerUserDetailsService"
             class="net.cokkee.comker.service.ComkerUserDetailsService">
-        <property name="userDao" ref="comkerUserDao"/>
+        <property name="securityService" ref="comkerSecurityService"/>
     </bean>
 
     <bean id="comkerSecurityService"
             class="net.cokkee.comker.service.impl.ComkerSecurityServiceImpl">
+        <property name="userDao" ref="comkerUserDao"/>
     </bean>
 </beans>
 

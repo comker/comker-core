@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.ComkerSessionInfo;
+import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,17 @@ public class ComkerAuthResource {
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    private ComkerSecurityService securityService = null;
+
+    public ComkerSecurityService getSecurityService() {
+        return securityService;
+    }
+
+    public void setSecurityService(ComkerSecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    
     private ComkerSessionService sessionService = null;
 
     public ComkerSessionService getSessionService() {

@@ -1,22 +1,26 @@
 package net.cokkee.comker.service.impl;
 
-import java.util.HashMap;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
-import net.cokkee.comker.dao.ComkerCrewDao;
-import net.cokkee.comker.dao.ComkerPermissionDao;
-import net.cokkee.comker.dao.ComkerRoleDao;
-import net.cokkee.comker.dao.ComkerSpotDao;
+import java.util.Set;
 import net.cokkee.comker.dao.ComkerUserDao;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerPermission;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.service.ComkerSecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserCache;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
  *
@@ -37,49 +41,115 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         this.userDao = userDao;
     }
 
+    private UserCache userCache = null;
 
-    private ComkerSpotDao spotDao = null;
-
-    public ComkerSpotDao getSpotDao() {
-        return spotDao;
+    public UserCache getUserCache() {
+        return userCache;
     }
 
-    public void setSpotDao(ComkerSpotDao spotDao) {
-        this.spotDao = spotDao;
+    public void setUserCache(UserCache userCache) {
+        this.userCache = userCache;
     }
 
+    //--------------------------------------------------------------------------
 
-    private ComkerCrewDao crewDao = null;
-
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
+    @Override
+    public UserDetails getUserDetails() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null) return null;
+        Authentication authentication = context.getAuthentication();
+        if (authentication == null) return null;
+        Object user = authentication.getPrincipal();
+        if (user instanceof UserDetails) return (UserDetails) user;
+        return null;
     }
-
-    public void setCrewDao(ComkerCrewDao crewDao) {
-        this.crewDao = crewDao;
-    }
-
-
-    private ComkerRoleDao roleDao = null;
-
-    public ComkerRoleDao getRoleDao() {
-        return roleDao;
-    }
-
-    public void setRoleDao(ComkerRoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
-
-
-    private ComkerPermissionDao permissionDao = null;
-
-    public ComkerPermissionDao getPermissionDao() {
-        return permissionDao;
-    }
-
-    public void setPermissionDao(ComkerPermissionDao permissionDao) {
-        this.permissionDao = permissionDao;
-    }
-
     
+    @Override
+    public UserDetails loadUserDetails(String username, String spotCode)
+            throws UsernameNotFoundException, DataAccessException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("loadUserByUsername(" + username + ")");
+        }
+
+        ComkerUser user = null;
+        if (username != null) {
+            user = getUserDao().getByUsername(username);
+        }
+
+        if (user == null) {
+            if (log.isErrorEnabled()) {
+                log.error("loadUserByUsername(" + username + ") is NULL");
+            }
+            throw new UsernameNotFoundException("User " + username + " not found.");
+        }
+
+        Set<String> authoritySet = new HashSet<String>();
+
+        authoritySet.addAll(getUserDao().getCodeOfGlobalPermission(user));
+
+        if (spotCode != null) {
+            Map<String,Set<String>> tree = getUserDao().getCodeOfSpotWithPermission(user);
+            if (tree.containsKey(spotCode)) {
+                authoritySet.addAll(tree.get(spotCode));
+            }
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format("authorities of user {0}:", new Object[] {username}));
+            for(String authority:authoritySet) {
+                log.debug(MessageFormat.format(" + {0}", new Object[] {authority}));
+            }
+        }
+
+        ComkerUserDetails userDetails = new ComkerUserDetails(
+                user.getUsername(), user.getPassword(),
+                createGrantedAuthorities(authoritySet));
+
+        return userDetails;
+    }
+
+    private static Collection<GrantedAuthority> createGrantedAuthorities(Collection<String> authorities) {
+        Collection<GrantedAuthority> ga = new HashSet<GrantedAuthority>();
+        for(String authority: authorities) {
+            ga.add(new SimpleGrantedAuthority(authority));
+        }
+        return ga;
+    }
+
+    @Override
+    public void reloadUserDetails(String spotCode) {
+        UserDetails oldUserDetails = getUserDetails();
+        if (oldUserDetails == null) return;
+
+        UserDetails userDetails = loadUserDetails(oldUserDetails.getUsername(), spotCode);
+
+        if (userDetails != null) {
+            UsernamePasswordAuthenticationToken newToken =
+                    new UsernamePasswordAuthenticationToken(userDetails,
+                userDetails.getPassword(), userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newToken);
+        }
+
+        // refresh user details (remove from userCache)
+        if (getUserCache() != null) {
+            getUserCache().removeUserFromCache(oldUserDetails.getUsername());
+        }
+    }
+
+    @Override
+    public void changePassword(String password, String encodedPassword) {
+        UserDetails user = getUserDetails();
+        if (user == null) return;
+
+        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+        authorities.addAll(user.getAuthorities());
+
+        ComkerUserDetails userDetails = new ComkerUserDetails(
+                user.getUsername(), encodedPassword, authorities);
+
+        UsernamePasswordAuthenticationToken newToken =
+                new UsernamePasswordAuthenticationToken(userDetails, password);
+        SecurityContextHolder.getContext().setAuthentication(newToken);
+    }
 }
