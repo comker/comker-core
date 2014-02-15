@@ -2,6 +2,8 @@ package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.dao.ComkerNavbarDao;
@@ -44,19 +46,56 @@ public class ComkerNavbarResource {
     @javax.ws.rs.Path("/tree")
     @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
-        value = "Tree of Navigation Node",
-        notes = "Returns Tree of Navigation Node",
+        value = "Full tree of navigation nodes",
+        notes = "Returns full tree of navigation nodes",
         response = ComkerNavbarNode.class)
-    public Response getNavbarTree() {
+    public Response getNavbarTreeRoot() {
+
         if (log.isDebugEnabled()) {
-            log.debug("getNavbarTree() - started");
+            log.debug("getNavbarTreeRoot()");
         }
 
         ComkerNavbarNode item = getNavbarDao().getNavbarTree();
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
-                    "getNavbarTree() - Root's code: {0}",
+                    "getNavbarTreeRoot() - Root code: {0}",
+                    new Object[] {item.getCode()}));
+        }
+
+        return Response.ok().entity(item).build();
+    }
+
+    @javax.ws.rs.GET
+    @javax.ws.rs.Path("/tree/{mode}/{id}")
+    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(
+        value = "Tree of Navigation Node",
+        notes = "Returns Tree of Navigation Node",
+        response = ComkerNavbarNode.class)
+    public Response getNavbarTree(
+            @ApiParam(value = "Loading mode", required = false)
+            @javax.ws.rs.PathParam("mode") String mode,
+            @ApiParam(value = "ID of NavbarNode that needs to be loaded", required = false)
+            @javax.ws.rs.PathParam("id") String id) {
+        
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format(
+                    "getNavbarTree() - with mode:{0} & id:{1}",
+                    new Object[] {mode, id}));
+        }
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (mode != null && id != null) {
+            params.put(ComkerNavbarDao.FILTER_ID, id);
+            params.put(ComkerNavbarDao.FILTER_MODE, mode);
+        }
+
+        ComkerNavbarNode item = getNavbarDao().getNavbarTree(params);
+
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format(
+                    "getNavbarTree() - Root code: {0}",
                     new Object[] {item.getCode()}));
         }
         
