@@ -52,6 +52,10 @@ software/src/main/java/net/cokkee/comker/model/po/ComkerSpotJoinModulePk.java -t
 software/src/main/java/net/cokkee/comker/model/po/ComkerUser.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrew.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrewPk.java -text
+software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationEntryPoint.java -text
+software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationFailureHandler.java -text
+software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationHelper.java -text
+software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationSuccessHandler.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerInitializationService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerSecurityService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerSessionService.java -text
@@ -214,3 +218,4 @@ software/src/main/webapp/api/lib/swagger.js -text
 software/src/main/webapp/api/lib/underscore-min.js -text
 software/src/main/webapp/api/swagger-ui.js -text
 software/src/main/webapp/api/swagger-ui.min.js -text
+software/src/main/webapp/comker/login.jsp -text

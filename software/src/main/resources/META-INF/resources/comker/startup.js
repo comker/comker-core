@@ -11,6 +11,11 @@ define([
     'app/routers/crewRouter',
     'app/routers/userRouter',
 ], function($, _, Backbone, Coke, AuthRouter, HomeRouter, PermissionRouter, RoleRouter, SpotRouter, CrewRouter, UserRouter) {
+
+    $.ajaxSetup({
+        headers: { "X-Requested-With": "ComkerAjaxRequest" }
+    });
+
     var initialize = function() {
         var app = app || {};
 

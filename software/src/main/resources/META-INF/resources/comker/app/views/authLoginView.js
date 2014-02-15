@@ -50,14 +50,14 @@ define([
             var form_username = this.model.get('username');
             var form_password = this.model.get('password');
             $.ajax({
-                url: '../j_spring_security_check',
+                url: '../login-ajax',
                 type: 'POST',
                 contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
                 dataType: 'json',
-                data: {j_username: form_username, j_password: form_password},
-                beforeSend: function(data){
+                data: {username: form_username, password: form_password},
+                beforeSend: function(xhr){
                     Coke.log.debug("run AuthLoginView.login() - before $.ajax()");
-                    console.log(data);
+                    xhr.setRequestHeader("X-Requested-With", "ComkerAjaxRequest");
                 },
                 success: function(data) {
                     Coke.log.debug("run AuthLoginView.login() - run $.ajax() success");

@@ -9,54 +9,116 @@
        http://www.springframework.org/schema/security
        http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <security:global-method-security secured-annotations="enabled" />
+    <security:global-method-security secured-annotations="enabled"/>
 
     <!--
     The ‹http› namespace block always creates an SecurityContextPersistenceFilter,
     an ExceptionTranslationFilter and a FilterSecurityInterceptor. These are
     fixed and cannot be replaced with alternatives.
     -->
+
+    <security:http pattern="/comker/*.jsp" security="none"/>
+    <security:http pattern="/comker/*.html" security="none"/>
+    <security:http pattern="/comker/*.js" security="none"/>
+    <security:http pattern="/comker/lib/**" security="none"/>
+    <security:http pattern="/comker/app/**" security="none"/>
+
     <security:http
             auto-config="true"
             use-expressions="true"
-            access-decision-manager-ref="comkerAccessDecisionManager">
+            access-decision-manager-ref="comkerAccessDecisionManager"
+            entry-point-ref="comkerAuthenticationEntryPoint">
 
         <!-- <security:anonymous enabled="false"/> -->
 
         <!-- Authorization support through ACL -->
-        <security:intercept-url pattern="/comker/**" access="permitAll" />
-        
-        <security:intercept-url pattern="/comker/lib/**" access="permitAll" />
-        <security:intercept-url pattern="/comker/app/**" access="permitAll" />
-
-        <security:intercept-url pattern="/ws/comker/api/auth/**" access="permitAll" />
-
-        <security:intercept-url pattern="/ws/comker/api/**" access="hasRole('PERM_COMKER_USER')" />
+        <security:intercept-url pattern="/ws/comker/api/auth/**" access="permitAll"/>
+        <security:intercept-url pattern="/ws/comker/api/**" access="hasRole('PERM_COMKER_USER')"/>
         
         <!-- Form login support -->
+        <security:custom-filter before="FORM_LOGIN_FILTER" ref="comkerAjaxFormLoginFilter"/>
+        
         <security:form-login
                 login-page="/comker/#auth/login"
-                login-processing-url="/j_spring_security_check"
+                login-processing-url="/login"
+                username-parameter="username"
+                password-parameter="password"
                 default-target-url="/comker/"
-                authentication-failure-url="/login.jsp?login_error=1" />
+                authentication-failure-url="/comker/#auth/loginFailure"/>
 
         <!-- Remember Me authentication support -->
-        <!-- <security:remember-me key="comkerAppKey" token-validity-seconds="1209600" /> -->
-        <!-- <security:remember-me services-ref="comkerRememberMeServices" /> -->
+        <!-- <security:remember-me key="comkerAppKey" token-validity-seconds="1209600"/> -->
+        <!-- <security:remember-me services-ref="comkerRememberMeServices"/> -->
 
         <!-- Anonymous Login support -->
-        <!-- <security:anonymous username="guest" granted-authority="ROLE_GUEST" /> -->
+        <!-- <security:anonymous username="guest" granted-authority="ROLE_GUEST"/> -->
 
         <!-- Log out support -->
-        <security:logout invalidate-session="true" 
+        <security:logout 
+                invalidate-session="true"
+                delete-cookies="true"
                 logout-url="/logout"
-                logout-success-url="/comker/#auth/logoutSuccess" />
+                logout-success-url="/comker/#auth/logoutSuccess"/>
     </security:http>
 
-    <security:debug />
+    <!-- <security:debug/> -->
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+    <!-- Delegating Entry Point (ajax and default) -->
+	<bean id="comkerAuthenticationEntryPoint"
+            class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+	     <constructor-arg>
+	         <map>
+	             <entry key="hasHeader('X-Requested-With','ComkerAjaxRequest')"
+                        value-ref="comkerAjaxAuthenticationEntryPoint"/>
+	         </map>
+	     </constructor-arg>
+	     <property name="defaultEntryPoint" ref="comkerDefaultAuthenticationEntryPoint"/>
+	</bean>
+
+    <bean id="comkerAjaxAuthenticationEntryPoint"
+            class="net.cokkee.comker.security.web.authentication.ComkerAjaxAuthenticationEntryPoint">
+        <property name="helper" ref="comkerAjaxAuthenticationHelper"/>
+    </bean>
+
+    <bean id="comkerDefaultAuthenticationEntryPoint"
+            class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<property name="loginFormUrl" value="/comker/#auth/login"/>
+	</bean>
+
+
+    <bean id="comkerAjaxFormLoginFilter"
+            class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="comkerAuthenticationManager"/>
+        <property name="filterProcessesUrl" value="/login-ajax"/>
+        <property name="usernameParameter" value="username"/>
+        <property name="passwordParameter" value="password"/>
+        <property name="authenticationSuccessHandler" ref="comkerAjaxAuthenticationSuccessHandler"/>
+        <property name="authenticationFailureHandler" ref="comkerAjaxAuthenticationFailureHandler"/>
+    </bean>
+
+    <bean id="comkerAjaxAuthenticationSuccessHandler"
+            class="net.cokkee.comker.security.web.authentication.ComkerAjaxAuthenticationSuccessHandler">
+        <property name="helper" ref="comkerAjaxAuthenticationHelper"/>
+    </bean>
+
+    <bean id="comkerAjaxAuthenticationFailureHandler"
+            class="net.cokkee.comker.security.web.authentication.ComkerAjaxAuthenticationFailureHandler">
+        <property name="helper" ref="comkerAjaxAuthenticationHelper"/>
+    </bean>
+
+    <bean id="comkerAjaxAuthenticationHelper"
+            class="net.cokkee.comker.security.web.authentication.ComkerAjaxAuthenticationHelper">
+        <property name="requestMatcher">
+            <bean class="org.springframework.security.web.util.ELRequestMatcher">
+                <constructor-arg value="hasHeader('X-Requested-With','ComkerAjaxRequest')"/>
+            </bean>
+        </property>
+    </bean>
 
     <!--
-    <security:custom-filter position="BASIC_AUTH_FILTER" ref="comkerBasicAuthenticationFilter" />
+    <security:custom-filter position="BASIC_AUTH_FILTER" ref="comkerBasicAuthenticationFilter"/>
 
     <bean id="comkerBasicAuthenticationFilter"
             class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
@@ -66,7 +128,7 @@
 
     <bean id="comkerAuthenticationEntryPoint"
             class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-        <property name="realmName" value="Username: jack Password: jill" />
+        <property name="realmName" value="Username: jack Password: jill"/>
     </bean>
 
     <bean id="comkerAuthenticationEntryPoint2"
@@ -76,24 +138,25 @@
     -->
 
     <!--
-    <security:custom-filter position="FORM_LOGIN_FILTER" ref="comkerFormLoginFilter" />
+    <security:custom-filter position="FORM_LOGIN_FILTER" ref="comkerFormLoginFilter"/>
 
-    <bean id="comkerFormLoginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+    <bean id="comkerFormLoginFilter"
+            class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
         <property name="authenticationManager" ref="comkerAuthenticationManager"/>
         <property name="filterProcessesUrl" value="/j_spring_security_check"/>
         <property name="usernameParameter" value="username"/>
         <property name="passwordParameter" value="password"/>
         <property name="authenticationSuccessHandler">
-            <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler ">
+            <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
                 <property name="alwaysUseDefaultTargetUrl" value="true"/>
                 <property name="defaultTargetUrl" value="/success.jsp"/>
             </bean>
         </property>
-        <property name="authenticationFailureHandler" ref="comkerAuthenticationFailureHandler" />
+        <property name="authenticationFailureHandler" ref="comkerAuthenticationFailureHandler"/>
     </bean>
 
     <bean id="comkerAuthenticationFailureHandler"
-            class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler "/>
+            class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
 
     <bean id="comkerAuthenticationFailureHandler"
             class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
@@ -109,11 +172,11 @@
     -->
     
     <!--
-    <security:custom-filter position="LOGOUT_FILTER" ref="comkerLogoutFilter" />
+    <security:custom-filter position="LOGOUT_FILTER" ref="comkerLogoutFilter"/>
 
     <bean id="comkerLogoutFilter"
             class="org.springframework.security.web.authentication.logout.LogoutFilter">
-        <constructor-arg value="/logout" />
+        <constructor-arg value="/logout"/>
         <constructor-arg>
             <list>
                 <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
@@ -124,7 +187,7 @@
     -->
 
     <!--
-    <security:custom-filter position="FILTER_SECURITY_INTERCEPTOR" ref="comkerFilterSecurityInterceptor" />
+    <security:custom-filter position="FILTER_SECURITY_INTERCEPTOR" ref="comkerFilterSecurityInterceptor"/>
 
     <bean id="comkerFilterSecurityInterceptor"
             class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
@@ -143,12 +206,12 @@
     -->
 
     <!--
-    <security:custom-filter position="REMEMBER_ME_FILTER" ref="comkerRememberMeFilter" />
+    <security:custom-filter position="REMEMBER_ME_FILTER" ref="comkerRememberMeFilter"/>
 
     <bean id="comkerRememberMeFilter"
             class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
         <property name="rememberMeServices" ref="comkerRememberMeServices"/>
-        <property name="authenticationManager" ref="comkerRememberMeAuthenticationManager" />
+        <property name="authenticationManager" ref="comkerRememberMeAuthenticationManager"/>
     </bean>
 
     <bean id="comkerRememberMeAuthenticationManager"
@@ -175,11 +238,11 @@
     -->
 
     <!--
-    <security:custom-filter position="ANONYMOUS_FILTER" ref="comkerAnonymousFilter" />
+    <security:custom-filter position="ANONYMOUS_FILTER" ref="comkerAnonymousFilter"/>
 
     <bean id="comkerAnonymousFilter"
             class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter" >
-        <property name="userAttribute" value="ROLE_GUEST" />
+        <property name="userAttribute" value="ROLE_GUEST"/>
     </bean>
     -->
 
@@ -198,9 +261,9 @@
             class="org.springframework.security.access.vote.AffirmativeBased">
         <property name="decisionVoters">
             <list>
-                <ref bean="comkerExpressionVoter" />
-                <ref bean="comkerRoleVoter" />
-                <ref bean="comkerAuthenticatedVoter" />
+                <ref bean="comkerExpressionVoter"/>
+                <ref bean="comkerRoleVoter"/>
+                <ref bean="comkerAuthenticatedVoter"/>
             </list>
         </property>
     </bean>
@@ -220,22 +283,22 @@
     </bean>
 
     <bean id="comkerExpressionHandler"
-            class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" />
+            class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 
     <!--
     <security:authentication-manager alias="comkerAuthenticationManager">
         <security:authentication-provider>
-            <security:password-encoder hash="md5" />
+            <security:password-encoder hash="md5"/>
             <security:user-service>
                 <security:user name="user"
                         password="e10adc3949ba59abbe56e057f20f883e"
-                        authorities="VLFR_MEMBER" />
+                        authorities="VLFR_MEMBER"/>
                 <security:user name="manager"
                         password="e10adc3949ba59abbe56e057f20f883e"
-                        authorities="VLFR_MEMBER,VLFR_MANAGER" />
+                        authorities="VLFR_MEMBER,VLFR_MANAGER"/>
                 <security:user name="admin"
                         password="e10adc3949ba59abbe56e057f20f883e"
-                        authorities="VLFR_MEMBER,VLFR_MANAGER,VLFR_ADMIN" />
+                        authorities="VLFR_MEMBER,VLFR_MANAGER,VLFR_ADMIN"/>
             </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
@@ -243,7 +306,7 @@
     
     <security:authentication-manager alias="comkerAuthenticationManager">
         <security:authentication-provider user-service-ref="comkerUserDetailsService">
-            <security:password-encoder hash="md5" />
+            <security:password-encoder hash="md5"/>
         </security:authentication-provider>
     </security:authentication-manager>
 
