@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.ComkerSessionInfo;
+import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
@@ -54,6 +55,11 @@ public class ComkerAuthResource {
         }
 
         ComkerSessionInfo item = new ComkerSessionInfo();
+
+        ComkerUserDetails userDetails = getSecurityService().getUserDetails();
+        if (userDetails != null) {
+            item.setPermissions(userDetails.getPermissions());
+        }
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(

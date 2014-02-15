@@ -19,7 +19,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
@@ -54,18 +53,18 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     //--------------------------------------------------------------------------
 
     @Override
-    public UserDetails getUserDetails() {
+    public ComkerUserDetails getUserDetails() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context == null) return null;
         Authentication authentication = context.getAuthentication();
         if (authentication == null) return null;
         Object user = authentication.getPrincipal();
-        if (user instanceof UserDetails) return (UserDetails) user;
+        if (user instanceof ComkerUserDetails) return (ComkerUserDetails) user;
         return null;
     }
     
     @Override
-    public UserDetails loadUserDetails(String username, String spotCode)
+    public ComkerUserDetails loadUserDetails(String username, String spotCode)
             throws UsernameNotFoundException, DataAccessException {
 
         if (log.isDebugEnabled()) {
@@ -103,26 +102,17 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         }
 
         ComkerUserDetails userDetails = new ComkerUserDetails(
-                user.getUsername(), user.getPassword(),
-                createGrantedAuthorities(authoritySet));
+                user.getUsername(), user.getPassword(), spotCode, authoritySet);
 
         return userDetails;
     }
 
-    private static Collection<GrantedAuthority> createGrantedAuthorities(Collection<String> authorities) {
-        Collection<GrantedAuthority> ga = new HashSet<GrantedAuthority>();
-        for(String authority: authorities) {
-            ga.add(new SimpleGrantedAuthority(authority));
-        }
-        return ga;
-    }
-
     @Override
     public void reloadUserDetails(String spotCode) {
-        UserDetails oldUserDetails = getUserDetails();
+        ComkerUserDetails oldUserDetails = getUserDetails();
         if (oldUserDetails == null) return;
 
-        UserDetails userDetails = loadUserDetails(oldUserDetails.getUsername(), spotCode);
+        ComkerUserDetails userDetails = loadUserDetails(oldUserDetails.getUsername(), spotCode);
 
         if (userDetails != null) {
             UsernamePasswordAuthenticationToken newToken =
@@ -131,7 +121,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
             SecurityContextHolder.getContext().setAuthentication(newToken);
         }
 
-        // refresh user details (remove from userCache)
+        // refresh oldUserDetails details (remove from userCache)
         if (getUserCache() != null) {
             getUserCache().removeUserFromCache(oldUserDetails.getUsername());
         }
@@ -139,17 +129,13 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     @Override
     public void changePassword(String password, String encodedPassword) {
-        UserDetails user = getUserDetails();
-        if (user == null) return;
+        ComkerUserDetails oldUserDetails = getUserDetails();
+        if (oldUserDetails == null) return;
 
-        Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        authorities.addAll(user.getAuthorities());
-
-        ComkerUserDetails userDetails = new ComkerUserDetails(
-                user.getUsername(), encodedPassword, authorities);
+        ComkerUserDetails newUserDetails = new ComkerUserDetails(oldUserDetails, encodedPassword);
 
         UsernamePasswordAuthenticationToken newToken =
-                new UsernamePasswordAuthenticationToken(userDetails, password);
+                new UsernamePasswordAuthenticationToken(newUserDetails, password);
         SecurityContextHolder.getContext().setAuthentication(newToken);
     }
 }

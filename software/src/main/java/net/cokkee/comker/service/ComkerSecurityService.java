@@ -1,7 +1,7 @@
 package net.cokkee.comker.service;
 
+import net.cokkee.comker.model.ComkerUserDetails;
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 /**
@@ -10,9 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public interface ComkerSecurityService {
     
-    UserDetails getUserDetails();
+    ComkerUserDetails getUserDetails();
 
-    UserDetails loadUserDetails(String username, String spotCode)
+    ComkerUserDetails loadUserDetails(String username, String spotCode)
             throws UsernameNotFoundException, DataAccessException;
 
     void reloadUserDetails(String spotCode);

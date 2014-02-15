@@ -1,7 +1,8 @@
 package net.cokkee.comker.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,33 +15,41 @@ public class ComkerUserDetails  implements UserDetails {
 
     static final GrantedAuthority NO_ROLE = new SimpleGrantedAuthority("NO_ROLE");
 
-    public ComkerUserDetails(String username, String password, Collection<GrantedAuthority> authorities) {
+    public ComkerUserDetails(String username, String password, String spotCode, Set<String> permissions) {
         this.username = username;
         this.password = password;
-        this.authorities = authorities;
+        this.spotCode = spotCode;
+        this.permissions = permissions;
+
+        this.authorities = null;
     }
 
-    public ComkerUserDetails(String username, String password, String[] authorityArray) {
-        this.username = username;
+    public ComkerUserDetails(ComkerUserDetails userdetails, String password) {
+        this.username = userdetails.getUsername();
         this.password = password;
-        this.authorities = new ArrayList<GrantedAuthority>();
+        this.spotCode = userdetails.getSpotCode();
+        this.permissions = userdetails.getPermissions();
+        this.authorities = userdetails.getAuthorities();
+    }
 
-        if (authorityArray != null && authorityArray.length > 0) {
-            for (int i=0; i<authorityArray.length; i++) {
-                authorities.add(new SimpleGrantedAuthority(authorityArray[i]));
-            }
-        } else {
-            authorities.add(NO_ROLE);
-        }
+    public ComkerUserDetails(ComkerUserDetails userdetails, String spotCode, Set<String> permissions) {
+        this.username = userdetails.getUsername();
+        this.password = userdetails.getPassword();
+        this.spotCode = spotCode;
+        this.permissions = permissions;
+        this.authorities = null;
     }
 
     private String username;
     private String password;
+    private String spotCode;
+    private Set<String> permissions = null;
+
     private Collection<GrantedAuthority> authorities = null;
 
     @Override
-    public Collection<GrantedAuthority> getAuthorities() {
-        return this.authorities;
+    public String getUsername() {
+        return this.username;
     }
 
     @Override
@@ -48,9 +57,27 @@ public class ComkerUserDetails  implements UserDetails {
         return this.password;
     }
 
+    public String getSpotCode() {
+        return spotCode;
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
     @Override
-    public String getUsername() {
-        return this.username;
+    public Collection<GrantedAuthority> getAuthorities() {
+        if (authorities == null) {
+            authorities = new HashSet<GrantedAuthority>();
+            if (permissions != null && permissions.size() > 0) {
+                for (String permission:permissions) {
+                    authorities.add(new SimpleGrantedAuthority(permission));
+                }
+            } else {
+                authorities.add(NO_ROLE);
+            }
+        }
+        return authorities;
     }
 
     @Override
