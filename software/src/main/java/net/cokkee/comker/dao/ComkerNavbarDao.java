@@ -11,10 +11,8 @@ import java.util.Set;
 import net.cokkee.comker.model.po.ComkerNavbarNode;
 
 import org.hibernate.Criteria;
-import org.hibernate.LockOptions;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -29,10 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ComkerNavbarDao {
 
     public static final String FILTER_ID = "id";
-    public static final String FILTER_MODE = "mode";
-    public static final String FILTER_MODE_INSIDE = "inside";
-    public static final String FILTER_MODE_EXCEPT = "except";
+    public static final String FILTER_EXCLUDE_ID = "excludeId";
 
+    public static final String FIELD_TREE_ID = "treeId";
     Integer count();
 
     ComkerNavbarNode getNavbarTree();
@@ -72,25 +69,18 @@ public interface ComkerNavbarDao {
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerNavbarNode getNavbarTree(Map<String,Object> params) {
-            if (params == null) params = new HashMap<String,Object>();
-
-            Object id = params.get(FILTER_ID);
-            Object mode = params.get(FILTER_MODE);
-
             Session session = this.getSessionFactory().getCurrentSession();
             Criteria c = session.createCriteria(ComkerNavbarNode.class);
 
-            Object exceptNodeId = null;
+            if (params == null) params = new HashMap<String,Object>();
+
+            Object id = params.get(FILTER_ID);
+            Object excludeNodeId = params.get(FILTER_EXCLUDE_ID);
+
             if (id == null) {
                 c.add(Restrictions.isNull(FIELD_PARENT));
             } else {
-                if (FILTER_MODE_INSIDE.equals(mode)) {
-                    c.add(Restrictions.idEq(id));
-                }
-                if (FILTER_MODE_EXCEPT.equals(mode)) {
-                    c.add(Restrictions.isNull(FIELD_PARENT));
-                    exceptNodeId = id;
-                }
+                c.add(Restrictions.idEq(id));
             }
 
             Queue<ComkerNavbarNode> queue = new LinkedList<ComkerNavbarNode>();
@@ -98,8 +88,8 @@ public interface ComkerNavbarDao {
             ComkerNavbarNode root = (ComkerNavbarNode) c.uniqueResult();
             if (root != null) queue.add(root);
 
-            ComkerNavbarNode exceptParentNode = null;
-            ComkerNavbarNode exceptNode = null;
+            ComkerNavbarNode excludeNodeParent = null;
+            ComkerNavbarNode excludeNode = null;
 
             while(!queue.isEmpty()) {
                 ComkerNavbarNode node = queue.remove();
@@ -107,10 +97,10 @@ public interface ComkerNavbarDao {
                 Set<ComkerNavbarNode> children = node.getChildren();
                 if (children == null) continue;
                 for(ComkerNavbarNode child:children) {
-                    if (exceptNodeId != null && exceptNodeId.equals(child.getId())) {
-                        exceptParentNode = node;
-                        exceptNode = child;
-                        exceptNodeId = null;
+                    if (excludeNodeId != null && excludeNodeId.equals(child.getId())) {
+                        excludeNodeParent = node;
+                        excludeNode = child;
+                        excludeNodeId = null;
                     }
                     queue.add(child);
                 }
@@ -118,13 +108,13 @@ public interface ComkerNavbarDao {
 
             session.clear();
 
-            if (exceptParentNode != null && exceptNode != null) {
+            if (excludeNodeParent != null && excludeNode != null) {
                 if (log.isDebugEnabled()) {
                     log.debug(MessageFormat.format(
                             "getNavbarTree() - ExceptNode.id: {0}; ParentNode.id: {1}",
-                            new Object[]{exceptNode.getId(), exceptParentNode.getId()}));
+                            new Object[]{excludeNode.getId(), excludeNodeParent.getId()}));
                 }
-                exceptParentNode.getChildren().remove(exceptNode);
+                excludeNodeParent.getChildren().remove(excludeNode);
             }
             
             return root;
@@ -133,7 +123,7 @@ public interface ComkerNavbarDao {
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public List getNavbarList() {
-            return getNavbarList(new HashMap<String,Object>());
+            return getNavbarList(null);
         }
 
         @Override
@@ -141,7 +131,46 @@ public interface ComkerNavbarDao {
         public List getNavbarList(Map<String,Object> params) {
             Session session = this.getSessionFactory().getCurrentSession();
             Criteria c = session.createCriteria(ComkerNavbarNode.class);
-            return c.list();
+
+            if (params == null) params = new HashMap<String,Object>();
+
+            // retrieve the root
+            Object id = params.get(FILTER_ID);
+            if (id == null) {
+                c.add(Restrictions.isNull(FIELD_PARENT));
+            } else {
+                c.add(Restrictions.idEq(id));
+            }
+            ComkerNavbarNode root = (ComkerNavbarNode) c.uniqueResult();
+            if (root == null) return null;
+
+            // retrieve the excluded node
+            ComkerNavbarNode excludeNode = null;
+            Object excludeNodeId = params.get(FILTER_EXCLUDE_ID);
+            if (excludeNodeId != null) {
+                excludeNode = (ComkerNavbarNode) session.get(
+                        ComkerNavbarNode.class, excludeNodeId.toString());
+            }
+
+            // use Criteria query the nodes which are children of 'node' and not
+            // be excludeNode or descendants of excludeNode
+            Criteria l = session.createCriteria(ComkerNavbarNode.class);
+            l.add(Restrictions.like(FIELD_TREE_ID, root.getTreeId() + "%"));
+            if (excludeNode != null) {
+                l.add(Restrictions.not(Restrictions.like(FIELD_TREE_ID, excludeNode.getTreeId() + "%")));
+            }
+            l.addOrder(Order.asc(FIELD_TREE_ID));
+
+            // retrieve the list
+            List<ComkerNavbarNode> result = l.list();
+
+            // evict and remove the children property.
+            session.clear();
+            for(ComkerNavbarNode node:result) {
+                node.setChildren(null);
+            }
+
+            return result;
         }
 
         @Override
