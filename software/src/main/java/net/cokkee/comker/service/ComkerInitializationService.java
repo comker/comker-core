@@ -201,10 +201,18 @@ public interface ComkerInitializationService {
             ComkerCrew crewGuests = getOrCreateCrew(spotUnknown, roleGst, "Guests", "Guest Group");
 
             // init users
-            ComkerUser userAdmin = getOrCreateUser("admin@cokkee.net", "admin", "dobietday", "Administrator");
+            ComkerUser userAdmin = getOrCreateUser(
+                    "admin@cokkee.net",
+                    "admin",
+                    getPasswordEncoder().encodePassword("dobietday", null),
+                    "Administrator");
             getUserDao().addCrew(userAdmin, crewAdmins);
 
-            ComkerUser userGuest = getOrCreateUser("guest@cokkee.net", "guest", "nopassword", "Guest");
+            ComkerUser userGuest = getOrCreateUser(
+                    "guest@cokkee.net",
+                    "guest",
+                    getPasswordEncoder().encodePassword("nopassword", null),
+                    "Guest");
             getUserDao().addCrew(userGuest, crewGuests);
         }
 
@@ -298,25 +306,49 @@ public interface ComkerInitializationService {
             ComkerSpot spotBnho = getOrCreateSpot("buocnho.com", "Buocnho Training & Technology", "");
             initDefaultSpot(spotBnho);
 
-            ComkerUser userBnho0 = getOrCreateUser("manager@buocnho.com", "BNA00000", "dobietday", "Buocnho Manager");
+            ComkerUser userBnho0 = getOrCreateUser(
+                    "manager@buocnho.com",
+                    "BNA00000",
+                    getPasswordEncoder().encodePassword("dobietday", null),
+                    "Buocnho Manager");
             initDefaultUser(userBnho0, spotBnho, roleMgr);
 
-            ComkerUser userBnho1 = getOrCreateUser("member1@buocnho.com", "BNA00001", "nopassword", "Buocnho Member One");
+            ComkerUser userBnho1 = getOrCreateUser(
+                    "member1@buocnho.com",
+                    "BNA00001",
+                    getPasswordEncoder().encodePassword("nopassword", null),
+                    "Buocnho Member One");
             initDefaultUser(userBnho1, spotBnho, roleMbr);
 
-            ComkerUser userBnho2 = getOrCreateUser("member2@buocnho.com", "BNA00002", "nopassword", "Buocnho Member Two");
+            ComkerUser userBnho2 = getOrCreateUser(
+                    "member2@buocnho.com",
+                    "BNA00002",
+                    getPasswordEncoder().encodePassword("nopassword", null),
+                    "Buocnho Member Two");
             initDefaultUser(userBnho2, spotBnho, roleMbr);
 
             ComkerSpot spotPctu = getOrCreateSpot("pctu.edu.vn", "Đại học Phan Châu Trinh - Hội An", "");
             initDefaultSpot(spotPctu);
 
-            ComkerUser userPctu0 = getOrCreateUser("manager@pctu.edu.vn", "PCT00000", "dobietday", "Pctu Manager");
+            ComkerUser userPctu0 = getOrCreateUser(
+                    "manager@pctu.edu.vn",
+                    "PCT00000",
+                    getPasswordEncoder().encodePassword("dobietday", null),
+                    "Pctu Manager");
             initDefaultUser(userPctu0, spotPctu, roleMgr);
 
-            ComkerUser userPctu1 = getOrCreateUser("member1@pctu.edu.vn", "PCT00001", "nopassword", "Pctu Member One");
+            ComkerUser userPctu1 = getOrCreateUser(
+                    "member1@pctu.edu.vn",
+                    "PCT00001",
+                    getPasswordEncoder().encodePassword("nopassword", null),
+                    "Pctu Member One");
             initDefaultUser(userPctu1, spotPctu, roleMbr);
 
-            ComkerUser userPctu2 = getOrCreateUser("member2@pctu.edu.vn", "PCT00002", "nopassword", "Pctu Member Two");
+            ComkerUser userPctu2 = getOrCreateUser(
+                    "member2@pctu.edu.vn",
+                    "PCT00002",
+                    getPasswordEncoder().encodePassword("nopassword", null),
+                    "Pctu Member Two");
             initDefaultUser(userPctu2, spotPctu, roleMbr);
         }
 
