@@ -30,6 +30,7 @@
             class="net.cokkee.comker.service.ComkerInitializationService$Impl">
         <property name="userDao" ref="comkerUserDao" />
         <property name="spotDao" ref="comkerSpotDao" />
+        <property name="settingDao" ref="comkerSettingDao" />
         <property name="crewDao" ref="comkerCrewDao" />
         <property name="roleDao" ref="comkerRoleDao" />
         <property name="permissionDao" ref="comkerPermissionDao" />

@@ -25,6 +25,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "comker_spot")
 public class ComkerSpot extends ComkerAbstractItem {
 
+    public static final String UNKNOWN = "__UNKNOWN_SPOT__";
+    public static final String DEFAULT = "__DEFAULT_SPOT__";
+
     public ComkerSpot() {
         super();
     }

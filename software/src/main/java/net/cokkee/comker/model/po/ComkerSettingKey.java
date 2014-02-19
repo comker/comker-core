@@ -19,6 +19,19 @@ import org.hibernate.annotations.GenericGenerator;
         uniqueConstraints = @UniqueConstraint(columnNames = "f_code"))
 public class ComkerSettingKey extends ComkerAbstractItem {
 
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_INTEGER = "integer";
+    public static final String TYPE_BOOLEAN = "boolean";
+    public static final String TYPE_LIST = "list";
+
+    public static final String CODE_APPLICATION_TITLE = "APPLICATION_TITLE";
+    public static final String CODE_APPLICATION_MESSAGE = "APPLICATION_MESSAGE";
+    public static final String CODE_APPLICATION_PAGER_SIZE = "APPLICATION_PAGER_SIZE";
+
+    public static final String CODE_SPOT_THEME = "SPOT_THEME";
+
+    public static final String CODE_USER_LANGUAGE = "USER_LANGUAGE";
+
     public ComkerSettingKey() {
         super();
     }

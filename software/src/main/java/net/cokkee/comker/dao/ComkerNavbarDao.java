@@ -42,6 +42,8 @@ public interface ComkerNavbarDao {
 
     ComkerNavbarNode get(String id);
 
+    ComkerNavbarNode create(ComkerNavbarNode item);
+    
     ComkerNavbarNode update(ComkerNavbarNode item);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -178,6 +180,14 @@ public interface ComkerNavbarDao {
         public ComkerNavbarNode get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
             return (ComkerNavbarNode) session.get(ComkerNavbarNode.class, id);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerNavbarNode create(ComkerNavbarNode item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.save(item);
+            return item;
         }
 
         @Override

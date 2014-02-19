@@ -30,6 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerCrewDao extends ComkerAbstractDao {
 
+    public static final String FIELD_SPOT = "pk.spot";
+    public static final String FIELD_ROLE = "pk.role";
+
     ComkerCrew findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
@@ -37,6 +40,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     ComkerCrew get(String id);
 
     ComkerCrew getByName(String name);
+
+    ComkerCrew getBySpotWithRole(ComkerSpot spot, ComkerRole role);
     
     ComkerCrew save(ComkerCrew item);
 
@@ -124,6 +129,33 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put(FIELD_NAME, name);
             return findWhere(params);
+        }
+
+        /* // Examples: ctx, log
+            def cd = ctx.getBean('comkerCrewDao');
+            def sd = ctx.getBean('comkerSpotDao');
+            def rd = ctx.getBean('comkerRoleDao');
+
+            def s = sd.getByCode('buocnho.com');
+            def r = rd.getByCode('Manager');
+
+            def c = cd.getBySpotWithRole(s, r);
+            print c.getName();
+         */
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public ComkerCrew getBySpotWithRole(ComkerSpot spot, ComkerRole role) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerCrewJoinRoleWithSpot.class);
+
+            session.buildLockRequest(LockOptions.NONE).lock(spot);
+            session.buildLockRequest(LockOptions.NONE).lock(role);
+
+            c.add(Restrictions.eq(FIELD_SPOT, spot));
+            c.add(Restrictions.eq(FIELD_ROLE, role));
+            ComkerCrewJoinRoleWithSpot result = (ComkerCrewJoinRoleWithSpot) c.uniqueResult();
+            if (result == null) return null;
+            return result.getCrew();
         }
 
         @Override
