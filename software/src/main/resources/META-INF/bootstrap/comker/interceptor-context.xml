@@ -5,7 +5,7 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="comkerWatchPointcutAdvisor"
+    <bean id="comkerWatchdogPointcutAdvisor"
             class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
         <property name="patterns">
             <list>
@@ -16,12 +16,12 @@
                 <value>.*(create|update|delete)DefVienna.*</value>
             </list>
         </property>
-        <property name="advice" ref="comkerWatchInterceptor" />
+        <property name="advice" ref="comkerWatchdogInterceptor" />
     </bean>
 
-    <bean id="comkerWatchInterceptor"
-            class="net.cokkee.comker.interceptor.ComkerWatchInterceptor">
-        <property name="watchDao" ref="comkerWatchDao" />
+    <bean id="comkerWatchdogInterceptor"
+            class="net.cokkee.comker.interceptor.ComkerWatchdogInterceptor">
+        <property name="watchdogDao" ref="comkerWatchdogDao" />
         <property name="taskExecutor" ref="comkerTaskExecutor" />
         <property name="securityService" ref="comkerSecurityService" />
         <property name="toolboxService" ref="comkerToolboxService" />

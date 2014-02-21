@@ -100,7 +100,7 @@
                 <value>net.cokkee.comker.model.po.ComkerSettingEntry</value>
                 <value>net.cokkee.comker.model.po.ComkerSettingEntryPk</value>
                 <value>net.cokkee.comker.model.po.ComkerSettingKey</value>
-                <value>net.cokkee.comker.model.po.ComkerWatchLog</value>
+                <value>net.cokkee.comker.model.po.ComkerWatchdog</value>
             </list>
         </property>
         <property name="hibernateProperties">

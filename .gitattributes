@@ -22,8 +22,10 @@ software/src/main/java/net/cokkee/comker/dao/ComkerSettingDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSpotDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerUserDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerWatchDao.java -text
+software/src/main/java/net/cokkee/comker/dao/ComkerWatchdogDao.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerSettingDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchdogDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAccessDatabaseException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerFieldDuplicatedException.java -text
@@ -31,6 +33,7 @@ software/src/main/java/net/cokkee/comker/exception/ComkerInvalidParameterExcepti
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
 software/src/main/java/net/cokkee/comker/interceptor/ComkerWatchInterceptor.java -text
+software/src/main/java/net/cokkee/comker/interceptor/ComkerWatchdogInterceptor.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionResponse.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerHashMap.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerObject.java -text

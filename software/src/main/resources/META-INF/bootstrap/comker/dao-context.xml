@@ -11,7 +11,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerUserDaoHibernate" />
@@ -29,7 +29,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerSpotDaoHibernate" />
@@ -46,7 +46,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerSettingDaoHibernate" />
@@ -65,7 +65,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerCrewDaoHibernate" />
@@ -83,7 +83,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerRoleDaoHibernate" />
@@ -100,7 +100,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchPointcutAdvisor" />
+                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerPermissionDaoHibernate" />
@@ -116,7 +116,7 @@
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
-    <bean id="comkerWatchDao" class="net.cokkee.comker.dao.impl.ComkerWatchDaoHibernate">
+    <bean id="comkerWatchdogDao" class="net.cokkee.comker.dao.impl.ComkerWatchdogDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
