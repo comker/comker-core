@@ -66,9 +66,11 @@ software/src/main/java/net/cokkee/comker/service/ComkerInitializationService.jav
 software/src/main/java/net/cokkee/comker/service/ComkerSecurityService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerSessionService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerStorageManager.java -text
+software/src/main/java/net/cokkee/comker/service/ComkerToolboxService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerUserDetailsService.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerSecurityServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerStorageManagerImpl.java -text
+software/src/main/java/net/cokkee/comker/service/impl/ComkerToolboxServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/structure/ComkerKeyAndValueSet.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerAddHeaderFilter.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerBeanPostProcessor.java -text

@@ -42,4 +42,8 @@
             class="net.cokkee.comker.service.ComkerSessionService$Impl" scope="session">
         <aop:scoped-proxy proxy-target-class="false" />
     </bean>
+
+    <bean id="comkerToolboxService"
+            class="net.cokkee.comker.service.impl.ComkerToolboxServiceImpl">
+    </bean>
 </beans>
