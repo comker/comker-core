@@ -77,6 +77,7 @@ software/src/main/java/net/cokkee/comker/service/ComkerSessionService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerStorageManager.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerToolboxService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerUserDetailsService.java -text
+software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerSecurityServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerStorageManagerImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerToolboxServiceImpl.java -text
