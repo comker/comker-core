@@ -29,6 +29,10 @@ public interface ComkerSessionService {
     Map<String, Object> getPermissionListCriteria();
 
     ComkerPager getPermissionListPager();
+
+    Map<String, Object> getWatchdogListCriteria();
+
+    ComkerPager getWatchdogListPager();
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -122,6 +126,22 @@ public interface ComkerSessionService {
         @Override
         public ComkerPager getPermissionListPager() {
             return permissionListPager;
+        }
+
+        //----------------------------------------------------------------------
+
+        private Map<String,Object> watchdogListCriteria = new HashMap<String, Object>();
+
+        @Override
+        public Map<String, Object> getWatchdogListCriteria() {
+            return watchdogListCriteria;
+        }
+
+        private ComkerPager watchdogListPager = new ComkerPager();
+
+        @Override
+        public ComkerPager getWatchdogListPager() {
+            return watchdogListPager;
         }
     }
 }

@@ -13,6 +13,7 @@ software/src/main/java/net/cokkee/comker/api/ComkerQuestionResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerRoleResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerSpotResource.java -text
 software/src/main/java/net/cokkee/comker/api/ComkerUserResource.java -text
+software/src/main/java/net/cokkee/comker/api/ComkerWatchdogResource.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerAbstractDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerCrewDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerNavbarDao.java -text

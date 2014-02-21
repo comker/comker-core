@@ -47,6 +47,12 @@
         <property name="navbarDao" ref="comkerNavbarDao" />
     </bean>
 
+    <bean id="comkerWatchdogResource"
+            class="net.cokkee.comker.api.ComkerWatchdogResource">
+        <property name="sessionService" ref="comkerSessionService" />
+        <property name="watchdogDao" ref="comkerWatchdogDao" />
+    </bean>
+
     <bean id="comkerQuestionResource"
             class="net.cokkee.comker.api.ComkerQuestionResource">
         <property name="storageManager" ref="comkerStorageManager" />
