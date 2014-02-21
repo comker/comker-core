@@ -53,6 +53,13 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     //--------------------------------------------------------------------------
 
     @Override
+    public String getUsername() {
+        ComkerUserDetails userDetails = getUserDetails();
+        if (userDetails == null) return null;
+        return userDetails.getUsername();
+    }
+
+    @Override
     public ComkerUserDetails getUserDetails() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context == null) return null;

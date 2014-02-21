@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @author drupalex
  */
 public interface ComkerSecurityService {
+
+    String getUsername();
     
     ComkerUserDetails getUserDetails();
 
