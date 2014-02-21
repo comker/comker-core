@@ -65,6 +65,7 @@ software/src/main/java/net/cokkee/comker/model/po/ComkerUser.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrew.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrewPk.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerWatchLog.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerWatchdog.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationEntryPoint.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationFailureHandler.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationHelper.java -text
