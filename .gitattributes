@@ -21,13 +21,16 @@ software/src/main/java/net/cokkee/comker/dao/ComkerRoleDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSettingDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSpotDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerUserDao.java -text
+software/src/main/java/net/cokkee/comker/dao/ComkerWatchDao.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerSettingDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAccessDatabaseException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerFieldDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerInvalidParameterException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
+software/src/main/java/net/cokkee/comker/interceptor/ComkerWatchInterceptor.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionResponse.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerHashMap.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerObject.java -text
@@ -58,6 +61,7 @@ software/src/main/java/net/cokkee/comker/model/po/ComkerSpotJoinModulePk.java -t
 software/src/main/java/net/cokkee/comker/model/po/ComkerUser.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrew.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerUserJoinCrewPk.java -text
+software/src/main/java/net/cokkee/comker/model/po/ComkerWatchLog.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationEntryPoint.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationFailureHandler.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationHelper.java -text
@@ -80,6 +84,7 @@ software/src/main/java/net/cokkee/comker/util/ComkerBootstrapPublisher.java -tex
 software/src/main/resources/META-INF/bootstrap/comker/attachment-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/cxf-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/dao-context.xml -text
+software/src/main/resources/META-INF/bootstrap/comker/interceptor-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/orm-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/resource-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text

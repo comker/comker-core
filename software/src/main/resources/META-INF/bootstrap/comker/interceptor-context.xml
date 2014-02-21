@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="comkerWatchPointcutAdvisor"
+            class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="patterns">
+            <list>
+                <value>.*(create|update|delete).*</value>
+                <value>.*(create|update|delete)DefFee.*</value>
+                <value>.*(create|update|delete)DefDocument.*</value>
+                <value>.*(create|update|delete)DefNice.*</value>
+                <value>.*(create|update|delete)DefVienna.*</value>
+            </list>
+        </property>
+        <property name="advice" ref="comkerWatchInterceptor" />
+    </bean>
+
+    <bean id="comkerWatchInterceptor"
+            class="net.cokkee.comker.interceptor.ComkerWatchInterceptor">
+        <property name="watchDao" ref="comkerWatchDao" />
+        <property name="taskExecutor" ref="comkerTaskExecutor" />
+        <property name="securityService" ref="comkerSecurityService" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+</beans>

@@ -13,7 +13,14 @@
     <bean id="comkerBeanPostInitializer" class="net.cokkee.comker.util.ComkerBootstrapInitializer">
         <property name="initializationService" ref="comkerInitializationService"/>
     </bean>
-    
+
+    <bean id="comkerTaskExecutor"
+            class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="100" />
+        <property name="queueCapacity" value="3000" />
+    </bean>
+
     <bean id="comkerInitializationService"
             class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">

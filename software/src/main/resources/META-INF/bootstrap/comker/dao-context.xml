@@ -11,6 +11,7 @@
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerUserDaoHibernate" />
@@ -28,6 +29,7 @@
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerSpotDaoHibernate" />
@@ -43,7 +45,9 @@
             <value>net.cokkee.comker.dao.ComkerSettingDao</value>
         </property>
         <property name="interceptorNames">
-            <list></list>
+            <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
+            </list>
         </property>
         <property name="target" ref="comkerSettingDaoHibernate" />
     </bean>
@@ -61,6 +65,7 @@
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerCrewDaoHibernate" />
@@ -78,6 +83,7 @@
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerRoleDaoHibernate" />
@@ -94,6 +100,7 @@
         </property>
         <property name="interceptorNames">
             <list>
+                <idref bean="comkerWatchPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerPermissionDaoHibernate" />
@@ -103,19 +110,13 @@
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="comkerNavbarDao" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="proxyInterfaces">
-            <value>net.cokkee.comker.dao.ComkerNavbarDao</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-            </list>
-        </property>
-        <property name="target" ref="comkerNavbarDaoHibernate" />
+    <bean id="comkerNavbarDao" class="net.cokkee.comker.dao.ComkerNavbarDao$Hibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
-    <bean id="comkerNavbarDaoHibernate" class="net.cokkee.comker.dao.ComkerNavbarDao$Hibernate">
+    <bean id="comkerWatchDao" class="net.cokkee.comker.dao.impl.ComkerWatchDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
