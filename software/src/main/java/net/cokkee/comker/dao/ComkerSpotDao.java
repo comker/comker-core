@@ -11,12 +11,12 @@ import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
 
 import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerSpotJoinModule;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -27,6 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author drupalex
  */
 public interface ComkerSpotDao extends ComkerAbstractDao {
+
+    Integer count();
+
+    List findAll(ComkerPager filter);
 
     ComkerSpot findWhere(Map<String,Object> params);
 
@@ -44,12 +48,30 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     void delete(String id);
 
-    Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot);
+    //Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerSpotDao {
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Integer count() {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerSpot.class);
+            c.setProjection(Projections.rowCount());
+            return ((Long) c.uniqueResult()).intValue();
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List findAll(ComkerPager filter) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerSpot.class);
+            ComkerPager.apply(c, filter);
+            return c.list();
+        }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -81,7 +103,6 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
         public ComkerSpot get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
             ComkerSpot item = (ComkerSpot) session.get(ComkerSpot.class, id);
-            loadAggregationRefs(item);
             return item;
         }
 
@@ -91,7 +112,6 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put(FIELD_CODE, code);
             ComkerSpot item = findWhere(params);
-            loadAggregationRefs(item);
             return item;
         }
 
@@ -132,6 +152,7 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
             session.delete(item);
         }
 
+        /*
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot) {
@@ -150,18 +171,7 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
             return result;
         }
-
-        //----------------------------------------------------------------------
-
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        private void loadAggregationRefs(ComkerSpot spot) {
-            if (spot == null) return;
-            spot.getIdsOfModuleList().clear();
-            List<ComkerSpotJoinModule> list = spot.getSpotJoinModuleList();
-            for(ComkerSpotJoinModule item:list) {
-                spot.getIdsOfModuleList().add(item.getModule().getId());
-            }
-        }
+        */
     }
 }
 

@@ -35,6 +35,12 @@ public class ComkerSettingEntry extends ComkerAbstractItem {
     private ComkerSettingEntryPk pk;
     private String value;
 
+    private String valueString;
+    private Double valueDouble;
+    private Integer valueInteger;
+    private Boolean valueBoolean;
+    private String valueXStream;
+    
     @EmbeddedId
     public ComkerSettingEntryPk getPk() {
         return pk;
@@ -78,6 +84,51 @@ public class ComkerSettingEntry extends ComkerAbstractItem {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Column(name = "f_value_string", length = 1024)
+    public String getValueString() {
+        return valueString;
+    }
+
+    public void setValueString(String value) {
+        this.valueString = value;
+    }
+
+    @Column(name = "f_value_double")
+    public Double getValueDouble() {
+        return valueDouble;
+    }
+
+    public void setValueDouble(Double value) {
+        this.valueDouble = value;
+    }
+
+    @Column(name = "f_value_integer")
+    public Integer getValueInteger() {
+        return valueInteger;
+    }
+
+    public void setValueInteger(Integer value) {
+        this.valueInteger = value;
+    }
+
+    @Column(name = "f_value_boolean")
+    public Boolean getValueBoolean() {
+        return valueBoolean;
+    }
+
+    public void setValueBoolean(Boolean value) {
+        this.valueBoolean = value;
+    }
+
+    @Column(name = "f_value_xstream")
+    public String getValueXStream() {
+        return valueXStream;
+    }
+
+    public void setValueXStream(String valueXStream) {
+        this.valueXStream = valueXStream;
     }
 
     @Override

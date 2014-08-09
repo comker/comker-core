@@ -1,6 +1,7 @@
 package net.cokkee.comker.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -12,9 +13,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ComkerSessionInfo implements Serializable {
 
-    private int checkpoint = 0;
-    private Set<String> permissions = new HashSet<String>();
+    private Date timestamp = null;
 
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    private int checkpoint = 0;
+    
     public int getCheckpoint() {
         return checkpoint;
     }
@@ -23,6 +33,8 @@ public class ComkerSessionInfo implements Serializable {
         this.checkpoint = checkpoint;
     }
 
+    private Set<String> permissions = new HashSet<String>();
+    
     public Set<String> getPermissions() {
         return permissions;
     }

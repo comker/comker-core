@@ -45,12 +45,34 @@
         <property name="passwordEncoder" ref="comkerPasswordEncoder" />
     </bean>
 
+    <bean id="comkerSecurityContextHolder"
+            class="net.cokkee.comker.service.impl.ComkerSecurityContextHolderImpl">
+    </bean>
+
+    <bean id="comkerSecurityService"
+            class="net.cokkee.comker.service.impl.ComkerSecurityServiceImpl">
+        <property name="securityContextHolder" ref="comkerSecurityContextHolder"/>
+        <property name="userDao" ref="comkerUserDao"/>
+    </bean>
+
     <bean id="comkerSessionService"
-            class="net.cokkee.comker.service.ComkerSessionService$Impl" scope="session">
+            class="net.cokkee.comker.service.impl.ComkerSessionServiceImpl" scope="session">
         <aop:scoped-proxy proxy-target-class="false" />
     </bean>
 
     <bean id="comkerToolboxService"
             class="net.cokkee.comker.service.impl.ComkerToolboxServiceImpl">
+    </bean>
+
+    <bean id="comkerLocaleMessageService"
+            class="net.cokkee.comker.service.impl.ComkerLocaleMessageServiceImpl">
+        <property name="messageSource" ref="comkerMessageSource"/>
+    </bean>
+
+    <bean id="comkerMessageSource" name="messageSource"
+            class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>messages</value>
+        </property>
     </bean>
 </beans>

@@ -2,6 +2,7 @@ package net.cokkee.comker.model.po;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import net.cokkee.comker.util.ComkerDataUtil;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -24,18 +28,23 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "comker_navbar_node")
 public class ComkerNavbarNode extends ComkerAbstractItem {
 
+    public static final String ROOT_CODE = "";
+
     public ComkerNavbarNode() {
         super();
         this.parent = null;
         this.enabled = true;
     }
 
-    public ComkerNavbarNode(String code, String url, String label, String description) {
-        super();
-        this.parent = null;
+    public ComkerNavbarNode(String code, String url, String[] permissions) {
+        this();
         this.code = code;
         this.url = url;
-        this.enabled = true;
+        this.permissions = permissions;
+    }
+
+    public ComkerNavbarNode(String code, String url, String[] permissions, String label, String description) {
+        this(code, url, permissions);
         this.label = label;
         this.description = description;
     }
@@ -46,6 +55,9 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
     private Boolean enabled;
     private String label;
     private String description;
+
+    private String[] permissions = null;
+    private String permissionStore = null;
 
     private ComkerNavbarNode parent = null;
     private Set<ComkerNavbarNode> children = new HashSet<ComkerNavbarNode>();
@@ -65,7 +77,7 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
         this.id = id;
     }
 
-    @Column(name = "f_code", unique = false, nullable = false, length = 255)
+    @Column(name = "f_code", unique = true, nullable = false, length = 255)
     public String getCode() {
         return code;
     }
@@ -110,17 +122,39 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
         this.description = description;
     }
 
+    @XmlElement(name = "permissions")
+    @Transient
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String[] permissions) {
+        this.permissions = permissions;
+    }
+
+    @XmlTransient
+    @Column(name = "f_permissions", unique = false, nullable = true, length = 1024)
+    public String getPermissionStore() {
+        this.permissionStore = ComkerDataUtil.mergeStringArray(permissions);
+        return this.permissionStore;
+    }
+
+    public void setPermissionStore(String permissionStore) {
+        this.permissionStore = permissionStore;
+        this.permissions = ComkerDataUtil.splitStringArray(permissionStore);
+    }
+
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "f_parent_id", insertable=false, updatable=false)
+    @JoinColumn(name = "f_parent_id", nullable=true)
     public ComkerNavbarNode getParent() {
         return parent;
     }
 
-    private void setParent(ComkerNavbarNode parent) {
+    public void setParent(ComkerNavbarNode parent) {
         this.parent = parent;
     }
 
-    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="parent", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     public Set<ComkerNavbarNode> getChildren() {
         return children;
     }
@@ -134,7 +168,7 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
         return treeId;
     }
 
-    private void setTreeId(String treeId) {
+    public void setTreeId(String treeId) {
         this.treeId = treeId;
     }
 
@@ -143,32 +177,7 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
         return treeIndent;
     }
 
-    private void setTreeIndent(String treeIndent) {
+    public void setTreeIndent(String treeIndent) {
         this.treeIndent = treeIndent;
-    }
-    
-    //--------------------------------------------------------------------------
-    
-    public void changeParent(ComkerNavbarNode newParent) {
-        if (validateTreeData(newParent)) {
-            this.parent = newParent;
-            updateTreeData();
-        }
-    }
-
-    private boolean validateTreeData(ComkerNavbarNode newParent) {
-        if (newParent == null) return true;
-        if (newParent.getTreeId().contains(this.treeId)) return false;
-        return true;
-    }
-
-    private void updateTreeData() {
-        if (this.parent == null) {
-            this.treeId = this.id;
-            this.treeIndent = "";
-        } else {
-            this.treeId = this.parent.getTreeId() + ">" + this.id;
-            this.treeIndent = "----" + this.parent.getTreeIndent();
-        }
     }
 }

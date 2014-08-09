@@ -1,11 +1,8 @@
 package net.cokkee.comker.model.po;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,17 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-@XmlRootElement
 @Entity
 @Table(name = "comker_crew")
 public class ComkerCrew extends ComkerAbstractItem {
@@ -46,9 +38,6 @@ public class ComkerCrew extends ComkerAbstractItem {
     private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
             new LinkedList<ComkerCrewJoinRoleWithSpot>();
     
-    private Set<String> idsOfGlobalRoleList = new HashSet<String>();
-    private Set<ComkerKeyAndValueSet> idsOfSpotWithRoleList = new HashSet<ComkerKeyAndValueSet>();
-
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -79,8 +68,7 @@ public class ComkerCrew extends ComkerAbstractItem {
         this.name = name;
     }
 
-    @XmlTransient
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew", cascade=CascadeType.ALL, orphanRemoval=true)
     public List<ComkerCrewJoinGlobalRole> getCrewJoinGlobalRoleList() {
         return crewJoinGlobalRoleList;
     }
@@ -89,43 +77,12 @@ public class ComkerCrew extends ComkerAbstractItem {
         this.crewJoinGlobalRoleList = item;
     }
 
-    @XmlTransient
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.crew", cascade=CascadeType.ALL, orphanRemoval=true)
     public List<ComkerCrewJoinRoleWithSpot> getCrewJoinRoleWithSpotList() {
         return crewJoinRoleWithSpotList;
     }
 
     public void setCrewJoinRoleWithSpotList(List<ComkerCrewJoinRoleWithSpot> item) {
         this.crewJoinRoleWithSpotList = item;
-    }
-
-    @Transient
-    public Set<String> getIdsOfGlobalRoleList() {
-        return idsOfGlobalRoleList;
-    }
-
-    public void setIdsOfGlobalRoleList(Set<String> globalRoleIdList) {
-        this.idsOfGlobalRoleList = globalRoleIdList;
-    }
-
-    @Transient
-    public Set<ComkerKeyAndValueSet> getIdsOfSpotWithRoleList() {
-        return idsOfSpotWithRoleList;
-    }
-
-    public void setIdsOfSpotWithRoleList(Set<ComkerKeyAndValueSet> idsOfSpotWithRoleList) {
-        this.idsOfSpotWithRoleList = idsOfSpotWithRoleList;
-    }
-
-    @Deprecated
-    public void addRoleWithSpot(ComkerRole role, ComkerSpot spot) {
-        ComkerCrewJoinRoleWithSpot item = new ComkerCrewJoinRoleWithSpot();
-
-        item.setPk(new ComkerCrewJoinRoleWithSpotPk(this, role, spot));
-        item.setCrew(this);
-        item.setRole(role);
-        item.setSpot(spot);
-
-        getCrewJoinRoleWithSpotList().add(item);
     }
 }

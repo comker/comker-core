@@ -1,9 +1,8 @@
 package net.cokkee.comker.model.po;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,16 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-@XmlRootElement
 @Entity
 @Table(name = "comker_role")
 public class ComkerRole extends ComkerAbstractItem {
@@ -42,8 +37,6 @@ public class ComkerRole extends ComkerAbstractItem {
     private String description;
     private List<ComkerRoleJoinPermission> roleJoinPermissionList =
             new LinkedList<ComkerRoleJoinPermission>();
-
-    private Set<String> idsOfPermissionList = new HashSet<String>();
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -84,22 +77,12 @@ public class ComkerRole extends ComkerAbstractItem {
         this.name = name;
     }
 
-    @XmlTransient
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role", cascade=CascadeType.ALL, orphanRemoval=true)
     public List<ComkerRoleJoinPermission> getRoleJoinPermissionList() {
         return roleJoinPermissionList;
     }
 
     public void setRoleJoinPermissionList(List<ComkerRoleJoinPermission> roleJoinPermission) {
         this.roleJoinPermissionList = roleJoinPermission;
-    }
-
-    @Transient
-    public Set<String> getIdsOfPermissionList() {
-        return idsOfPermissionList;
-    }
-
-    public void setIdsOfPermissionList(Set<String> idsOfPermissionList) {
-        this.idsOfPermissionList = idsOfPermissionList;
     }
 }

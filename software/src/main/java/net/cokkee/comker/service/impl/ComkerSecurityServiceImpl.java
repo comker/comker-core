@@ -1,23 +1,22 @@
 package net.cokkee.comker.service.impl;
 
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.dao.ComkerUserDao;
+import net.cokkee.comker.exception.ComkerForbiddenAccessException;
 import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.service.ComkerSecurityContextHolder;
 import net.cokkee.comker.service.ComkerSecurityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -40,6 +39,12 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         this.userDao = userDao;
     }
 
+    private ComkerSecurityContextHolder securityContextHolder = null;
+
+    public void setsecurityContextHolder(ComkerSecurityContextHolder securityContextHolder) {
+        this.securityContextHolder = securityContextHolder;
+    }
+
     private UserCache userCache = null;
 
     public UserCache getUserCache() {
@@ -48,6 +53,12 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     public void setUserCache(UserCache userCache) {
         this.userCache = userCache;
+    }
+
+    private PasswordEncoder passwordEncoder = null;
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
     //--------------------------------------------------------------------------
@@ -61,7 +72,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     @Override
     public ComkerUserDetails getUserDetails() {
-        SecurityContext context = SecurityContextHolder.getContext();
+        SecurityContext context = securityContextHolder.getContext();
         if (context == null) return null;
         Authentication authentication = context.getAuthentication();
         if (authentication == null) return null;
@@ -125,7 +136,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
             UsernamePasswordAuthenticationToken newToken =
                     new UsernamePasswordAuthenticationToken(userDetails,
                 userDetails.getPassword(), userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(newToken);
+            securityContextHolder.getContext().setAuthentication(newToken);
         }
 
         // refresh oldUserDetails details (remove from userCache)
@@ -135,14 +146,21 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     }
 
     @Override
-    public void changePassword(String password, String encodedPassword) {
+    public void changePassword(String oldPassword, String newPassword) {
         ComkerUserDetails oldUserDetails = getUserDetails();
         if (oldUserDetails == null) return;
 
-        ComkerUserDetails newUserDetails = new ComkerUserDetails(oldUserDetails, encodedPassword);
+        String oldEncodedPassword = passwordEncoder.encodePassword(oldPassword, null);
+
+        if (!oldEncodedPassword.equals(oldUserDetails.getPassword())) {
+            throw new ComkerForbiddenAccessException("invalid_password");
+        }
+
+        String newEncodedPassword = passwordEncoder.encodePassword(newPassword, null);
+        ComkerUserDetails newUserDetails = new ComkerUserDetails(oldUserDetails, newEncodedPassword);
 
         UsernamePasswordAuthenticationToken newToken =
-                new UsernamePasswordAuthenticationToken(newUserDetails, password);
-        SecurityContextHolder.getContext().setAuthentication(newToken);
+                new UsernamePasswordAuthenticationToken(newUserDetails, newPassword);
+        securityContextHolder.getContext().setAuthentication(newToken);
     }
 }

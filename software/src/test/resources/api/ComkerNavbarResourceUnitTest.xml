@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:cxf="http://cxf.apache.org/core"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core
+        http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:/api/applicationContext-UnitTest.xml" />
+
+    <jaxrs:server id="navbarJaxrsService"
+            address="${server.address}/navbar">
+        <jaxrs:serviceBeans>
+            <ref bean="navbarServer" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="comkerJaxbProvider" />
+            <ref bean="comkerJsonProvider" />
+            <ref bean="comkerExceptionMapper" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <jaxrs:client id="navbarClient"
+            address="${server.address}/navbar"
+            serviceClass="net.cokkee.comker.api.ComkerNavbarResource">
+        <jaxrs:headers>
+            <entry key="Accept" value="application/json"></entry>
+        </jaxrs:headers>
+        <jaxrs:providers>
+            <ref bean="comkerJaxbProvider" />
+            <ref bean="comkerJsonProvider" />
+            <ref bean="comkerExceptionMapper" />
+        </jaxrs:providers>
+    </jaxrs:client>
+
+    <bean id="navbarServer" class="net.cokkee.comker.api.impl.ComkerNavbarResourceImpl" />
+</beans>

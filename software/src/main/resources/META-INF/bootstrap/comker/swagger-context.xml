@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:cxf="http://cxf.apache.org/core"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core
+        http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+
+    <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/interceptor-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/manager-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/cxf-context.xml" />
+  
+    <context:component-scan base-package="net.cokkee.comker" />
+
+    <bean id="swaggerResourceJSON" class="com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON" />
+    <bean id="swaggerApiWriter" class="com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider" />
+    <bean id="swaggerResourceWriter" class="com.wordnik.swagger.jaxrs.listing.ResourceListingProvider" />
+
+    <bean id="swaggerConfig" class="com.wordnik.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="net.cokkee.comker.api" />
+        <property name="version" value="1.0.0" />
+        <property name="basePath" value="ws/comker/api" />
+        <property name="title" value="Comker Module" />
+        <property name="description" value="Comker module provides System Monitor and Administration."/>
+        <property name="scan" value="true" />
+    </bean>
+
+    <jaxrs:server id="comkerApiService" address="/comker/api">
+        <jaxrs:serviceBeans>
+            <ref bean="comkerAuthResource" />
+            <ref bean="comkerUserResource" />
+            <ref bean="comkerCrewResource" />
+            <ref bean="comkerSpotResource" />
+            <ref bean="comkerRoleResource" />
+            <ref bean="comkerPermissionResource" />
+            <ref bean="comkerNavbarResource" />
+            <ref bean="comkerSessionResource" />
+            <ref bean="comkerWatchdogResource" />
+            <ref bean="swaggerResourceJSON" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="comkerJaxbProvider" />
+            <ref bean="comkerJsonProvider" />
+            <ref bean="comkerExceptionMapper" />
+            <ref bean="swaggerResourceWriter" />
+            <ref bean="swaggerApiWriter" />
+        </jaxrs:providers>
+        <jaxrs:features>
+            <cxf:logging/>
+        </jaxrs:features>
+    </jaxrs:server>
+</beans>

@@ -11,6 +11,10 @@ import net.cokkee.comker.model.po.ComkerWatchdog;
  */
 public interface ComkerWatchdogDao extends ComkerAbstractDao {
 
+    Integer count();
+
+    List findAll(ComkerPager filter);
+    
     ComkerWatchdog findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
@@ -22,7 +26,5 @@ public interface ComkerWatchdogDao extends ComkerAbstractDao {
     ComkerWatchdog update(ComkerWatchdog item);
 
     void delete(ComkerWatchdog item);
-
-    void delete(String id);
 }
 

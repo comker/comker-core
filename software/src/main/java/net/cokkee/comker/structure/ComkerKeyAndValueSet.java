@@ -1,5 +1,6 @@
 package net.cokkee.comker.structure;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -16,6 +17,12 @@ public class ComkerKeyAndValueSet {
     public ComkerKeyAndValueSet(String key, HashSet<String> valueSet) {
         this.key = key;
         this.valueSet = valueSet;
+    }
+
+    public ComkerKeyAndValueSet(String key, String[] valueArray) {
+        this.key = key;
+        this.valueSet = new HashSet<String>();
+        this.valueSet.addAll(Arrays.asList(valueArray));
     }
 
     private String key;

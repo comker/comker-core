@@ -34,4 +34,28 @@
                 <goal>install</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-verify</actionName>
+            <displayName>verify</displayName>
+            <goals>
+                <goal>verify</goal>
+            </goals>
+        </action>
+        <action>
+            <actionName>CUSTOM-test debug</actionName>
+            <displayName>test debug</displayName>
+            <goals>
+                <goal>test</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>debug</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-test</actionName>
+            <displayName>test</displayName>
+            <goals>
+                <goal>test</goal>
+            </goals>
+        </action>
     </actions>

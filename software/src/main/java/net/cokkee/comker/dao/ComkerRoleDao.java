@@ -14,9 +14,11 @@ import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
 import net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk;
 
 import org.hibernate.Criteria;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -28,12 +30,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface ComkerRoleDao extends ComkerAbstractDao {
 
+    Integer count();
+
+    List findAll(ComkerPager filter);
+
     ComkerRole findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    @Deprecated
     Set<String> getAuthorities(String id);
 
+    @Deprecated
     Set<String> getAuthorities(ComkerRole role);
 
     ComkerRole get(String id);
@@ -42,20 +50,38 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
     ComkerRole create(ComkerRole item);
 
-    ComkerRole update(ComkerRole item);
+    void update(ComkerRole item);
 
     void delete(ComkerRole item);
-
-    void delete(String id);
 
     void addPermission(ComkerRole role, ComkerPermission permission);
 
     void removePermission(ComkerRole role, ComkerPermission permission);
 
+    void collectPermission(Set<ComkerPermission> bag, ComkerRole role);
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     public static class Hibernate extends ComkerAbstractDao.Hibernate
             implements ComkerRoleDao {
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Integer count() {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerRole.class);
+            c.setProjection(Projections.rowCount());
+            return ((Long) c.uniqueResult()).intValue();
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List findAll(ComkerPager filter) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerRole.class);
+            ComkerPager.apply(c, filter);
+            return c.list();
+        }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -81,12 +107,10 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
             ComkerPager.apply(c, filter);
             List list = c.list();
 
-            for(Object item:list) {
-                loadAggregationRefs((ComkerRole) item);
-            }
             return list;
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public Set<String> getAuthorities(String id) {
@@ -94,6 +118,7 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
             return getAuthorities((ComkerRole) session.load(ComkerRole.class, id));
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public Set<String> getAuthorities(ComkerRole role) {
@@ -109,9 +134,7 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerRole get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
-            ComkerRole item = (ComkerRole) session.get(ComkerRole.class, id);
-            loadAggregationRefs(item);
-            return item;
+            return (ComkerRole) session.get(ComkerRole.class, id);
         }
         
         @Override
@@ -138,24 +161,15 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public ComkerRole update(ComkerRole item) {
+        public void update(ComkerRole item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
-            return item;
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void delete(ComkerRole item) {
             Session session = this.getSessionFactory().getCurrentSession();
-            session.delete(item);
-        }
-
-        @Override
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public void delete(String id) {
-            Session session = this.getSessionFactory().getCurrentSession();
-            ComkerRole item = (ComkerRole) session.get(ComkerRole.class, id);
             session.delete(item);
         }
 
@@ -178,15 +192,15 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
             session.delete(new ComkerRoleJoinPermission(role, permission));
         }
 
-        //----------------------------------------------------------------------
-
+        @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        private void loadAggregationRefs(ComkerRole role) {
-            if (role == null) return;
-            role.getIdsOfPermissionList().clear();
+        public void collectPermission(Set<ComkerPermission> bag, ComkerRole role) {
+            if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(role);
             List<ComkerRoleJoinPermission> list = role.getRoleJoinPermissionList();
             for(ComkerRoleJoinPermission item:list) {
-                role.getIdsOfPermissionList().add(item.getPermission().getId());
+                bag.add(item.getPermission());
             }
         }
     }

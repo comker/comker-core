@@ -9,6 +9,7 @@ import net.cokkee.comker.model.po.ComkerSettingEntryPk;
 import net.cokkee.comker.model.po.ComkerSettingKey;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.util.ComkerDataUtil;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -109,16 +110,59 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDao.Hibernate
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String defaultValue) {
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public <T> void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T defaultValue) {
         Session session = this.getSessionFactory().getCurrentSession();
         ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
         ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
         if (item == null) {
             item = new ComkerSettingEntry(key, spot, user);
         }
-        item.setValue(defaultValue);
+
+        setSettingEntryValue(item, clazz, defaultValue);
+        
         session.saveOrUpdate(item);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public <T> T getValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz) {
+        Session session = this.getSessionFactory().getCurrentSession();
+        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
+        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        if (item == null) {
+            if (isErrorCatched()) {
+                throw new ComkerObjectNotFoundException("setting_not_found");
+            } else {
+                return null;
+            }
+        }
+        return getSettingEntryValue(item, clazz);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public <T> void setValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T value) {
+        Session session = this.getSessionFactory().getCurrentSession();
+        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
+        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        if (item == null) {
+            if (isErrorCatched()) {
+                throw new ComkerObjectNotFoundException("setting_not_found");
+            } else {
+                return;
+            }
+        }
+
+        setSettingEntryValue(item, clazz, value);
+
+        session.saveOrUpdate(value);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String defaultValue) {
+        define(spot, user, key, String.class, defaultValue);
     }
 
     @Override
@@ -166,5 +210,37 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDao.Hibernate
         }
         item.setValue(value);
         session.saveOrUpdate(value);
+    }
+
+    //--------------------------------------------------------------------------
+    
+    private <T> T getSettingEntryValue(ComkerSettingEntry item, Class<T> clazz) {
+        T result = null;
+        if (clazz == String.class) {
+            result = clazz.cast(item.getValueString());
+        } else if (clazz == Double.class) {
+            result = clazz.cast(item.getValueDouble());
+        } else if (clazz == Integer.class) {
+            result = clazz.cast(item.getValueInteger());
+        } else if (clazz == Boolean.class) {
+            result = clazz.cast(item.getValueBoolean());
+        } else {
+            result = clazz.cast(ComkerDataUtil.convertXStreamToObject(item.getValueXStream()));
+        }
+        return result;
+    }
+
+    private <T> void setSettingEntryValue(ComkerSettingEntry item, Class<T> clazz, T value) {
+        if (clazz == String.class) {
+            item.setValueString((String)value);
+        } else if (clazz == Double.class) {
+            item.setValueDouble((Double)value);
+        } else if (clazz == Integer.class) {
+            item.setValueInteger((Integer)value);
+        } else if (clazz == Boolean.class) {
+            item.setValueBoolean((Boolean)value);
+        } else {
+            item.setValueXStream(ComkerDataUtil.convertObjectToXStream(value));
+        }
     }
 }

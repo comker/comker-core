@@ -1,7 +1,5 @@
 package net.cokkee.comker.model;
 
-import javax.xml.bind.annotation.XmlTransient;
-
 @javax.xml.bind.annotation.XmlRootElement
 public class ComkerExceptionResponse {
 
@@ -11,8 +9,13 @@ public class ComkerExceptionResponse {
     public static final int OK = 4;
     public static final int TOO_BUSY = 5;
 
+    public static final String WEBAPP_ERRORS = "WEBAPP_ERRORS";
+    public static final String SYSTEM_ERRORS = "SYSTEM_ERRORS";
+    public static final String COMKER_ERRORS = "COMKER_ERRORS";
+
     private int code;
     private String type;
+    private String name;
     private String message;
 
     public ComkerExceptionResponse() {
@@ -20,30 +23,21 @@ public class ComkerExceptionResponse {
 
     public ComkerExceptionResponse(int code, String message) {
         this.code = code;
-        switch (code) {
-            case ERROR:
-                setType("error");
-                break;
-            case WARNING:
-                setType("warning");
-                break;
-            case INFO:
-                setType("info");
-                break;
-            case OK:
-                setType("ok");
-                break;
-            case TOO_BUSY:
-                setType("too busy");
-                break;
-            default:
-                setType("unknown");
-                break;
+        if (code == 500) {
+            this.type = SYSTEM_ERRORS;
+        } else if (code < 500) {
+            this.type = WEBAPP_ERRORS;
+        } else if (code > 500) {
+            this.type = COMKER_ERRORS;
         }
         this.message = message;
     }
 
-    @XmlTransient
+    public ComkerExceptionResponse(int code, String message, String name) {
+        this(code, message);
+        this.name = name;
+    }
+
     public int getCode() {
         return code;
     }
@@ -58,6 +52,14 @@ public class ComkerExceptionResponse {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMessage() {

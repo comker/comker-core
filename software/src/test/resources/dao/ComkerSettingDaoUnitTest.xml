@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath:/dao/applicationContext-UnitTest.xml" />
+
+    <bean id="testSettingDao" class="net.cokkee.comker.dao.impl.ComkerSettingDaoHibernate">
+        <property name="sessionFactory" ref="testSessionFactory"/>
+    </bean>
+
+    <bean id="testSessionFactory"
+            class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="annotatedClasses">
+            <list>
+                <value>net.cokkee.comker.model.po.ComkerPermission</value>
+                <value>net.cokkee.comker.model.po.ComkerRole</value>
+                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermission</value>
+                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk</value>
+                <value>net.cokkee.comker.model.po.ComkerModule</value>
+                <value>net.cokkee.comker.model.po.ComkerSpot</value>
+                <value>net.cokkee.comker.model.po.ComkerSpotJoinModule</value>
+                <value>net.cokkee.comker.model.po.ComkerSpotJoinModulePk</value>
+                <value>net.cokkee.comker.model.po.ComkerCrew</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot</value>
+                <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpotPk</value>
+                <value>net.cokkee.comker.model.po.ComkerUser</value>
+                <value>net.cokkee.comker.model.po.ComkerUserJoinCrew</value>
+                <value>net.cokkee.comker.model.po.ComkerUserJoinCrewPk</value>
+                <value>net.cokkee.comker.model.po.ComkerSettingEntry</value>
+                <value>net.cokkee.comker.model.po.ComkerSettingEntryPk</value>
+                <value>net.cokkee.comker.model.po.ComkerSettingKey</value>
+            </list>
+        </property>
+        <property name="dataSource" ref="comkerDataSource"/>
+        <property name="hibernateProperties" ref="comkerHibernateProperties" />
+    </bean>
+</beans>

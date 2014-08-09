@@ -7,17 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-
-@XmlRootElement
 @Entity
 @Table(name = "comker_watchdog")
 public class ComkerWatchdog extends ComkerAbstractItem {
@@ -35,10 +30,31 @@ public class ComkerWatchdog extends ComkerAbstractItem {
 
     private String comment;
 
+    public ComkerWatchdog() {
+        super();
+    }
+
+    public ComkerWatchdog(String username, String methodName) {
+        this.username = username;
+        this.methodName = methodName;
+    }
+
+
+    public ComkerWatchdog(String username, String methodName, String methodArgs,
+            Date hitTime, Long hitDuration, Integer hitState) {
+        this();
+        this.username = username;
+        this.methodName = methodName;
+        this.methodArgs = methodArgs;
+        this.hitTime = hitTime;
+        this.hitDuration = hitDuration;
+        this.hitState = hitState;
+    }
+
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    @Column(name = "f_id", unique = true, nullable = false, length = 36)
+	@Column(name = "f_id", unique = true, nullable = false, length = 36)
     public String getId() {
         return id;
     }
@@ -47,7 +63,7 @@ public class ComkerWatchdog extends ComkerAbstractItem {
         this.id = id;
     }
 
-    @Column(name = "f_username", unique = false, nullable = true, length = 64)
+    @Column(name = "f_username", length = 64)
     public String getUsername() {
         return username;
     }
@@ -56,7 +72,7 @@ public class ComkerWatchdog extends ComkerAbstractItem {
         this.username = username;
     }
 
-    @Column(name = "f_method_name", unique = false, nullable = true, length = 255)
+    @Column(name = "f_method_name", length = 255)
     public String getMethodName() {
         return methodName;
     }
@@ -65,7 +81,7 @@ public class ComkerWatchdog extends ComkerAbstractItem {
         this.methodName = methodId;
     }
 
-    @Column(name="f_method_args", columnDefinition="TEXT")
+    @Column(name="f_method_args", length=10000)
     public String getMethodArgs() {
         return methodArgs;
     }
@@ -102,7 +118,7 @@ public class ComkerWatchdog extends ComkerAbstractItem {
         this.hitState = flag;
     }
 
-    @Column(name = "f_comment", unique = false, nullable = true, length = 1024)
+    @Column(name = "f_comment", length = 1024)
     public String getComment() {
         return comment;
     }

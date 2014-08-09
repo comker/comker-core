@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:util="http://www.springframework.org/schema/util"
-        xmlns:cxf="http://cxf.apache.org/core"
-        xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cxf="http://cxf.apache.org/core"
+    xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -15,39 +15,18 @@
             http://cxf.apache.org/schemas/jaxrs.xsd">
 
     <import resource="classpath:META-INF/cxf/cxf.xml" />
-    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
-
-    <jaxrs:server id="comkerApiService" address="/comker/api">
-        <jaxrs:serviceBeans>
-            <ref bean="comkerAuthResource" />
-            <ref bean="comkerUserResource" />
-            <ref bean="comkerCrewResource" />
-            <ref bean="comkerSpotResource" />
-            <ref bean="comkerRoleResource" />
-            <ref bean="comkerPermissionResource" />
-            <ref bean="comkerNavbarResource" />
-            <ref bean="comkerWatchdogResource" />
-            <ref bean="comkerQuestionResource" />
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="comkerJaxbProvider" />
-            <ref bean="comkerJsonProvider" />
-            <ref bean="comkerExceptionMapper" />
-        </jaxrs:providers>
-        <jaxrs:features>
-            <cxf:logging/>
-        </jaxrs:features>
-    </jaxrs:server>
 
     <bean id="comkerExceptionMapper"
-            class="net.cokkee.comker.api.ComkerExceptionMapper" />
+            class="net.cokkee.comker.api.ComkerExceptionMapper">
+        <property name="localeMessageService" ref="comkerLocaleMessageService" />
+    </bean>
 
     <bean id="comkerJaxbProvider"
             class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
     </bean>
 
     <bean id="comkerJsonProvider"
-            class="org.apache.cxf.jaxrs.provider.JSONProvider">
+            class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
         <property name="dropRootElement" value="true"/>
         <property name="dropCollectionWrapperElement" value="true" />
         <property name="supportUnwrapped" value="true"/>
@@ -59,6 +38,7 @@
 
     <util:list id="comkerJsonKeys">
         <value>permissions</value>
+        <value>permissionIds</value>
         <value>children</value>
         <value>valueSet</value>
         <value>idsOfCrewList</value>

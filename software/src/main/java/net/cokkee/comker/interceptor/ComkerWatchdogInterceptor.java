@@ -137,7 +137,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
             watchLog.setMethodName(MessageFormat.format("{0}.{1}", new Object[] {className, methodName}));
 
-            List objs = new ArrayList();
+            List<Object> objs = new ArrayList<Object>();
             for(int i=0; (params!=null) && (i<params.length); i++) {
                 if (params[i] instanceof ComkerAbstractItem ||
                         params[i] instanceof String ||

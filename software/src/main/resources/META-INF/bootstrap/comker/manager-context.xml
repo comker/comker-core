@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="comkerUserStorage"
+            class="net.cokkee.comker.storage.impl.ComkerUserStorageImpl">
+        <property name="userDao" ref="comkerUserDao" />
+        <property name="crewDao" ref="comkerCrewDao" />
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerCrewStorage"
+            class="net.cokkee.comker.storage.impl.ComkerCrewStorageImpl">
+        <property name="crewDao" ref="comkerCrewDao" />
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerSpotStorage"
+            class="net.cokkee.comker.storage.impl.ComkerSpotStorageImpl">
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="moduleDao" ref="comkerModuleDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerRoleStorage"
+            class="net.cokkee.comker.storage.impl.ComkerRoleStorageImpl">
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="permissionDao" ref="comkerPermissionDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerPermissionStorage"
+            class="net.cokkee.comker.storage.impl.ComkerPermissionStorageImpl">
+        <property name="permissionDao" ref="comkerPermissionDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerNavbarStorage"
+            class="net.cokkee.comker.storage.impl.ComkerNavbarStorageImpl">
+        <property name="navbarDao" ref="comkerNavbarDao" />
+    </bean>
+
+    <bean id="comkerWatchdogStorage"
+            class="net.cokkee.comker.storage.impl.ComkerWatchdogStorageImpl">
+        <property name="watchdogDao" ref="comkerWatchdogDao" />
+        <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+</beans>

@@ -18,12 +18,15 @@ public class ComkerPager implements Serializable {
     public static final ComkerPager ONE = new ComkerPager(DEFAULT_START, new Integer(1));
 
     public ComkerPager() {
+         this.start = DEFAULT_START;
+         this.limit = DEFAULT_LIMIT;
     }
 
     public ComkerPager(Integer start, Integer limit) {
         this.start = start;
         this.limit = limit;
     }
+
     private Integer start;
 
     public Integer getStart() {
@@ -33,6 +36,7 @@ public class ComkerPager implements Serializable {
     public void setStart(Integer start) {
         this.start = start;
     }
+
     private Integer limit;
 
     public Integer getLimit() {
@@ -42,6 +46,7 @@ public class ComkerPager implements Serializable {
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
+
     private String sortedCol = null;
 
     public String getSortedCol() {
@@ -51,6 +56,7 @@ public class ComkerPager implements Serializable {
     public void setSortedCol(String sortedCol) {
         this.sortedCol = sortedCol;
     }
+
     private String sortedDir = null;
 
     public String getSortedDir() {
@@ -79,25 +85,37 @@ public class ComkerPager implements Serializable {
         }
     }
 
-    public static void apply(Query query, ComkerPager filter) {
-        if (filter != null) {
-            if (filter.getStart() != null) {
-                query.setFirstResult(filter.getStart());
-            }
-            if (filter.getLimit() != null) {
-                query.setMaxResults(filter.getLimit());
-            }
+    public Query applyTo(Query query) {
+        if (this.getStart() != null) {
+            query.setFirstResult(this.getStart());
         }
+        if (this.getLimit() != null) {
+            query.setMaxResults(this.getLimit());
+        }
+        return query;
     }
 
-    public static void apply(Criteria c, ComkerPager filter) {
-        if (filter != null) {
-            if (filter.getStart() != null) {
-                c.setFirstResult(filter.getStart());
-            }
-            if (filter.getLimit() != null) {
-                c.setMaxResults(filter.getLimit());
-            }
+    public Criteria applyTo(Criteria c) {
+        if (this.getStart() != null) {
+            c.setFirstResult(this.getStart());
         }
+        if (this.getLimit() != null) {
+            c.setMaxResults(this.getLimit());
+        }
+        return c;
+    }
+
+    public static Query apply(Query query, ComkerPager filter) {
+        if (filter != null) {
+            filter.applyTo(query);
+        }
+        return query;
+    }
+
+    public static Criteria apply(Criteria c, ComkerPager filter) {
+        if (filter != null) {
+            filter.applyTo(c);
+        }
+        return c;
     }
 }

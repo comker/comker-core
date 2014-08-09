@@ -34,6 +34,4 @@ public class ComkerToolboxServiceImpl implements ComkerToolboxService {
         nextCal.add(Calendar.DAY_OF_YEAR, count);
         return nextCal.getTime();
     }
-
-
 }

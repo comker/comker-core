@@ -1,6 +1,8 @@
 package net.cokkee.comker.dao;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,10 +13,13 @@ import java.util.Set;
 import net.cokkee.comker.model.po.ComkerNavbarNode;
 
 import org.hibernate.Criteria;
+import org.hibernate.EmptyInterceptor;
+import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -30,21 +35,26 @@ public interface ComkerNavbarDao {
     public static final String FILTER_EXCLUDE_ID = "excludeId";
 
     public static final String FIELD_TREE_ID = "treeId";
+    
     Integer count();
 
-    ComkerNavbarNode getNavbarTree();
+    ComkerNavbarNode getTree();
 
-    ComkerNavbarNode getNavbarTree(Map<String,Object> params);
+    ComkerNavbarNode getTree(String fromNodeId, String excludeNodeId);
 
-    List getNavbarList();
+    List getList();
     
-    List getNavbarList(Map<String,Object> params);
+    List getList(String fromNodeId, String excludedNodeId);
 
     ComkerNavbarNode get(String id);
 
+    ComkerNavbarNode getByCode(String code);
+
     ComkerNavbarNode create(ComkerNavbarNode item);
     
-    ComkerNavbarNode update(ComkerNavbarNode item);
+    void update(ComkerNavbarNode item);
+
+    void delete(ComkerNavbarNode item);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -64,25 +74,20 @@ public interface ComkerNavbarDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public ComkerNavbarNode getNavbarTree() {
-            return getNavbarTree(null);
+        public ComkerNavbarNode getTree() {
+            return getTree(null, null);
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public ComkerNavbarNode getNavbarTree(Map<String,Object> params) {
+        public ComkerNavbarNode getTree(String fromNodeId, String excludeNodeId) {
             Session session = this.getSessionFactory().getCurrentSession();
             Criteria c = session.createCriteria(ComkerNavbarNode.class);
-
-            if (params == null) params = new HashMap<String,Object>();
-
-            Object id = params.get(FILTER_ID);
-            Object excludeNodeId = params.get(FILTER_EXCLUDE_ID);
-
-            if (id == null) {
+            
+            if (fromNodeId == null) {
                 c.add(Restrictions.isNull(FIELD_PARENT));
             } else {
-                c.add(Restrictions.idEq(id));
+                c.add(Restrictions.idEq(fromNodeId));
             }
 
             Queue<ComkerNavbarNode> queue = new LinkedList<ComkerNavbarNode>();
@@ -95,7 +100,6 @@ public interface ComkerNavbarDao {
 
             while(!queue.isEmpty()) {
                 ComkerNavbarNode node = queue.remove();
-                
                 Set<ComkerNavbarNode> children = node.getChildren();
                 if (children == null) continue;
                 for(ComkerNavbarNode child:children) {
@@ -108,6 +112,7 @@ public interface ComkerNavbarDao {
                 }
             }
 
+            // evict and remove the children property.
             session.clear();
 
             if (excludeNodeParent != null && excludeNode != null) {
@@ -124,42 +129,37 @@ public interface ComkerNavbarDao {
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public List getNavbarList() {
-            return getNavbarList(null);
+        public List getList() {
+            return getList(null, null);
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        public List getNavbarList(Map<String,Object> params) {
+        public List getList(String fromNodeId, String excludedNodeId) {
             Session session = this.getSessionFactory().getCurrentSession();
             Criteria c = session.createCriteria(ComkerNavbarNode.class);
 
-            if (params == null) params = new HashMap<String,Object>();
-
-            // retrieve the root
-            Object id = params.get(FILTER_ID);
-            if (id == null) {
+            if (fromNodeId == null) {
                 c.add(Restrictions.isNull(FIELD_PARENT));
             } else {
-                c.add(Restrictions.idEq(id));
+                c.add(Restrictions.idEq(fromNodeId));
             }
             ComkerNavbarNode root = (ComkerNavbarNode) c.uniqueResult();
             if (root == null) return null;
 
             // retrieve the excluded node
-            ComkerNavbarNode excludeNode = null;
-            Object excludeNodeId = params.get(FILTER_EXCLUDE_ID);
-            if (excludeNodeId != null) {
-                excludeNode = (ComkerNavbarNode) session.get(
-                        ComkerNavbarNode.class, excludeNodeId.toString());
+            ComkerNavbarNode excludedNode = null;
+            if (excludedNodeId != null) {
+                excludedNode = (ComkerNavbarNode) session.get(
+                        ComkerNavbarNode.class, excludedNodeId.toString());
             }
 
             // use Criteria query the nodes which are children of 'node' and not
-            // be excludeNode or descendants of excludeNode
+            // be excludedNode or descendants of excludedNode
             Criteria l = session.createCriteria(ComkerNavbarNode.class);
             l.add(Restrictions.like(FIELD_TREE_ID, root.getTreeId() + "%"));
-            if (excludeNode != null) {
-                l.add(Restrictions.not(Restrictions.like(FIELD_TREE_ID, excludeNode.getTreeId() + "%")));
+            if (excludedNode != null) {
+                l.add(Restrictions.not(Restrictions.like(FIELD_TREE_ID, excludedNode.getTreeId() + "%")));
             }
             l.addOrder(Order.asc(FIELD_TREE_ID));
 
@@ -183,19 +183,90 @@ public interface ComkerNavbarDao {
         }
 
         @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public ComkerNavbarNode getByCode(String code) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerNavbarNode.class);
+            c.add(Restrictions.eq(FIELD_CODE, code));
+            List result = c.list();
+            if (result.isEmpty()) return null;
+            return (ComkerNavbarNode)result.get(0);
+        }
+
+        @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public ComkerNavbarNode create(ComkerNavbarNode item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.save(item);
+            propagationTreeData(item);
             return item;
         }
 
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-        public ComkerNavbarNode update(ComkerNavbarNode item) {
+        public void update(ComkerNavbarNode item) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.saveOrUpdate(item);
-            return item;
+            propagationTreeData(item);
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(ComkerNavbarNode item) {
+            if (item == null) return;
+
+            Session session = this.getSessionFactory().getCurrentSession();
+            ComkerNavbarNode parent = item.getParent();
+            if (parent != null) {
+                parent.getChildren().remove(item);
+                item.setParent(null);
+                session.saveOrUpdate(parent);
+            } else {
+                session.delete(item);
+            }
+        }
+
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        private void propagationTreeData(ComkerNavbarNode item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+
+            Queue<ComkerNavbarNode> queue = new LinkedList<ComkerNavbarNode>();
+            ComkerNavbarNode parent = null;
+
+            // update TreeData of item
+            parent = item.getParent();
+            if (parent == null) {
+                item.setTreeId(item.getId());
+                item.setTreeIndent("");
+            } else {
+                item.setTreeId(parent.getTreeId() + ">" + item.getId());
+                item.setTreeIndent("----" + parent.getTreeIndent());
+            }
+            queue.addAll(item.getChildren());
+
+            // use item as parent, update children's TreeData
+            while(!queue.isEmpty()) {
+                ComkerNavbarNode node = queue.remove();
+                parent = node.getParent();
+                node.setTreeId(parent.getTreeId() + ">" + node.getId());
+                node.setTreeIndent("----" + parent.getTreeIndent());
+                queue.addAll(node.getChildren());
+            }
+
+            // save the change
+            session.saveOrUpdate(item);
+        }
+    }
+
+    public static class Interceptor extends EmptyInterceptor {
+        private List<String> dirtyPropertyNames = new ArrayList<String>();
+
+        @Override
+        public boolean onFlushDirty(Object entity, Serializable id,
+                Object[] currentState, Object[] previousState,
+                String[] propertyNames, Type[] types) {
+
+            return super.onFlushDirty(entity, id, currentState, previousState, propertyNames, types);
         }
     }
 }

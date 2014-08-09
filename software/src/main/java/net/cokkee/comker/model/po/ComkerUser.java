@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -113,7 +114,7 @@ public class ComkerUser extends ComkerAbstractItem {
     }
 
     @XmlTransient
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user", cascade=CascadeType.ALL, orphanRemoval=true)
     public List<ComkerUserJoinCrew> getUserJoinCrewList() {
         return userJoinCrewList;
     }

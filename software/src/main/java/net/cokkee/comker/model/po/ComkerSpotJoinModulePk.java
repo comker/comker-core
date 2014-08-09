@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import net.cokkee.comker.exception.ComkerInvalidParameterException;
 
 /**
  *
@@ -16,6 +17,9 @@ public class ComkerSpotJoinModulePk implements Serializable {
     }
 
     public ComkerSpotJoinModulePk(ComkerSpot spot, ComkerModule module) {
+        if (spot == null || module == null) {
+            throw new ComkerInvalidParameterException("spot_or_module_should_not_be_null");
+        }
         this.spot = spot;
         this.module = module;
     }

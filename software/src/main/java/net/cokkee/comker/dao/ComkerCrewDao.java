@@ -13,13 +13,10 @@ import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
 import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpotPk;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 import org.hibernate.Criteria;
-import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +30,10 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     public static final String FIELD_SPOT = "pk.spot";
     public static final String FIELD_ROLE = "pk.role";
 
+    Integer count();
+
+    List findAll(ComkerPager filter);
+    
     ComkerCrew findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
@@ -42,31 +43,50 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     ComkerCrew getByName(String name);
 
     ComkerCrew getBySpotWithRole(ComkerSpot spot, ComkerRole role);
-    
+
+    @Deprecated
     ComkerCrew save(ComkerCrew item);
+
+    ComkerCrew create(ComkerCrew item);
+
+    ComkerCrew update(ComkerCrew item);
+
+    void delete(ComkerCrew item);
 
     void addGlobalRole(ComkerCrew crew, ComkerRole role);
 
     void removeGlobalRole(ComkerCrew crew, ComkerRole role);
 
+    void collectGlobalRole(Set<ComkerRole> bag, ComkerCrew crew);
+
     void addRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
 
     void removeRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
 
+    void collectSpotWithRole(Map<ComkerSpot,Set<ComkerRole>> bag, ComkerCrew crew);
+
+    @Deprecated
     Set<String> getCodeOfGlobalRole(ComkerCrew crew);
 
+    @Deprecated
     void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew);
 
+    @Deprecated
     Set<String> getCodeOfGlobalPermission(ComkerCrew crew);
 
+    @Deprecated
     void collectCodeOfGlobalPermission(Set<String> bag, ComkerCrew crew);
 
+    @Deprecated
     Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew);
 
+    @Deprecated
     void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew);
 
+    @Deprecated
     Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerCrew crew);
 
+    @Deprecated
     void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew);
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,7 +103,25 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         public void setRoleDao(ComkerRoleDao roleDao) {
             this.roleDao = roleDao;
         }
-        
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Integer count() {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerCrew.class);
+            c.setProjection(Projections.rowCount());
+            return ((Long) c.uniqueResult()).intValue();
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List findAll(ComkerPager filter) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerCrew.class);
+            ComkerPager.apply(c, filter);
+            return c.list();
+        }
+
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerCrew findWhere(Map<String, Object> params) {
@@ -107,10 +145,6 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             }
             ComkerPager.apply(c, filter);
             List list = c.list();
-
-            for(Object item:list) {
-                loadAggregationRefs((ComkerCrew) item);
-            }
             return list;
         }
 
@@ -119,7 +153,6 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         public ComkerCrew get(String id) {
             Session session = this.getSessionFactory().getCurrentSession();
             ComkerCrew item = (ComkerCrew) session.get(ComkerCrew.class, id);
-            loadAggregationRefs(item);
             return item;
         }
 
@@ -158,6 +191,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             return result.getCrew();
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public ComkerCrew save(ComkerCrew item) {
@@ -186,6 +220,24 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         }
 
         @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public void collectSpotWithRole(Map<ComkerSpot,Set<ComkerRole>> bag, ComkerCrew crew) {
+            if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(crew);
+            List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
+            for(ComkerCrewJoinRoleWithSpot item:list) {
+                ComkerSpot spot = item.getSpot();
+                Set<ComkerRole> roleSet = bag.get(spot);
+                if (roleSet == null) {
+                    roleSet = new HashSet<ComkerRole>();
+                    bag.put(spot, roleSet);
+                }
+                roleSet.add(item.getRole());
+            }
+        }
+
+        @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void addGlobalRole(ComkerCrew crew, ComkerRole role) {
             ComkerCrewJoinGlobalRole item = new ComkerCrewJoinGlobalRole();
@@ -202,6 +254,19 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
         }
 
         @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public void collectGlobalRole(Set<ComkerRole> bag, ComkerCrew crew) {
+            if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(crew);
+            List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
+            for(ComkerCrewJoinGlobalRole item:list) {
+                bag.add(item.getRole());
+            }
+        }
+
+        @Deprecated
+        @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Set<String> getCodeOfGlobalRole(ComkerCrew crew) {
             Set<String> result = new HashSet<String>();
@@ -209,6 +274,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             return result;
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew) {
@@ -219,6 +285,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             }
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Set<String> getCodeOfGlobalPermission(ComkerCrew crew) {
@@ -227,6 +294,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             return result;
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfGlobalPermission(Set<String> bag, ComkerCrew crew) {
@@ -239,6 +307,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             }
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew) {
@@ -247,6 +316,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             return result;
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew) {
@@ -265,6 +335,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             }
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerCrew crew) {
@@ -273,6 +344,7 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
             return result;
         }
 
+        @Deprecated
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
         public void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew) {
@@ -293,34 +365,27 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
         //----------------------------------------------------------------------
 
-        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-        private void loadAggregationRefs(ComkerCrew crew) {
-            if (crew == null) return;
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerCrew create(ComkerCrew item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.save(item);
+            return item;
+        }
 
-            crew.getIdsOfGlobalRoleList().clear();
-            List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
-            for(ComkerCrewJoinGlobalRole item:list) {
-                crew.getIdsOfGlobalRoleList().add(item.getRole().getId());
-            }
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public ComkerCrew update(ComkerCrew item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.saveOrUpdate(item);
+            return item;
+        }
 
-            Map<String,HashSet<String>> bag = new HashMap<String,HashSet<String>>();
-            List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpot = crew.getCrewJoinRoleWithSpotList();
-            for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpot) {
-                ComkerSpot spot = item.getSpot();
-                HashSet<String> roleSet = bag.get(spot.getId());
-                if (roleSet == null) {
-                    roleSet = new HashSet<String>();
-                    bag.put(spot.getId(), roleSet);
-                }
-                roleSet.add(item.getRole().getId());
-            }
-
-            Set<ComkerKeyAndValueSet> result = new HashSet<ComkerKeyAndValueSet>();
-            for(String key: bag.keySet()) {
-                result.add(new ComkerKeyAndValueSet(key, bag.get(key)));
-            }
-
-            crew.setIdsOfSpotWithRoleList(result);
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+        public void delete(ComkerCrew item) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.delete(item);
         }
     }
 }

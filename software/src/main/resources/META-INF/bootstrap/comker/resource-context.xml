@@ -6,59 +6,57 @@
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="comkerAuthResource"
-            class="net.cokkee.comker.api.ComkerAuthResource">
+            class="net.cokkee.comker.api.impl.ComkerAuthResourceImpl">
         <property name="securityService" ref="comkerSecurityService" />
         <property name="sessionService" ref="comkerSessionService" />
     </bean>
 
     <bean id="comkerUserResource"
-            class="net.cokkee.comker.api.ComkerUserResource">
+            class="net.cokkee.comker.api.impl.ComkerUserResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="userDao" ref="comkerUserDao" />
+        <property name="userStorage" ref="comkerUserStorage" />
     </bean>
 
     <bean id="comkerCrewResource"
-            class="net.cokkee.comker.api.ComkerCrewResource">
+            class="net.cokkee.comker.api.impl.ComkerCrewResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="crewDao" ref="comkerCrewDao" />
+        <property name="crewStorage" ref="comkerCrewStorage" />
     </bean>
 
     <bean id="comkerSpotResource"
-            class="net.cokkee.comker.api.ComkerSpotResource">
+            class="net.cokkee.comker.api.impl.ComkerSpotResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="spotStorage" ref="comkerSpotStorage" />
     </bean>
 
     <bean id="comkerRoleResource"
-            class="net.cokkee.comker.api.ComkerRoleResource">
+            class="net.cokkee.comker.api.impl.ComkerRoleResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="roleStorage" ref="comkerRoleStorage" />
     </bean>
 
     <bean id="comkerPermissionResource"
-            class="net.cokkee.comker.api.ComkerPermissionResource">
+            class="net.cokkee.comker.api.impl.ComkerPermissionResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="permissionDao" ref="comkerPermissionDao" />
+        <property name="permissionStorage" ref="comkerPermissionStorage" />
     </bean>
 
     <bean id="comkerNavbarResource"
-            class="net.cokkee.comker.api.ComkerNavbarResource">
+            class="net.cokkee.comker.api.impl.ComkerNavbarResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="navbarDao" ref="comkerNavbarDao" />
+        <property name="navbarStorage" ref="comkerNavbarStorage" />
+    </bean>
+
+    <bean id="comkerSessionResource"
+            class="net.cokkee.comker.api.impl.ComkerSessionResourceImpl">
+        <property name="securityService" ref="comkerSecurityService" />
+        <property name="sessionService" ref="comkerSessionService" />
     </bean>
 
     <bean id="comkerWatchdogResource"
-            class="net.cokkee.comker.api.ComkerWatchdogResource">
+            class="net.cokkee.comker.api.impl.ComkerWatchdogResourceImpl">
         <property name="sessionService" ref="comkerSessionService" />
-        <property name="watchdogDao" ref="comkerWatchdogDao" />
+        <property name="watchdogStorage" ref="comkerWatchdogStorage" />
     </bean>
-
-    <bean id="comkerQuestionResource"
-            class="net.cokkee.comker.api.ComkerQuestionResource">
-        <property name="storageManager" ref="comkerStorageManager" />
-    </bean>
-
-    <bean id="comkerStorageManager"
-            class="net.cokkee.comker.service.impl.ComkerStorageManagerImpl" />
 
 </beans>

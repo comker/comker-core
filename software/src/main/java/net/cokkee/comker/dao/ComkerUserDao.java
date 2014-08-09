@@ -12,9 +12,11 @@ import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
 import net.cokkee.comker.model.po.ComkerUserJoinCrewPk;
 import org.hibernate.Criteria;
+import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author drupalex
  */
 public interface ComkerUserDao extends ComkerAbstractDao {
+
+    Integer count();
+
+    List findAll(ComkerPager filter);
 
     ComkerUser findWhere(Map<String,Object> params);
 
@@ -47,6 +53,8 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     void removeCrew(ComkerUser user, ComkerCrew crew);
 
+    void collectCrew(Set<ComkerCrew> bag, ComkerUser user);
+
     Set<String> getCodeOfGlobalPermission(ComkerUser user);
 
     Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerUser user);
@@ -67,7 +75,25 @@ public interface ComkerUserDao extends ComkerAbstractDao {
         }
 
         //----------------------------------------------------------------------
-        
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public Integer count() {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerUser.class);
+            c.setProjection(Projections.rowCount());
+            return ((Long) c.uniqueResult()).intValue();
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public List findAll(ComkerPager filter) {
+            Session session = this.getSessionFactory().getCurrentSession();
+            Criteria c = session.createCriteria(ComkerUser.class);
+            ComkerPager.apply(c, filter);
+            return c.list();
+        }
+
         @Override
         @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
         public ComkerUser findWhere(Map<String, Object> params) {
@@ -193,6 +219,18 @@ public interface ComkerUserDao extends ComkerAbstractDao {
         public void removeCrew(ComkerUser user, ComkerCrew crew) {
             Session session = this.getSessionFactory().getCurrentSession();
             session.delete(new ComkerUserJoinCrew(user, crew));
+        }
+
+        @Override
+        @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+        public void collectCrew(Set<ComkerCrew> bag, ComkerUser user) {
+            if (bag == null) return;
+            Session session = this.getSessionFactory().getCurrentSession();
+            session.buildLockRequest(LockOptions.NONE).lock(user);
+            List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
+            for(ComkerUserJoinCrew item:list) {
+                bag.add(item.getCrew());
+            }
         }
 
         @Override

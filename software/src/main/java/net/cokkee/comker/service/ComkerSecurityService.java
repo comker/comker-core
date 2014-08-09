@@ -19,5 +19,5 @@ public interface ComkerSecurityService {
 
     void reloadUserDetails(String spotCode);
 
-    void changePassword(String password, String encodedPassword);
+    void changePassword(String oldPassword, String newPassword);
 }

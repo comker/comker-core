@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import net.cokkee.comker.exception.ComkerInvalidParameterException;
 
 /**
  *
@@ -16,6 +17,9 @@ public class ComkerCrewJoinGlobalRolePk implements Serializable {
     }
 
     public ComkerCrewJoinGlobalRolePk(ComkerCrew crew, ComkerRole role) {
+        if (crew == null || role == null) {
+            throw new ComkerInvalidParameterException("crew_or_role_should_not_be_null");
+        }
         this.crew = crew;
         this.role = role;
     }

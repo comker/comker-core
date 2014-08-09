@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.po;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import net.cokkee.comker.model.ComkerObject;
 import org.springframework.validation.Errors;
 

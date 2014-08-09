@@ -218,6 +218,8 @@ public class ComkerInitializationServiceImpl
                 getPasswordEncoder().encodePassword("nopassword", null),
                 "Guest");
         getUserDao().addCrew(userGuest, crewGuests);
+
+        //this.initComkerNavbars();
     }
 
     @Override
@@ -478,30 +480,46 @@ public class ComkerInitializationServiceImpl
 
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    private void initOriginNavbars() {
-        ComkerNavbarNode nodeRoot = new ComkerNavbarNode("__NAVBAR_ROOT__", null, null, null);
-        getNavbarDao().create(nodeRoot);
+    private void initComkerNavbars() {
+        ComkerNavbarNode nodeRoot = new ComkerNavbarNode("__NAVBAR_ROOT__", null, 
+                new String[] {"PERM_COMKER_GUEST"});
+        nodeRoot = getNavbarDao().create(nodeRoot);
 
         ComkerNavbarNode parent = nodeRoot;
-        ComkerNavbarNode node = new ComkerNavbarNode("home", "#", null, null);
-        node.changeParent(parent);
-        getNavbarDao().create(node);
+        ComkerNavbarNode node = new ComkerNavbarNode("home", "#", 
+                new String[] {"PERM_COMKER_GUEST"});
+        parent.getChildren().add(node);
+        node.setParent(parent);
+        node = getNavbarDao().create(node);
 
         // Administration sub-menu
         parent = nodeRoot;
-        node = new ComkerNavbarNode("administration", "#administration", null, null);
-        node.changeParent(parent);
-        getNavbarDao().create(node);
+        node = new ComkerNavbarNode("administration", "#administration",
+                new String[] {
+                    "PERM_COMKER_ADM_USER",
+                    "PERM_COMKER_ADM_CREW",
+                    "PERM_COMKER_ADM_SPOT"});
+        parent.getChildren().add(node);
+        node.setParent(parent);
+        node = getNavbarDao().create(node);
 
         parent = node;
 
-        node = new ComkerNavbarNode("administration.userList", "#user/list", null, null);
-        node.changeParent(parent);
-        getNavbarDao().create(node);
+        node = new ComkerNavbarNode("administration.userList", "#user/list",
+                new String[] {
+                    "PERM_COMKER_MOD_USER",
+                    "PERM_COMKER_ADM_USER"});
+        parent.getChildren().add(node);
+        node.setParent(parent);
+        node = getNavbarDao().create(node);
 
-        node = new ComkerNavbarNode("administration.crewList", "#crew/list", null, null);
-        node.changeParent(parent);
-        getNavbarDao().create(node);
+        node = new ComkerNavbarNode("administration.crewList", "#crew/list",
+                new String[] {
+                    "PERM_COMKER_MOD_CREW",
+                    "PERM_COMKER_ADM_CREW"});
+        parent.getChildren().add(node);
+        node.setParent(parent);
+        node = getNavbarDao().create(node);
 
         // Tools sub-menu
     }

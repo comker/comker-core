@@ -40,6 +40,23 @@
     </bean>
 
 
+    <bean id="comkerModuleDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.dao.ComkerModuleDao</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerModuleDaoHibernate" />
+    </bean>
+
+    <bean id="comkerModuleDaoHibernate" class="net.cokkee.comker.dao.ComkerModuleDao$Hibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
+
+
     <bean id="comkerSettingDao" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="proxyInterfaces">
             <value>net.cokkee.comker.dao.ComkerSettingDao</value>
@@ -112,6 +129,10 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
+    <bean id="comkerAuditEntityDao" class="net.cokkee.comker.dao.impl.ComkerAuditEntityDaoHibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
+    
     <bean id="comkerNavbarDao" class="net.cokkee.comker.dao.ComkerNavbarDao$Hibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
