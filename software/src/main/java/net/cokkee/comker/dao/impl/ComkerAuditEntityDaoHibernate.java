@@ -7,7 +7,7 @@ import net.cokkee.comker.dao.ComkerAuditEntityDao;
  *
  * @author drupalex
  */
-public class ComkerAuditEntityDaoHibernate extends ComkerAbstractDao.Hibernate
+public class ComkerAuditEntityDaoHibernate extends ComkerAbstractDaoHibernate
         implements ComkerAuditEntityDao {
 
 }

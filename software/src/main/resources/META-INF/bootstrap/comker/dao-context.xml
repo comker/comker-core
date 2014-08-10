@@ -17,7 +17,7 @@
         <property name="target" ref="comkerUserDaoHibernate" />
     </bean>
 
-    <bean id="comkerUserDaoHibernate" class="net.cokkee.comker.dao.ComkerUserDao$Hibernate">
+    <bean id="comkerUserDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerUserDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
         <property name="crewDao" ref="comkerCrewDaoHibernate"/>
     </bean>
@@ -35,7 +35,7 @@
         <property name="target" ref="comkerSpotDaoHibernate" />
     </bean>
 
-    <bean id="comkerSpotDaoHibernate" class="net.cokkee.comker.dao.ComkerSpotDao$Hibernate">
+    <bean id="comkerSpotDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerSpotDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
@@ -52,7 +52,7 @@
         <property name="target" ref="comkerModuleDaoHibernate" />
     </bean>
 
-    <bean id="comkerModuleDaoHibernate" class="net.cokkee.comker.dao.ComkerModuleDao$Hibernate">
+    <bean id="comkerModuleDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerModuleDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
@@ -88,7 +88,7 @@
         <property name="target" ref="comkerCrewDaoHibernate" />
     </bean>
 
-    <bean id="comkerCrewDaoHibernate" class="net.cokkee.comker.dao.ComkerCrewDao$Hibernate">
+    <bean id="comkerCrewDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerCrewDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
         <property name="roleDao" ref="comkerRoleDaoHibernate"/>
     </bean>
@@ -106,7 +106,7 @@
         <property name="target" ref="comkerRoleDaoHibernate" />
     </bean>
 
-    <bean id="comkerRoleDaoHibernate" class="net.cokkee.comker.dao.ComkerRoleDao$Hibernate">
+    <bean id="comkerRoleDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerRoleDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
@@ -123,7 +123,7 @@
         <property name="target" ref="comkerPermissionDaoHibernate" />
     </bean>
 
-    <bean id="comkerPermissionDaoHibernate" class="net.cokkee.comker.dao.ComkerPermissionDao$Hibernate">
+    <bean id="comkerPermissionDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerPermissionDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 
@@ -133,7 +133,7 @@
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
     
-    <bean id="comkerNavbarDao" class="net.cokkee.comker.dao.ComkerNavbarDao$Hibernate">
+    <bean id="comkerNavbarDao" class="net.cokkee.comker.dao.impl.ComkerNavbarDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
 

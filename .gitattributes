@@ -37,9 +37,16 @@ software/src/main/java/net/cokkee/comker/dao/ComkerSettingDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerSpotDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerUserDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerWatchdogDao.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerAbstractDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerAuditEntityDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerCrewDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerModuleDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerNavbarDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerPermissionDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerRoleDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerSettingDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerSpotDaoHibernate.java -text
+software/src/main/java/net/cokkee/comker/dao/impl/ComkerUserDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchdogDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAccessDatabaseException.java -text

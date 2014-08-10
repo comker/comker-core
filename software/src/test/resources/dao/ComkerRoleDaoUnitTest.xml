@@ -13,7 +13,7 @@
 
     <import resource="classpath:/dao/applicationContext-UnitTest.xml" />
 
-    <bean id="testRoleDao" class="net.cokkee.comker.dao.ComkerRoleDao$Hibernate">
+    <bean id="testRoleDao" class="net.cokkee.comker.dao.impl.ComkerRoleDaoHibernate">
         <property name="sessionFactory" ref="testSessionFactory"/>
     </bean>
 

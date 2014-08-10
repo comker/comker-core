@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author drupalex
  */
-public class ComkerSettingDaoHibernate extends ComkerAbstractDao.Hibernate
+public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         implements ComkerSettingDao {
 
     boolean errorCatched = false;

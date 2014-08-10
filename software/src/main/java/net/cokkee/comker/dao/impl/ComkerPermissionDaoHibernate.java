@@ -1,15 +1,17 @@
 package net.cokkee.comker.dao.impl;
 
-import net.cokkee.comker.dao.ComkerAbstractDao;
-import net.cokkee.comker.dao.ComkerWatchdogDao;
-
+import net.cokkee.comker.dao.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.po.ComkerWatchdog;
+import net.cokkee.comker.model.po.ComkerPermission;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -20,14 +22,32 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author drupalex
  */
-public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
-        implements ComkerWatchdogDao {
+public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
+            implements ComkerPermissionDao {
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public ComkerPermission find(String query, Map<String,Object> params) {
+        Query q = getSessionFactory().getCurrentSession().createQuery(query);
+        for(Map.Entry<String,Object> param : params.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+        }
+        return (ComkerPermission) q.uniqueResult();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public ComkerPermission findWhere(Map<String,Object> params) {
+        List result = findAllWhere(params, ComkerPager.ONE);
+        if (result.isEmpty()) return null;
+        return (ComkerPermission)result.get(0);
+    }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerPermission.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -36,29 +56,28 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerPermission.class);
         ComkerPager.apply(c, filter);
         return c.list();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerWatchdog findWhere(Map<String, Object> params) {
+    public Integer countWhere(Map<String,Object> params) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerPermission.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        List result = c.list();
-        if (result.isEmpty()) return null;
-        return (ComkerWatchdog)result.get(0);
+        c.setProjection(Projections.rowCount());
+        return ((Long) c.uniqueResult()).intValue();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerPermission.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -68,32 +87,24 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerWatchdog get(String id) {
+    public ComkerPermission get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerWatchdog item = (ComkerWatchdog) session.get(ComkerWatchdog.class, id);
-        return item;
+        return (ComkerPermission) session.get(ComkerPermission.class, id);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public ComkerPermission getByAuthority(String authority) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(FIELD_AUTHORITY, authority);
+        return findWhere(params);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdog create(ComkerWatchdog item) {
+    public ComkerPermission save(ComkerPermission item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdog update(ComkerWatchdog item) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.saveOrUpdate(item);
-        return item;
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(ComkerWatchdog item) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.delete(item);
     }
 }
