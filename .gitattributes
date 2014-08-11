@@ -304,6 +304,7 @@ software/src/test/java/net/cokkee/comker/api/ComkerSessionResourceUnitTest.java 
 software/src/test/java/net/cokkee/comker/api/ComkerSpotResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerAbstractDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerCrewDaoUnitTest.java -text
+software/src/test/java/net/cokkee/comker/dao/ComkerModuleDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerNavbarDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerPermissionDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerRoleDaoUnitTest.java -text
@@ -325,6 +326,7 @@ software/src/test/resources/api/ComkerSpotResourceUnitTest.xml -text
 software/src/test/resources/api/applicationContext-UnitTest.xml -text
 software/src/test/resources/api/test.properties -text
 software/src/test/resources/dao/ComkerCrewDaoUnitTest.xml -text
+software/src/test/resources/dao/ComkerModuleDaoUnitTest.xml -text
 software/src/test/resources/dao/ComkerNavbarDaoUnitTest.xml -text
 software/src/test/resources/dao/ComkerPermissionDaoUnitTest.xml -text
 software/src/test/resources/dao/ComkerRoleDaoUnitTest.xml -text
