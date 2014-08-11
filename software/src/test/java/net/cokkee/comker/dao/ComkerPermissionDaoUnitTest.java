@@ -1,5 +1,6 @@
 package net.cokkee.comker.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,8 @@ public class ComkerPermissionDaoUnitTest {
     @Autowired
     private ComkerPermissionDao testPermissionDao = null;
 
+    private List<String> permissionIdx = new ArrayList<String>();
+
     private Set<String> authorities = new HashSet<String>();
     
     @Before
@@ -43,13 +46,12 @@ public class ComkerPermissionDaoUnitTest {
         Session session = testSessionFactory.getCurrentSession();
         
         for(int i=0; i<20; i++) {
-            String prefix = (i<10)?"0":"";
-
-            String authorityString = "PERMISSION_" + prefix + (i + 1);
+            String authorityString = "PERMISSION_" + i;
             authorities.add(authorityString);
 
             item = new ComkerPermission(authorityString);
             session.saveOrUpdate(item);
+            permissionIdx.add(item.getId());
         }
     }
 
@@ -76,20 +78,20 @@ public class ComkerPermissionDaoUnitTest {
     }
 
     @Test
-    public void test_get_by_authoritiy() {
-        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_01");
+    public void test_get_by_authority() {
+        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_1");
         Assert.assertNotNull(item);
     }
 
     @Test
-    public void test_get_by_authoritiy_with_invalid_authority_code() {
+    public void test_get_by_authority_with_invalid_authority_code() {
         ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_NOT_FOUND");
         Assert.assertNull(item);
     }
 
     @Test
     public void test_get_by_id() {
-        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_01");
+        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_1");
         ComkerPermission item2 = testPermissionDao.get(item.getId());
         Assert.assertEquals(item, item2);
     }
@@ -104,7 +106,7 @@ public class ComkerPermissionDaoUnitTest {
     public void test_create() {
         int currentCount = testPermissionDao.count();
 
-        ComkerPermission item = new ComkerPermission("PERMISSION_0A");
+        ComkerPermission item = new ComkerPermission("PERMISSION_A");
         testPermissionDao.save(item);
 
         Assert.assertTrue(testPermissionDao.count() == currentCount + 1);
