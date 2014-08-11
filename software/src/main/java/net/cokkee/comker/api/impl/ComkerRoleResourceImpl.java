@@ -43,20 +43,28 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
-    public Response getRoleList() {
+    public Response getRoleList(Integer start, Integer limit, String q) {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerRoleResource.getRoleList() - started");
+            log.debug("ComkerRoleResource.getRoleList() - start...");
         }
-        List<ComkerRoleDTO> result = getRoleStorage().findAll(
-                getSessionService().getRoleListPager());
-        
+
+        Integer total = roleStorage.count();
+
+        List collection = roleStorage.findAll(sessionService.getPager(ComkerRoleDTO.class, start, limit));
+
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
                     "ComkerRoleResource.getRoleList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerRoleDTO>> entity = new GenericEntity<List<ComkerRoleDTO>>(result) {};
-        return Response.ok(entity).build();
+
+        ComkerRoleDTO.Pack result = new ComkerRoleDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerRoleResource.getRoleList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
     @Override

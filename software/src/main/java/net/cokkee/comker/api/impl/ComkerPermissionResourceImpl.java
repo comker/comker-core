@@ -2,7 +2,6 @@ package net.cokkee.comker.api.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerPermissionResource;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
@@ -41,20 +40,28 @@ public class ComkerPermissionResourceImpl implements ComkerPermissionResource {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
-    public Response getPermissionList() {
+    public Response getPermissionList(Integer start, Integer limit, String q) {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerPermissionResource.getPermissionList() - started");
+            log.debug("ComkerPermissionResource.getPermissionList() - start...");
         }
-        List result = getPermissionStorage().findAll(
-                getSessionService().getPermissionListPager());
-        
+
+        Integer total = permissionStorage.count();
+
+        List collection = permissionStorage.findAll(sessionService.getPager(ComkerPermissionDTO.class, start, limit));
+
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
                     "ComkerPermissionResource.getPermissionList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerPermissionDTO>> entity = new GenericEntity<List<ComkerPermissionDTO>>(result) {};
-        return Response.ok(entity).build();
+
+        ComkerPermissionDTO.Pack result = new ComkerPermissionDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerPermissionResource.getPermissionList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
     @Override

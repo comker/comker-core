@@ -1,6 +1,7 @@
 package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
@@ -15,9 +16,14 @@ public interface ComkerCrewResource {
     @ApiOperation(
         value = "List all of crews",
         notes = "Returns list of crews",
-        response = ComkerCrewDTO.class,
-        responseContainer = "List")
-    public Response getCrewList();
+        response = ComkerCrewDTO.Pack.class)
+    public Response getCrewList(
+            @ApiParam(value = "The begin position to get Crews", required = false)
+            @QueryParam("offset") Integer start,
+            @ApiParam(value = "How many Crews do you want to get?", required = false)
+            @QueryParam("max") Integer limit,
+            @ApiParam(value = "The query that crew's name should be matched", required = false)
+            @QueryParam("q") String q);
 
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/crud/{id}")

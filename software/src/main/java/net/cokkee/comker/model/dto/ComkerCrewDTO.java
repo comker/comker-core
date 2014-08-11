@@ -1,5 +1,6 @@
 package net.cokkee.comker.model.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 
@@ -65,5 +66,38 @@ public class ComkerCrewDTO extends ComkerAbstractDTO {
 
     public void setLimitedSpotRoleIds(ComkerKeyAndValueSet[] limitedSpotRoleIds) {
         this.limitedSpotRoleIds = limitedSpotRoleIds;
+    }
+
+    @XmlRootElement
+    public static class Pack {
+
+        public Pack() {
+        }
+
+        public Pack(Integer total, List<ComkerCrewDTO> collection) {
+            this();
+            this.total = total;
+            this.collection = collection;
+        }
+
+        private Integer total = null;
+
+        private List<ComkerCrewDTO> collection = null;
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public List<ComkerCrewDTO> getCollection() {
+            return collection;
+        }
+
+        public void setCollection(List<ComkerCrewDTO> collection) {
+            this.collection = collection;
+        }
     }
 }

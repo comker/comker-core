@@ -41,20 +41,28 @@ public class ComkerCrewResourceImpl implements ComkerCrewResource {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
-    public Response getCrewList() {
+    public Response getCrewList(Integer start, Integer limit, String q) {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerCrewResource.getCrewList() - started");
+            log.debug("ComkerCrewResource.getCrewList() - start...");
         }
-        List result = getCrewStorage().findAll(
-                getSessionService().getCrewListPager());
-        
+
+        Integer total = crewStorage.count();
+
+        List collection = crewStorage.findAll(sessionService.getPager(ComkerCrewDTO.class, start, limit));
+
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
                     "ComkerCrewResource.getCrewList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerCrewDTO>> entity = new GenericEntity<List<ComkerCrewDTO>>(result) {};
-        return Response.ok(entity).build();
+
+        ComkerCrewDTO.Pack result = new ComkerCrewDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerCrewResource.getCrewList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
     @Override

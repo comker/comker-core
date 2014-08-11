@@ -9,6 +9,10 @@ import net.cokkee.comker.model.ComkerPager;
  */
 public interface ComkerSessionService {
 
+    ComkerPager getPager(Class clazz);
+
+    ComkerPager getPager(Class clazz, Integer start, Integer limit);
+
     Map<String, Object> getUserListCriteria();
 
     ComkerPager getUserListPager();
@@ -19,11 +23,7 @@ public interface ComkerSessionService {
 
     Map<String, Object> getSpotListCriteria();
 
-    ComkerPager getSpotListPager();
-
     Map<String, Object> getRoleListCriteria();
-
-    ComkerPager getRoleListPager();
 
     Map<String, Object> getPermissionListCriteria();
 

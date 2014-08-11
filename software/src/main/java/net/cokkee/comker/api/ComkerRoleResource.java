@@ -1,6 +1,7 @@
 package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
@@ -15,9 +16,14 @@ public interface ComkerRoleResource {
     @ApiOperation(
         value = "List all of roles",
         notes = "Returns list of roles",
-        response = ComkerRoleDTO.class,
-        responseContainer = "List")
-    public Response getRoleList();
+        response = ComkerRoleDTO.Pack.class)
+    public Response getRoleList(
+            @ApiParam(value = "The begin position to get Roles", required = false)
+            @QueryParam("offset") Integer start,
+            @ApiParam(value = "How many Roles do you want to get?", required = false)
+            @QueryParam("max") Integer limit,
+            @ApiParam(value = "The query that role's name should be matched", required = false)
+            @QueryParam("q") String q);
 
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/crud/{id}")

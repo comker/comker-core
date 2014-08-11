@@ -1,5 +1,6 @@
 package net.cokkee.comker.model.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -67,5 +68,38 @@ public class ComkerSpotDTO extends ComkerAbstractDTO {
 
     public void setModuleIds(String[] moduleIds) {
         this.moduleIds = moduleIds;
+    }
+
+    @XmlRootElement
+    public static class Pack {
+
+        public Pack() {
+        }
+
+        public Pack(Integer total, List<ComkerSpotDTO> collection) {
+            this();
+            this.total = total;
+            this.collection = collection;
+        }
+
+        private Integer total = null;
+
+        private List<ComkerSpotDTO> collection = null;
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public List<ComkerSpotDTO> getCollection() {
+            return collection;
+        }
+
+        public void setCollection(List<ComkerSpotDTO> collection) {
+            this.collection = collection;
+        }
     }
 }

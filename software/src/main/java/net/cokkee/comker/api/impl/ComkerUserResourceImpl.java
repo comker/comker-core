@@ -2,7 +2,6 @@ package net.cokkee.comker.api.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerUserResource;
 import net.cokkee.comker.exception.ComkerAccessDatabaseException;
@@ -42,22 +41,32 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public Response getUserList() {
+    @Override
+    public Response getUserList(Integer start, Integer limit) {
         if (log.isDebugEnabled()) {
             log.debug("ComkerUserResource.getUserList() - started");
         }
-        List result = getUserStorage().findAll(
-                getSessionService().getUserListPager());
+
+        Integer total = userStorage.count();
+
+        List collection = userStorage.findAll(sessionService.getPager(ComkerUserDTO.class, start, limit));
         
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
                     "ComkerUserResource.getUserList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerUserDTO>> entity = new GenericEntity<List<ComkerUserDTO>>(result) { };
-        return Response.ok(entity).build();
+
+        ComkerUserDTO.Pack result = new ComkerUserDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerUserResource.getUserList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
+    @Override
     public Response getUserItem(String id)
                     throws ComkerObjectNotFoundException {
         ComkerUserDTO item = getUserStorage().get(id);
@@ -67,6 +76,7 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
         return Response.ok().entity(item).build();
     }
 
+    @Override
     public Response createUserItem(ComkerUserDTO item) {
 
         if (log.isDebugEnabled()) {
@@ -79,6 +89,7 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
         return Response.ok().entity(result).build();
     }
 
+    @Override
     public Response updateUserItem(String id, ComkerUserDTO item) {
 
         if (log.isDebugEnabled()) {
@@ -99,6 +110,7 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
         return Response.ok().entity(current).build();
     }
 
+    @Override
     public Response deleteUserItem(String id) {
 
         if (log.isDebugEnabled()) {

@@ -1,6 +1,7 @@
 package net.cokkee.comker.model.dto;
 
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -86,5 +87,38 @@ public class ComkerWatchdogDTO extends ComkerAbstractDTO {
 
     public void setComment(String text) {
         this.comment = text;
+    }
+
+    @XmlRootElement
+    public static class Pack {
+
+        public Pack() {
+        }
+
+        public Pack(Integer total, List<ComkerWatchdogDTO> collection) {
+            this();
+            this.total = total;
+            this.collection = collection;
+        }
+
+        private Integer total = null;
+
+        private List<ComkerWatchdogDTO> collection = null;
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public List<ComkerWatchdogDTO> getCollection() {
+            return collection;
+        }
+
+        public void setCollection(List<ComkerWatchdogDTO> collection) {
+            this.collection = collection;
+        }
     }
 }

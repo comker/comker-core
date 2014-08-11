@@ -1,6 +1,7 @@
 package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
@@ -15,9 +16,14 @@ public interface ComkerPermissionResource {
     @ApiOperation(
         value = "List all of permissions",
         notes = "Returns list of permissions",
-        response = ComkerPermissionDTO.class,
-        responseContainer = "List")
-    public Response getPermissionList();
+        response = ComkerPermissionDTO.Pack.class)
+    public Response getPermissionList(
+            @ApiParam(value = "The begin position to get Permissions", required = false)
+            @QueryParam("offset") Integer start,
+            @ApiParam(value = "How many Permissions do you want to get?", required = false)
+            @QueryParam("max") Integer limit,
+            @ApiParam(value = "The query that permission's name should be matched", required = false)
+            @QueryParam("q") String q);
 
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/crud/{id}")

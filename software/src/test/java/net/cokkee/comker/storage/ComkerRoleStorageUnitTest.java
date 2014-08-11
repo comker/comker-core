@@ -41,7 +41,11 @@ import static org.mockito.Mockito.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ComkerRoleStorageUnitTest {
 
+    private List<String> roleIdx = new ArrayList<String>();
+
     private Map<String, ComkerRole> roleMap = new HashMap<String, ComkerRole>();
+
+    private List<String> permissionIdx = new ArrayList<String>();
 
     private Map<String, ComkerPermission> permissionMap = new HashMap<String, ComkerPermission>();
     
@@ -58,31 +62,11 @@ public class ComkerRoleStorageUnitTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
-        ComkerPermission permission;
-
-        permission = new ComkerPermission("PERMISSION_01");
-        permission.setId("permission-01");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_02");
-        permission.setId("permission-02");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_03");
-        permission.setId("permission-03");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_04");
-        permission.setId("permission-04");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_05");
-        permission.setId("permission-05");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_06");
-        permission.setId("permission-06");
-        permissionMap.put(permission.getId(), permission);
+        for(int i=1; i<=6; i++) {
+            ComkerPermission permission = new ComkerPermission("PERMISSION_0" + i);
+            permission.setId("permission-0" + i);
+            permissionMap.put(permission.getId(), permission);
+        }
 
         when(permissionDao.get(anyString())).thenAnswer(new Answer<ComkerPermission>() {
             @Override
@@ -94,7 +78,7 @@ public class ComkerRoleStorageUnitTest {
         });
 
         ComkerRole role;
-        
+
         role = new ComkerRole("ROLE_01", "Role 01", "This is role-01");
         role.setId("role-01");
         role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-01")));
@@ -200,19 +184,19 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test
-    public void test_1_count() {
+    public void test_count() {
         Integer result = roleStorage.count();
         assertEquals(result.intValue(), 3);
     }
 
     @Test
-    public void test_1_find_all_role_objects() {
+    public void test_find_all_role_objects() {
         List<ComkerRoleDTO> result = roleStorage.findAll(null);
         assertEquals(result.size(), 3);
     }
 
     @Test
-    public void test_2_get_role_object_by_id() {
+    public void test_get_role_object_by_id() {
         ComkerRoleDTO result = roleStorage.get("role-01");
         verify(roleDao).get("role-01");
         assertArrayEquals(new String[] {"permission-01", "permission-02"}, result.getPermissionIds());
@@ -226,37 +210,37 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_2_get_role_object_by_invalid_id() {
+    public void test_get_role_object_by_invalid_id() {
         ComkerRoleDTO result = roleStorage.get("role-not-found");
         verify(roleDao).get("role-not-found");
     }
 
     @Test
-    public void test_2_get_role_object_by_code() {
+    public void test_get_role_object_by_code() {
         ComkerRoleDTO result = roleStorage.getByCode("ROLE_01");
         verify(roleDao).getByCode("ROLE_01");
         assertEquals(result.getPermissionIds().length, 2);
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_2_get_role_object_by_wrong_code() {
+    public void test_get_role_object_by_wrong_code() {
         ComkerRoleDTO result = roleStorage.get("ROLE_NOT_FOUND");
     }
 
     @Test
-    public void test_3_get_authorities() {
+    public void test_get_authorities() {
         Set<String> result = roleStorage.getAuthorities("role-01");
         assertArrayEquals(new String[] {"PERMISSION_01", "PERMISSION_02"}, result.toArray(new String[0]));
     }
 
     @Test(expected = ComkerFieldDuplicatedException.class)
-    public void test_4_create_role_object_with_duplicated_code() {
+    public void test_create_role_object_with_duplicated_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_02", "A new role", null);
         roleStorage.create(param);
     }
 
     @Test
-    public void test_4_create_role_object_with_valid_code() {
+    public void test_create_role_object_with_valid_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_04", "Role 04", "This is role 4");
         param.setPermissionIds(new String[] {"permission-01", "permission-06"});
         ComkerRoleDTO result = roleStorage.create(param);
@@ -270,14 +254,14 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_5_update_role_object_with_invalid_id() {
+    public void test_update_role_object_with_invalid_id() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_01", "Role 01 - modified", null);
         param.setId("role-not-found");
         roleStorage.update(param);
     }
 
     @Test
-    public void test_5_update_role_object_with_duplicated_both_id_and_code() {
+    public void test_update_role_object_with_duplicated_both_id_and_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_02", "Role 02 - modified", null);
         param.setId("role-02");
         roleStorage.update(param);
@@ -286,14 +270,14 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test(expected = ComkerFieldDuplicatedException.class)
-    public void test_5_update_role_object_with_duplicated_code() {
+    public void test_update_role_object_with_duplicated_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_02", "Role 01 - modified", null);
         param.setId("role-01");
         roleStorage.update(param);
     }
 
     @Test
-    public void test_5_update_role_object_with_null_permissionIds() {
+    public void test_update_role_object_with_null_permissionIds() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_01", "Role 01 - modified", null);
         param.setId("role-01");
         roleStorage.update(param);
@@ -303,7 +287,7 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test
-    public void test_5_update_role_object_with_valid_permissionIds() {
+    public void test_update_role_object_with_valid_permissionIds() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_01", "Role 01 - modified", "Role 01 description");
         param.setId("role-01");
         param.setPermissionIds(new String[] {"permission-02", "permission-05", "permission-06"});
@@ -315,7 +299,7 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test
-    public void test_5_update_role_object_with_invalid_permissionIds() {
+    public void test_update_role_object_with_invalid_permissionIds() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_01", "Role 01 - modified", "Role 01 description");
         param.setId("role-01");
         param.setPermissionIds(new String[] {"permission-01", "permission-02", "permission-not-found"});
@@ -326,13 +310,13 @@ public class ComkerRoleStorageUnitTest {
     }
 
     @Test
-    public void test_6_delete_role_object_by_id() {
+    public void test_delete_role_object_by_id() {
         roleStorage.delete("role-03");
         assertNull(roleMap.get("role-03"));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_6_delete_role_object_by_invalid_id() {
+    public void test_delete_role_object_by_invalid_id() {
         roleStorage.delete("role-not-found");
     }
 }

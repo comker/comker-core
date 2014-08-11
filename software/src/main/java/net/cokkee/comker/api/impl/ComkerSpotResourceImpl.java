@@ -2,7 +2,6 @@ package net.cokkee.comker.api.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerSpotResource;
 import net.cokkee.comker.storage.ComkerSpotStorage;
@@ -35,20 +34,28 @@ public class ComkerSpotResourceImpl implements ComkerSpotResource {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
-    public Response getSpotList() {
+    public Response getSpotList(Integer start, Integer limit, String q) {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerSpotResource.getSpotList() - started");
+            log.debug("ComkerSpotResource.getSpotList() - start...");
         }
-        List result = spotStorage.findAll(
-                sessionService.getSpotListPager());
+        
+        Integer total = spotStorage.count();
+        
+        List collection = spotStorage.findAll(sessionService.getPager(ComkerSpotDTO.class, start, limit));
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
                     "ComkerSpotResource.getSpotList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerSpotDTO>> entity = new GenericEntity<List<ComkerSpotDTO>>(result) {};
-        return Response.ok(entity).build();
+
+        ComkerSpotDTO.Pack result = new ComkerSpotDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerSpotResource.getSpotList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
     @Override

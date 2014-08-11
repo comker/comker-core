@@ -24,6 +24,31 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
 
     //----------------------------------------------------------------------
 
+    private Map<Class,ComkerPager> pagers = new HashMap<Class, ComkerPager>();
+
+    @Override
+    public ComkerPager getPager(Class clazz) {
+        if (clazz == null) return null;
+
+        ComkerPager pager = pagers.get(clazz);
+        if (pager == null) {
+            pager = new ComkerPager();
+            pagers.put(clazz, pager);
+        }
+
+        return pager;
+    }
+
+    @Override
+    public ComkerPager getPager(Class clazz, Integer start, Integer limit) {
+        ComkerPager pager = getPager(clazz);
+        if (start != null) pager.setStart(start);
+        if (limit != null) pager.setLimit(limit);
+        return pager;
+    }
+
+    //----------------------------------------------------------------------
+
     private Map<String,Object> userListCriteria = new HashMap<String, Object>();
 
     @Override
@@ -63,13 +88,6 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
         return spotListCriteria;
     }
 
-    private ComkerPager spotListPager = new ComkerPager();
-
-    @Override
-    public ComkerPager getSpotListPager() {
-        return spotListPager;
-    }
-
     //----------------------------------------------------------------------
 
     private Map<String,Object> roleListCriteria = new HashMap<String, Object>();
@@ -77,13 +95,6 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
     @Override
     public Map<String, Object> getRoleListCriteria() {
         return roleListCriteria;
-    }
-
-    private ComkerPager roleListPager = new ComkerPager();
-
-    @Override
-    public ComkerPager getRoleListPager() {
-        return roleListPager;
     }
 
     //----------------------------------------------------------------------

@@ -2,7 +2,6 @@ package net.cokkee.comker.api.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerWatchdogResource;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
@@ -41,20 +40,28 @@ public class ComkerWatchdogResourceImpl implements ComkerWatchdogResource {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @Override
-    public Response getWatchList() {
+    public Response getWatchdogList(Integer start, Integer limit, String q) {
         if (log.isDebugEnabled()) {
-            log.debug("ComkerWatchdogResource.getWatchList() - started");
+            log.debug("ComkerWatchdogResource.getWatchdogList() - start...");
         }
-        List result = getWatchdogStorage().findAll(
-                getSessionService().getWatchdogListPager());
-        
+
+        Integer total = watchdogStorage.count();
+
+        List collection = watchdogStorage.findAll(sessionService.getPager(ComkerWatchdogDTO.class, start, limit));
+
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format(
-                    "ComkerWatchdogResource.getWatchList() - the list had {0} items.",
-                    new Object[] {result.size()}));
+                    "ComkerWatchdogResource.getWatchdogList() - the list had {0} items.",
+                    new Object[] {collection.size()}));
         }
-        final GenericEntity<List<ComkerWatchdogDTO>> entity = new GenericEntity<List<ComkerWatchdogDTO>>(result) {};
-        return Response.ok(entity).build();
+
+        ComkerWatchdogDTO.Pack result = new ComkerWatchdogDTO.Pack(total, collection);
+
+        if (log.isDebugEnabled()) {
+            log.debug("ComkerWatchdogResource.getWatchdogList() - done");
+        }
+
+        return Response.ok(result).build();
     }
 
     @Override

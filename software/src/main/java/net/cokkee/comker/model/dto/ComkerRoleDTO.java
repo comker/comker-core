@@ -77,4 +77,37 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
     public void setIdsOfPermissionList(List<String> idsOfPermissionList) {
         this.idsOfPermissionList = idsOfPermissionList;
     }
+
+    @XmlRootElement
+    public static class Pack {
+
+        public Pack() {
+        }
+
+        public Pack(Integer total, List<ComkerRoleDTO> collection) {
+            this();
+            this.total = total;
+            this.collection = collection;
+        }
+
+        private Integer total = null;
+
+        private List<ComkerRoleDTO> collection = null;
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public List<ComkerRoleDTO> getCollection() {
+            return collection;
+        }
+
+        public void setCollection(List<ComkerRoleDTO> collection) {
+            this.collection = collection;
+        }
+    }
 }

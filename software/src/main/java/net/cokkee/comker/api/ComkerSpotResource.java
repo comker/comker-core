@@ -1,6 +1,7 @@
 package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
@@ -15,9 +16,14 @@ public interface ComkerSpotResource {
     @ApiOperation(
         value = "List all of spots",
         notes = "Returns list of spots",
-        response = ComkerSpotDTO.class,
-        responseContainer = "List")
-    public Response getSpotList();
+        response = ComkerSpotDTO.Pack.class)
+    public Response getSpotList(
+            @ApiParam(value = "The begin position to get Spots", required = false)
+            @QueryParam("offset") Integer start,
+            @ApiParam(value = "How many Spots do you want to get?", required = false)
+            @QueryParam("max") Integer limit,
+            @ApiParam(value = "The query that spot's name should be matched", required = false)
+            @QueryParam("q") String q);
 
     @javax.ws.rs.GET
     @javax.ws.rs.Path("/crud/{id}")

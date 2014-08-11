@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
-import net.cokkee.comker.api.impl.ComkerSpotResourceImpl;
+import net.cokkee.comker.api.impl.ComkerRoleResourceImpl;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.storage.ComkerSpotStorage;
+import net.cokkee.comker.storage.ComkerRoleStorage;
 import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerSpotDTO;
+import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.hamcrest.CoreMatchers;
@@ -37,50 +37,50 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author drupalex
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/api/ComkerSpotResourceUnitTest.xml"})
-public class ComkerSpotResourceUnitTest {
+@ContextConfiguration(locations = {"classpath:/api/ComkerRoleResourceUnitTest.xml"})
+public class ComkerRoleResourceUnitTest {
 
     @Autowired
-    protected ComkerSpotResource spotClient;
+    protected ComkerRoleResource roleClient;
 
     @Autowired
     @InjectMocks
-    private ComkerSpotResourceImpl spotServer;
+    private ComkerRoleResourceImpl roleServer;
 
     @Mock
     private ComkerSessionService sessionService;
 
     @Mock
-    private ComkerSpotStorage spotStorage;
+    private ComkerRoleStorage roleStorage;
 
-    private List<String> spotIdx = new ArrayList<String>();
+    private List<String> roleIdx = new ArrayList<String>();
 
-    private Map<String,ComkerSpotDTO> spotMap = new HashMap<String,ComkerSpotDTO>();
+    private Map<String,ComkerRoleDTO> roleMap = new HashMap<String,ComkerRoleDTO>();
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<10; i++) {
-            ComkerSpotDTO spot = new ComkerSpotDTO("SPOT_" + i, "Spot " + i, null);
-            spot.setId(UUID.randomUUID().toString());
-            spotMap.put(spot.getId(), spot);
-            spotIdx.add(spot.getId());
+            ComkerRoleDTO role = new ComkerRoleDTO("ROLE_" + i, "Role " + i, null);
+            role.setId(UUID.randomUUID().toString());
+            roleMap.put(role.getId(), role);
+            roleIdx.add(role.getId());
         }
 
-        Mockito.when(spotStorage.count()).thenAnswer(new Answer<Integer>() {
+        Mockito.when(roleStorage.count()).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
-                return spotMap.size();
+                return roleMap.size();
             }
         });
 
-        Mockito.when(spotStorage.findAll(Mockito.any(ComkerPager.class)))
-                .thenAnswer(new Answer<List<ComkerSpotDTO>>() {
+        Mockito.when(roleStorage.findAll(Mockito.any(ComkerPager.class)))
+                .thenAnswer(new Answer<List<ComkerRoleDTO>>() {
             @Override
-            public List<ComkerSpotDTO> answer(InvocationOnMock invocation) throws Throwable {
+            public List<ComkerRoleDTO> answer(InvocationOnMock invocation) throws Throwable {
                 ComkerPager p = (ComkerPager) invocation.getArguments()[0];
-                List<ComkerSpotDTO> result = new ArrayList<ComkerSpotDTO>(spotMap.values());
+                List<ComkerRoleDTO> result = new ArrayList<ComkerRoleDTO>(roleMap.values());
 
                 if (p != null) {
                     int k = (p.getStart() != null) ? p.getStart().intValue() : 0;
@@ -100,47 +100,47 @@ public class ComkerSpotResourceUnitTest {
             }
         });
 
-        Mockito.when(spotStorage.get(Mockito.anyString()))
-                .thenAnswer(new Answer<ComkerSpotDTO>() {
+        Mockito.when(roleStorage.get(Mockito.anyString()))
+                .thenAnswer(new Answer<ComkerRoleDTO>() {
             @Override
-            public ComkerSpotDTO answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerRoleDTO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                if (spotMap.containsKey(id)) {
-                    return spotMap.get(id);
+                if (roleMap.containsKey(id)) {
+                    return roleMap.get(id);
                 }
-                throw new ComkerObjectNotFoundException("spot_not_found");
+                throw new ComkerObjectNotFoundException("role_not_found");
             }
         });
 
-        Mockito.doAnswer(new Answer<ComkerSpotDTO>() {
+        Mockito.doAnswer(new Answer<ComkerRoleDTO>() {
             @Override
-            public ComkerSpotDTO answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpotDTO spot = (ComkerSpotDTO) invocation.getArguments()[0];
-                spot.setId(UUID.randomUUID().toString());
-                spotMap.put(spot.getId(), spot);
-                spotIdx.add(spot.getId());
-                return spot;
+            public ComkerRoleDTO answer(InvocationOnMock invocation) throws Throwable {
+                ComkerRoleDTO role = (ComkerRoleDTO) invocation.getArguments()[0];
+                role.setId(UUID.randomUUID().toString());
+                roleMap.put(role.getId(), role);
+                roleIdx.add(role.getId());
+                return role;
             }
-        }).when(spotStorage).create(Mockito.any(ComkerSpotDTO.class));
+        }).when(roleStorage).create(Mockito.any(ComkerRoleDTO.class));
 
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpotDTO spot = (ComkerSpotDTO) invocation.getArguments()[0];
-                ComkerDataUtil.copyProperties(spot, spotMap.get(spot.getId()));
+                ComkerRoleDTO role = (ComkerRoleDTO) invocation.getArguments()[0];
+                ComkerDataUtil.copyProperties(role, roleMap.get(role.getId()));
                 return null;
             }
-        }).when(spotStorage).update(Mockito.any(ComkerSpotDTO.class));
+        }).when(roleStorage).update(Mockito.any(ComkerRoleDTO.class));
 
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                spotMap.remove(id);
-                spotIdx.remove(id);
+                roleMap.remove(id);
+                roleIdx.remove(id);
                 return null;
             }
-        }).when(spotStorage).delete(Mockito.anyString());
+        }).when(roleStorage).delete(Mockito.anyString());
 
         Mockito.when(sessionService.getPager(Mockito.any(Class.class),
                     Mockito.any(Integer.class), Mockito.any(Integer.class)))
@@ -159,24 +159,24 @@ public class ComkerSpotResourceUnitTest {
 
     @Test
     public void test_find_all() {
-        Response resp = spotClient.getSpotList(null, null, null);
-        Mockito.verify(sessionService).getPager(ComkerSpotDTO.class, null, null);
+        Response resp = roleClient.getRoleList(null, null, null);
+        Mockito.verify(sessionService).getPager(ComkerRoleDTO.class, null, null);
         Assert.assertTrue(resp.getStatus() == 200);
         Assert.assertTrue(resp.hasEntity());
 
-        ComkerSpotDTO.Pack pack = resp.readEntity(ComkerSpotDTO.Pack.class);
-        Assert.assertTrue(pack.getTotal() == spotMap.size());
-        Assert.assertTrue(pack.getCollection().size() <= spotMap.size());
+        ComkerRoleDTO.Pack pack = resp.readEntity(ComkerRoleDTO.Pack.class);
+        Assert.assertTrue(pack.getTotal() == roleMap.size());
+        Assert.assertTrue(pack.getCollection().size() <= roleMap.size());
         Assert.assertTrue(pack.getCollection().size() <= ComkerPager.DEFAULT_LIMIT);
 
         List<String> resultIds = new ArrayList<String>();
-        List<ComkerSpotDTO> collection = pack.getCollection();
-        for(ComkerSpotDTO item:collection) {
+        List<ComkerRoleDTO> collection = pack.getCollection();
+        for(ComkerRoleDTO item:collection) {
             resultIds.add(item.getId());
-            Assert.assertEquals(item.getCode(), spotMap.get(item.getId()).getCode());
+            Assert.assertEquals(item.getCode(), roleMap.get(item.getId()).getCode());
         }
 
-        List<String> sourceIds = new ArrayList<String>(spotIdx);
+        List<String> sourceIds = new ArrayList<String>(roleIdx);
         Collections.sort(sourceIds);
         Collections.sort(resultIds);
 
@@ -184,35 +184,35 @@ public class ComkerSpotResourceUnitTest {
     }
     
     @Test
-    public void test_get_spot_item() {
+    public void test_get_role_item() {
         int position = 3;
-        Response resp = spotClient.getSpotItem(spotIdx.get(position));
+        Response resp = roleClient.getRoleItem(roleIdx.get(position));
         Assert.assertTrue(resp.getStatus() == 200);
         Assert.assertTrue(resp.hasEntity());
 
-        ComkerSpotDTO spot = resp.readEntity(ComkerSpotDTO.class);
-        Assert.assertEquals("SPOT_" + position, spot.getCode());
-        Assert.assertEquals("Spot " + position, spot.getName());
+        ComkerRoleDTO role = resp.readEntity(ComkerRoleDTO.class);
+        Assert.assertEquals("ROLE_" + position, role.getCode());
+        Assert.assertEquals("Role " + position, role.getName());
     }
 
     @Test
-    public void test_get_spot_item_with_invalid_id() {
-        Response resp = spotClient.getSpotItem("ID_INVALID");
+    public void test_get_role_item_with_invalid_id() {
+        Response resp = roleClient.getRoleItem("ID_INVALID");
         Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
     }
 
     @Test
-    public void test_create_spot() {
-        int position = spotMap.size();
-        ComkerSpotDTO source = new ComkerSpotDTO(
-                "SPOT_" + position,
-                "Spot " + position,
+    public void test_create_role() {
+        int position = roleMap.size();
+        ComkerRoleDTO source = new ComkerRoleDTO(
+                "ROLE_" + position,
+                "Role " + position,
                 null);
 
-        Response resp = spotClient.createSpotItem(source);
+        Response resp = roleClient.createRoleItem(source);
         Assert.assertTrue(resp.getStatus() == 200);
 
-        ComkerSpotDTO result = resp.readEntity(ComkerSpotDTO.class);
+        ComkerRoleDTO result = resp.readEntity(ComkerRoleDTO.class);
         Assert.assertTrue(result.getId().length() > 0);
         Assert.assertEquals(source.getCode(), result.getCode());
         Assert.assertEquals(source.getName(), result.getName());
@@ -220,42 +220,42 @@ public class ComkerSpotResourceUnitTest {
     }
 
     @Test
-    public void test_update_spot() {
-        ComkerSpotDTO source = spotMap.get(spotIdx.get(5));
+    public void test_update_role() {
+        ComkerRoleDTO source = roleMap.get(roleIdx.get(5));
 
-        ComkerSpotDTO actual = new ComkerSpotDTO(
+        ComkerRoleDTO actual = new ComkerRoleDTO(
                 source.getCode() + "_UPDATED",
                 source.getName() + " - updated",
                 source.getDescription());
         actual.setId(source.getId());
-        actual.setModuleIds(new String[] {
+        actual.setPermissionIds(new String[] {
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString()});
 
-        Response resp = spotClient.updateSpotItem(source.getId(), actual);
+        Response resp = roleClient.updateRoleItem(source.getId(), actual);
         Assert.assertTrue(resp.getStatus() == 200);
-        ComkerSpotDTO result = resp.readEntity(ComkerSpotDTO.class);
+        ComkerRoleDTO result = resp.readEntity(ComkerRoleDTO.class);
 
         assertEquals(actual, result);
     }
 
     @Test
-    public void test_delete_spot() {
-        ComkerSpotDTO source = spotMap.get(spotIdx.get(5));
+    public void test_delete_role() {
+        ComkerRoleDTO source = roleMap.get(roleIdx.get(5));
 
-        Response resp = spotClient.deleteSpotItem(source.getId());
+        Response resp = roleClient.deleteRoleItem(source.getId());
         Assert.assertTrue(resp.getStatus() == 200);
-        ComkerSpotDTO result = resp.readEntity(ComkerSpotDTO.class);
+        ComkerRoleDTO result = resp.readEntity(ComkerRoleDTO.class);
 
         assertEquals(source, result);
     }
 
-    private void assertEquals(ComkerSpotDTO source, ComkerSpotDTO result) {
+    private void assertEquals(ComkerRoleDTO source, ComkerRoleDTO result) {
         Assert.assertTrue(result.getId().length() > 0);
         Assert.assertEquals(source.getCode(), result.getCode());
         Assert.assertEquals(source.getName(), result.getName());
         Assert.assertEquals(source.getDescription(), result.getDescription());
 
-        Assert.assertThat(source.getModuleIds(), CoreMatchers.is(result.getModuleIds()));
+        Assert.assertThat(source.getPermissionIds(), CoreMatchers.is(result.getPermissionIds()));
     }
 }

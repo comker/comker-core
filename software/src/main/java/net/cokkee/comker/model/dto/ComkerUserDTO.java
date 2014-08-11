@@ -1,5 +1,6 @@
 package net.cokkee.comker.model.dto;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -114,5 +115,38 @@ public class ComkerUserDTO extends ComkerAbstractDTO {
 
     public void setCrewIds(String[] crewIds) {
         this.crewIds = crewIds;
+    }
+
+    @XmlRootElement
+    public static class Pack {
+
+        public Pack() {
+        }
+
+        public Pack(Integer total, List<ComkerUserDTO> collection) {
+            this();
+            this.total = total;
+            this.collection = collection;
+        }
+
+        private Integer total = null;
+
+        private List<ComkerUserDTO> collection = null;
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
+
+        public List<ComkerUserDTO> getCollection() {
+            return collection;
+        }
+
+        public void setCollection(List<ComkerUserDTO> collection) {
+            this.collection = collection;
+        }
     }
 }

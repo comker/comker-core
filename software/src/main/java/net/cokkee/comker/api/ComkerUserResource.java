@@ -1,29 +1,42 @@
 package net.cokkee.comker.api;
 
 import com.wordnik.swagger.annotations.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import org.springframework.security.access.annotation.Secured;
 
 @Api(value = "/user", description = "User API")
-@javax.ws.rs.Path("/user")
+@Path("/user")
 public interface ComkerUserResource {
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("/crud")
-    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @GET
+    @Path("/crud")
+    @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "List all of users",
         notes = "Returns list of users. Permissions to access: PERM_COMKER_ADM_USER, PERM_COMKER_MOD_USER.",
         response = ComkerUserDTO.class,
         responseContainer = "List")
     @Secured({"PERM_COMKER_ADM_USER", "PERM_COMKER_MOD_USER"})
-    public Response getUserList();
+    public Response getUserList(
+            @ApiParam(value = "The begin position to get Spots", required = false)
+            @QueryParam("offset") Integer start,
+            @ApiParam(value = "How many Spots do you want to get?", required = false)
+            @QueryParam("max") Integer limit);
 
-    @javax.ws.rs.GET
-    @javax.ws.rs.Path("/crud/{id}")
-    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @GET
+    @Path("/crud/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "Find user by ID",
         notes = "Returns a user by ID (UUID). . Permissions to access: PERM_COMKER_ADM_USER, PERM_COMKER_MOD_USER.",
@@ -34,12 +47,12 @@ public interface ComkerUserResource {
     @Secured({"PERM_COMKER_ADM_USER", "PERM_COMKER_MOD_USER"})
     public Response getUserItem(
             @ApiParam(value = "ID of user that needs to be fetched", required = true)
-            @javax.ws.rs.PathParam("id") String id);
+            @PathParam("id") String id);
 
-    @javax.ws.rs.POST
-    @javax.ws.rs.Path("/crud")
-    @javax.ws.rs.Consumes({MediaType.APPLICATION_JSON})
-    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @POST
+    @Path("/crud")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "Add a new user to the database",
         notes = "Permissions to access: PERM_COMKER_ADM_USER.")
@@ -50,10 +63,10 @@ public interface ComkerUserResource {
             @ApiParam(value = "User object that needs to be added to the store", required = true)
                 ComkerUserDTO item);
 
-    @javax.ws.rs.PUT
-    @javax.ws.rs.Path("/crud/{id}")
-    @javax.ws.rs.Consumes({MediaType.APPLICATION_JSON})
-    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @PUT
+    @Path("/crud/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "Update an existing user",
         notes = "Permissions to access: PERM_COMKER_ADM_USER.")
@@ -64,14 +77,14 @@ public interface ComkerUserResource {
     @Secured({"PERM_COMKER_ADM_USER"})
     public Response updateUserItem(
             @ApiParam(value = "ID of user that needs to be updated", required = true)
-            @javax.ws.rs.PathParam("id")
+            @PathParam("id")
                 String id,
             @ApiParam(value = "User object that needs to be updated", required = true)
                 ComkerUserDTO item);
 
-    @javax.ws.rs.DELETE
-    @javax.ws.rs.Path("/crud/{id}")
-    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @DELETE
+    @Path("/crud/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "Delete an existing user",
         notes = "Permissions to access: PERM_COMKER_ADM_USER.")
@@ -82,5 +95,5 @@ public interface ComkerUserResource {
     @Secured({"PERM_COMKER_ADM_USER"})
     public Response deleteUserItem(
             @ApiParam(value = "ID of user that needs to be deleted", required = true)
-            @javax.ws.rs.PathParam("id") String id);
+            @PathParam("id") String id);
 }
