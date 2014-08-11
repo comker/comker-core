@@ -18,20 +18,12 @@ public class ComkerAuthResourceImpl implements ComkerAuthResource {
 
     private ComkerSecurityService securityService = null;
 
-    public ComkerSecurityService getSecurityService() {
-        return securityService;
-    }
-
     public void setSecurityService(ComkerSecurityService securityService) {
         this.securityService = securityService;
     }
 
     
     private ComkerSessionService sessionService = null;
-
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
 
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
@@ -47,7 +39,7 @@ public class ComkerAuthResourceImpl implements ComkerAuthResource {
 
         ComkerSessionInfo item = new ComkerSessionInfo();
 
-        ComkerUserDetails userDetails = getSecurityService().getUserDetails();
+        ComkerUserDetails userDetails = securityService.getUserDetails();
         if (userDetails != null) {
             item.setPermissions(userDetails.getPermissions());
         }

@@ -86,14 +86,14 @@ public class ComkerSpotResourceImpl implements ComkerSpotResource {
         }
 
         if (!id.equals(item.getId())) {
-            throw new ComkerInvalidParameterException(400, "Invalid ID supplied");
+            throw new ComkerInvalidParameterException("Invalid ID supplied");
         }
 
         spotStorage.update(item);
 
         ComkerSpotDTO current = spotStorage.get(item.getId());
         if (current == null) {
-            throw new ComkerObjectNotFoundException(404, "Spot not found");
+            throw new ComkerObjectNotFoundException("Spot not found");
         }
 
         return Response.ok().entity(current).build();

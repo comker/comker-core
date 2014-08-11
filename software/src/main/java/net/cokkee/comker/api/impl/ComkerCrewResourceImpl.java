@@ -20,19 +20,11 @@ public class ComkerCrewResourceImpl implements ComkerCrewResource {
 
     private ComkerSessionService sessionService = null;
 
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
-
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
     }
 
     private ComkerCrewStorage crewStorage = null;
-
-    public ComkerCrewStorage getCrewStorage() {
-        return crewStorage;
-    }
 
     public void setCrewStorage(ComkerCrewStorage crewStorage) {
         this.crewStorage = crewStorage;
@@ -67,7 +59,7 @@ public class ComkerCrewResourceImpl implements ComkerCrewResource {
 
     @Override
     public Response getCrewItem(String id) {
-        ComkerCrewDTO item = getCrewStorage().get(id);
+        ComkerCrewDTO item = crewStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("Crew not found");
         }

@@ -19,19 +19,11 @@ public class ComkerPermissionResourceImpl implements ComkerPermissionResource {
 
     private ComkerSessionService sessionService = null;
 
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
-
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
     }
 
     private ComkerPermissionStorage permissionStorage = null;
-
-    public ComkerPermissionStorage getPermissionStorage() {
-        return permissionStorage;
-    }
 
     public void setPermissionStorage(ComkerPermissionStorage permissionStorage) {
         this.permissionStorage = permissionStorage;
@@ -67,7 +59,7 @@ public class ComkerPermissionResourceImpl implements ComkerPermissionResource {
     @Override
     public Response getPermissionItem(String id)
                     throws ComkerObjectNotFoundException {
-        ComkerPermissionDTO item = getPermissionStorage().get(id);
+        ComkerPermissionDTO item = permissionStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("Permission not found");
         }

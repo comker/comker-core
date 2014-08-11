@@ -303,6 +303,7 @@ software/src/test/java/net/cokkee/comker/api/ComkerNavbarResourceUnitTest.java -
 software/src/test/java/net/cokkee/comker/api/ComkerRoleResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerSessionResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerSpotResourceUnitTest.java -text
+software/src/test/java/net/cokkee/comker/api/ComkerUserResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerAbstractDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerCrewDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerModuleDaoUnitTest.java -text

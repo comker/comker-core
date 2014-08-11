@@ -21,19 +21,11 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
 
     private ComkerSessionService sessionService = null;
 
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
-
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
     }
 
     private ComkerUserStorage userStorage = null;
-
-    public ComkerUserStorage getUserStorage() {
-        return userStorage;
-    }
 
     public void setUserStorage(ComkerUserStorage userStorage) {
         this.userStorage = userStorage;
@@ -69,7 +61,7 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
     @Override
     public Response getUserItem(String id)
                     throws ComkerObjectNotFoundException {
-        ComkerUserDTO item = getUserStorage().get(id);
+        ComkerUserDTO item = userStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("User not found");
         }
@@ -84,7 +76,7 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
                     new Object[] {item.getId()}));
         }
 
-        ComkerUserDTO result = getUserStorage().create(item);
+        ComkerUserDTO result = userStorage.create(item);
 
         return Response.ok().entity(result).build();
     }
@@ -100,9 +92,9 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
             throw new ComkerInvalidParameterException("Invalid ID supplied");
         }
 
-        getUserStorage().update(item);
+        userStorage.update(item);
 
-        ComkerUserDTO current = getUserStorage().get(id);
+        ComkerUserDTO current = userStorage.get(id);
         if (current == null) {
             throw new ComkerObjectNotFoundException("User not found");
         }
@@ -117,13 +109,13 @@ public class ComkerUserResourceImpl implements ComkerUserResource {
             log.debug(MessageFormat.format("Delete User with ID:{0}", new Object[] {id}));
         }
 
-        ComkerUserDTO item = getUserStorage().get(id);
+        ComkerUserDTO item = userStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("User not found");
         }
 
         try {
-            getUserStorage().delete(id);
+            userStorage.delete(id);
             if (log.isDebugEnabled()) {
                 log.debug(MessageFormat.format("User#{0} deleted", new Object[] {id}));
             }

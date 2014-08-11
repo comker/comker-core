@@ -2,11 +2,9 @@ package net.cokkee.comker.api.impl;
 
 import java.text.MessageFormat;
 import java.util.List;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerRoleResource;
 import net.cokkee.comker.storage.ComkerRoleStorage;
-import net.cokkee.comker.exception.ComkerAccessDatabaseException;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
@@ -22,19 +20,11 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
 
     private ComkerSessionService sessionService = null;
 
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
-
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
     }
 
     private ComkerRoleStorage roleStorage = null;
-
-    public ComkerRoleStorage getRoleStorage() {
-        return roleStorage;
-    }
 
     public void setRoleStorage(ComkerRoleStorage roleStorage) {
         this.roleStorage = roleStorage;
@@ -70,7 +60,7 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
     @Override
     public Response getRoleItem(String id)
                     throws ComkerObjectNotFoundException {
-        ComkerRoleDTO item = getRoleStorage().get(id);
+        ComkerRoleDTO item = roleStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("Role not found");
         }
@@ -85,7 +75,7 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
                     new Object[] {item.getId()}));
         }
 
-        ComkerRoleDTO result = getRoleStorage().create(item);
+        ComkerRoleDTO result = roleStorage.create(item);
 
         return Response.ok().entity(result).build();
     }
@@ -101,9 +91,9 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
             throw new ComkerInvalidParameterException("Invalid ID supplied");
         }
 
-        getRoleStorage().update(item);
+        roleStorage.update(item);
 
-        ComkerRoleDTO current = getRoleStorage().get(id);
+        ComkerRoleDTO current = roleStorage.get(id);
         if (current == null) {
             throw new ComkerObjectNotFoundException("Role not found");
         }
@@ -118,23 +108,17 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
             log.debug(MessageFormat.format("Delete Role with ID:{0}", new Object[] {id}));
         }
 
-        ComkerRoleDTO item = getRoleStorage().get(id);
+        ComkerRoleDTO item = roleStorage.get(id);
         if (item == null) {
             throw new ComkerObjectNotFoundException("Role not found");
         }
 
-        try {
-            getRoleStorage().delete(id);
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format("Role#{0} deleted", new Object[] {id}));
-            }
-            return Response.ok().entity(item).build();
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(MessageFormat.format("Exception {0} - message:{1}",
-                        new Object[] {e.getClass().getName(), e.getMessage()}));
-            }
-            throw new ComkerAccessDatabaseException("Access database failure");
+        roleStorage.delete(id);
+
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format("Role#{0} deleted", new Object[] {id}));
         }
+        
+        return Response.ok().entity(item).build();
     }
 }

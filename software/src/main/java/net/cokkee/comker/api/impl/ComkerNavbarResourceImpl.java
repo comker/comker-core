@@ -22,10 +22,6 @@ public class ComkerNavbarResourceImpl implements ComkerNavbarResource {
 
     private ComkerSessionService sessionService = null;
 
-    public ComkerSessionService getSessionService() {
-        return sessionService;
-    }
-
     public void setSessionService(ComkerSessionService sessionService) {
         this.sessionService = sessionService;
     }
