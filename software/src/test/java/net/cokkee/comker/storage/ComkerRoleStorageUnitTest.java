@@ -73,6 +73,14 @@ public class ComkerRoleStorageUnitTest {
             permissionMap.put(permission.getId(), permission);
         }
 
+        when(permissionDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                String id = (String) invocation.getArguments()[0];
+                return permissionMap.containsKey(id);
+            }
+        });
+
         when(permissionDao.get(anyString())).thenAnswer(new Answer<ComkerPermission>() {
             @Override
             public ComkerPermission answer(InvocationOnMock invocation) throws Throwable {
@@ -303,7 +311,7 @@ public class ComkerRoleStorageUnitTest {
             "permission-02", "permission-05", "permission-06"}, result.getPermissionIds());
     }
 
-    @Test
+    @Test(expected=ComkerValidationFailedException.class)
     public void test_update_role_object_with_invalid_permissionIds() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_01", "Role 01 - modified", "Role 01 description");
         param.setId("role-01");
