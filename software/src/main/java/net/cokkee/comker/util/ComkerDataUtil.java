@@ -17,6 +17,16 @@ public class ComkerDataUtil {
 
     //--------------------------------------------------------------------------
 
+    public static final String CODE_PATTERN =
+            "^[A-Z0-9_\\-]{1,32}$";
+
+    public static boolean verifyCode(String code) {
+        if (code == null) return false;
+        return code.matches(CODE_PATTERN);
+    }
+
+    //--------------------------------------------------------------------------
+
     public static String mergeStringArray(String[] strs) {
         if (strs == null) return null;
         
