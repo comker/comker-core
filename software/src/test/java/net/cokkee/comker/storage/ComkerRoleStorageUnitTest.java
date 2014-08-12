@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.UUID;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.exception.ComkerValidationFailedException;
 import net.cokkee.comker.storage.impl.ComkerRoleStorageImpl;
 import net.cokkee.comker.model.ComkerPager;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
@@ -17,12 +17,11 @@ import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerRoleValidator;
 
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import static org.junit.Assert.*;
 
 import org.mockito.InjectMocks;
@@ -38,7 +37,8 @@ import static org.mockito.Mockito.*;
  * @author drupalex
  */
 @RunWith(MockitoJUnitRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(loader=AnnotationConfigContextLoader.class, classes={ComkerRoleStorageConfig.class})
 public class ComkerRoleStorageUnitTest {
 
     private List<String> roleIdx = new ArrayList<String>();
@@ -48,10 +48,13 @@ public class ComkerRoleStorageUnitTest {
     private List<String> permissionIdx = new ArrayList<String>();
 
     private Map<String, ComkerPermission> permissionMap = new HashMap<String, ComkerPermission>();
-    
+
     @InjectMocks
     private ComkerRoleStorageImpl roleStorage;
 
+    @InjectMocks
+    private ComkerRoleValidator roleValidator;
+    
     @Mock
     private ComkerRoleDao roleDao;
 
@@ -62,6 +65,8 @@ public class ComkerRoleStorageUnitTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
+        roleStorage.setRoleValidator(roleValidator);
+        
         for(int i=1; i<=6; i++) {
             ComkerPermission permission = new ComkerPermission("PERMISSION_0" + i);
             permission.setId("permission-0" + i);
@@ -233,7 +238,7 @@ public class ComkerRoleStorageUnitTest {
         assertArrayEquals(new String[] {"PERMISSION_01", "PERMISSION_02"}, result.toArray(new String[0]));
     }
 
-    @Test(expected = ComkerFieldDuplicatedException.class)
+    @Test(expected = ComkerValidationFailedException.class)
     public void test_create_role_object_with_duplicated_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_02", "A new role", null);
         roleStorage.create(param);
@@ -269,7 +274,7 @@ public class ComkerRoleStorageUnitTest {
         assertEquals(result.getName(), param.getName());
     }
 
-    @Test(expected = ComkerFieldDuplicatedException.class)
+    @Test(expected = ComkerValidationFailedException.class)
     public void test_update_role_object_with_duplicated_code() {
         ComkerRoleDTO param = new ComkerRoleDTO("ROLE_02", "Role 01 - modified", null);
         param.setId("role-01");

@@ -56,6 +56,7 @@ software/src/main/java/net/cokkee/comker/exception/ComkerIllegalAccessException.
 software/src/main/java/net/cokkee/comker/exception/ComkerInvalidParameterException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
+software/src/main/java/net/cokkee/comker/exception/ComkerValidationFailedException.java -text
 software/src/main/java/net/cokkee/comker/interceptor/ComkerWatchdogInterceptor.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionExtension.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionResponse.java -text
@@ -130,6 +131,7 @@ software/src/main/java/net/cokkee/comker/storage/ComkerSettingStorage.java -text
 software/src/main/java/net/cokkee/comker/storage/ComkerSpotStorage.java -text
 software/src/main/java/net/cokkee/comker/storage/ComkerUserStorage.java -text
 software/src/main/java/net/cokkee/comker/storage/ComkerWatchdogStorage.java -text
+software/src/main/java/net/cokkee/comker/storage/impl/ComkerAbstractStorageImpl.java -text
 software/src/main/java/net/cokkee/comker/storage/impl/ComkerCrewStorageImpl.java -text
 software/src/main/java/net/cokkee/comker/storage/impl/ComkerNavbarStorageImpl.java -text
 software/src/main/java/net/cokkee/comker/storage/impl/ComkerPermissionStorageImpl.java -text

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerRoleStorage;
 import net.cokkee.comker.model.ComkerPager;
@@ -18,6 +17,7 @@ import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerRoleValidator;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -27,10 +27,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class ComkerRoleStorageImpl implements ComkerRoleStorage {
+public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
+        implements ComkerRoleStorage {
 
     private static Logger log = LoggerFactory.getLogger(ComkerRoleStorageImpl.class);
-    
+
+    private ComkerRoleValidator roleValidator = null;
+
+    public void setRoleValidator(ComkerRoleValidator roleValidator) {
+        this.roleValidator = roleValidator;
+    }
+
     private ComkerRoleDao roleDao = null;
 
     public void setRoleDao(ComkerRoleDao roleDao) {
@@ -44,10 +51,6 @@ public class ComkerRoleStorageImpl implements ComkerRoleStorage {
     }
 
     private ComkerToolboxService toolboxService = null;
-
-    public ComkerToolboxService getToolboxService() {
-        return toolboxService;
-    }
 
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
@@ -111,11 +114,8 @@ public class ComkerRoleStorageImpl implements ComkerRoleStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerRoleDTO create(ComkerRoleDTO item) {
-        ComkerRole dbItem2 = roleDao.getByCode(item.getCode());
-        if (dbItem2 != null) {
-            throw new ComkerFieldDuplicatedException("role_is_duplicated");
-        }
-
+        invokeValidator(roleValidator, item);
+        
         ComkerRole dbItem = new ComkerRole();
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
@@ -132,10 +132,7 @@ public class ComkerRoleStorageImpl implements ComkerRoleStorage {
     public void update(ComkerRoleDTO item) {
         ComkerRole dbItem = getNotNull(item.getId());
 
-        ComkerRole dbItem2 = roleDao.getByCode(item.getCode());
-        if (dbItem2 != null && !dbItem2.getId().equals(item.getId())) {
-            throw new ComkerFieldDuplicatedException("role_is_duplicated");
-        }
+        invokeValidator(roleValidator, item);
 
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
