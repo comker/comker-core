@@ -85,6 +85,13 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
         return c.list();
     }
 
+    public Boolean exists(String id) {
+        Query query = this.getSessionFactory().getCurrentSession().
+                createQuery("select 1 from ComkerPermission t where t.id = :id");
+        query.setString("id", id);
+        return (query.uniqueResult() != null);
+    }
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerPermission get(String id) {

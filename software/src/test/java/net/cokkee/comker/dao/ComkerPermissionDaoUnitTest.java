@@ -103,6 +103,22 @@ public class ComkerPermissionDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<permissionIdx.size(); i++) {
+            Assert.assertTrue(testPermissionDao.exists(permissionIdx.get(i)));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testPermissionDao.exists(null));
+        
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testPermissionDao.exists("permission_id_" + i));
+        }
+    }
+
+    @Test
     public void test_create() {
         int currentCount = testPermissionDao.count();
 

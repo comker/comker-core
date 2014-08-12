@@ -24,6 +24,8 @@ public interface ComkerPermissionDao {
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    Boolean exists(String id);
+
     ComkerPermission get(String id);
 
     ComkerPermission getByAuthority(String authority);
