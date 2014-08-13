@@ -1,5 +1,6 @@
 package net.cokkee.comker.dao.impl;
 
+import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import java.util.HashMap;
 import java.util.List;
@@ -85,9 +86,13 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
         return c.list();
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Boolean exists(String id) {
         Query query = this.getSessionFactory().getCurrentSession().
-                createQuery("select 1 from ComkerPermission t where t.id = :id");
+                createQuery(MessageFormat.format(
+                    "select 1 from {0} t where t.id = :id",
+                    new Object[] {ComkerPermission.class.getSimpleName()}));
         query.setString("id", id);
         return (query.uniqueResult() != null);
     }
