@@ -103,6 +103,22 @@ public class ComkerModuleDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<moduleIdx.size(); i++) {
+            Assert.assertTrue(testModuleDao.exists(moduleIdx.get(i)));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testModuleDao.exists(null));
+
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testModuleDao.exists("module_id_" + i));
+        }
+    }
+
+    @Test
     public void test_create() {
         int currentCount = testModuleDao.count();
 

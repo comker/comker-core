@@ -140,6 +140,22 @@ public class ComkerSpotDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<spotObjects.length; i++) {
+            Assert.assertTrue(testSpotDao.exists(spotObjects[i].getId()));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testSpotDao.exists(null));
+
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testSpotDao.exists("spot_id_" + i));
+        }
+    }
+
+    @Test
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         

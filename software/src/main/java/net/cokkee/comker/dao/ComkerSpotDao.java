@@ -20,6 +20,8 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    Boolean exists(String id);
+
     ComkerSpot get(String id);
 
     ComkerSpot getByCode(String code);

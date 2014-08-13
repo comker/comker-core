@@ -24,6 +24,8 @@ public interface ComkerModuleDao {
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    Boolean exists(String id);
+
     ComkerModule get(String id);
 
     ComkerModule getByCode(String code);

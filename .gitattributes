@@ -149,6 +149,7 @@ software/src/main/java/net/cokkee/comker/util/ComkerBootstrapPublisher.java -tex
 software/src/main/java/net/cokkee/comker/util/ComkerDataUtil.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerAbstractValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerRoleValidator.java -text
+software/src/main/java/net/cokkee/comker/validation/ComkerSpotValidator.java -text
 software/src/main/resources/META-INF/bootstrap/comker/api-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/cxf-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/dao-context.xml -text
@@ -324,8 +325,10 @@ software/src/test/java/net/cokkee/comker/storage/ComkerCrewStorageUnitTest.java 
 software/src/test/java/net/cokkee/comker/storage/ComkerNavbarStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerRoleStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerSettingStorageUnitTest.java -text
+software/src/test/java/net/cokkee/comker/storage/ComkerSpotStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerUserStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerRoleValidatorUnitTest.java -text
+software/src/test/java/net/cokkee/comker/validation/ComkerSpotValidatorUnitTest.java -text
 software/src/test/resources/api/ComkerCrewResourceUnitTest.xml -text
 software/src/test/resources/api/ComkerMemberResourceUnitTest.xml -text
 software/src/test/resources/api/ComkerNavbarResourceUnitTest.xml -text
