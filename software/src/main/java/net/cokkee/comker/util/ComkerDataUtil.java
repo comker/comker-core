@@ -27,6 +27,17 @@ public class ComkerDataUtil {
 
     //--------------------------------------------------------------------------
 
+    private static final String EMAIL_PATTERN =
+		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    public static boolean verifyEmail(String code) {
+        if (code == null) return false;
+        return code.matches(EMAIL_PATTERN);
+    }
+
+    //--------------------------------------------------------------------------
+
     public static String mergeStringArray(String[] strs) {
         if (strs == null) return null;
         

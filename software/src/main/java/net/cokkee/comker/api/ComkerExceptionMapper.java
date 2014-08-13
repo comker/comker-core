@@ -1,12 +1,13 @@
 package net.cokkee.comker.api;
 
 import java.text.MessageFormat;
-import net.cokkee.comker.exception.ComkerAbstractException;
-import net.cokkee.comker.model.ComkerExceptionResponse;
-
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.Response;
+
+import net.cokkee.comker.exception.ComkerEntityProcessingException;
+import net.cokkee.comker.exception.ComkerValidationFailedException;
+import net.cokkee.comker.model.ComkerExceptionResponse;
 import net.cokkee.comker.model.ComkerExceptionExtension;
 import net.cokkee.comker.service.ComkerLocaleMessageService;
 
@@ -39,8 +40,8 @@ public class ComkerExceptionMapper implements ExceptionMapper<Exception> {
                     .status(e.getResponse().getStatus())
                     .entity(new ComkerExceptionResponse(e.getResponse().getStatus(), e.getMessage()))
                     .type("application/json").build();
-        } else if (exception instanceof ComkerAbstractException) {
-            ComkerAbstractException e = (ComkerAbstractException) exception;
+        } else if (exception instanceof ComkerEntityProcessingException) {
+            ComkerEntityProcessingException e = (ComkerEntityProcessingException) exception;
             ComkerExceptionExtension ext = e.getExtension();
             
             String msgName = (ext != null) ? ext.getName() : null;
@@ -50,6 +51,13 @@ public class ComkerExceptionMapper implements ExceptionMapper<Exception> {
             return Response
                     .status(e.getCode())
                     .entity(new ComkerExceptionResponse(e.getCode(), message, msgName))
+                    .type("application/json").build();
+        } else if (exception instanceof ComkerValidationFailedException) {
+            ComkerValidationFailedException e = (ComkerValidationFailedException) exception;
+
+            return Response
+                    .status(e.getCode())
+                    .entity(new ComkerExceptionResponse(e.getCode(), exception.getMessage()))
                     .type("application/json").build();
         } else {
             return Response

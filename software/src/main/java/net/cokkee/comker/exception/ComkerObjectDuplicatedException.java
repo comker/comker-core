@@ -6,7 +6,7 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerObjectDuplicatedException extends ComkerAbstractException {
+public class ComkerObjectDuplicatedException extends ComkerEntityProcessingException {
 
     public static final int CODE = 1409;
 
@@ -22,8 +22,8 @@ public class ComkerObjectDuplicatedException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerObjectDuplicatedException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerObjectDuplicatedException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

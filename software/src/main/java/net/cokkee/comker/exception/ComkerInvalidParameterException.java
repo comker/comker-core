@@ -6,9 +6,9 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerInvalidParameterException extends ComkerAbstractException {
+public class ComkerInvalidParameterException extends ComkerEntityProcessingException {
 
-    public static final int CODE = 1406;
+    public static final int CODE = 406;
     
     public ComkerInvalidParameterException (String msg) {
         super(CODE, msg);
@@ -22,8 +22,8 @@ public class ComkerInvalidParameterException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerInvalidParameterException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerInvalidParameterException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

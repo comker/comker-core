@@ -6,9 +6,9 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerIllegalAccessException extends ComkerAbstractException {
+public class ComkerIllegalAccessException extends ComkerEntityProcessingException {
 
-    public static final int CODE = 1404;
+    public static final int CODE = 404;
 
     public ComkerIllegalAccessException (String msg) {
         super(CODE, msg);
@@ -22,8 +22,8 @@ public class ComkerIllegalAccessException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerIllegalAccessException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerIllegalAccessException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

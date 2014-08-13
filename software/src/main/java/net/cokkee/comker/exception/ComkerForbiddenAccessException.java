@@ -6,7 +6,7 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerForbiddenAccessException extends ComkerAbstractException {
+public class ComkerForbiddenAccessException extends ComkerEntityProcessingException {
 
     public static final int CODE = 1403;
 
@@ -22,8 +22,8 @@ public class ComkerForbiddenAccessException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerForbiddenAccessException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerForbiddenAccessException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

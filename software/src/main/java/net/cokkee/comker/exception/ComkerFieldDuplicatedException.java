@@ -6,9 +6,9 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerFieldDuplicatedException extends ComkerAbstractException {
+public class ComkerFieldDuplicatedException extends ComkerEntityProcessingException {
 
-    public static final int CODE = 1402;
+    public static final int CODE = 402;
 
     public ComkerFieldDuplicatedException (String msg) {
         super(CODE, msg);
@@ -22,8 +22,8 @@ public class ComkerFieldDuplicatedException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerFieldDuplicatedException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerFieldDuplicatedException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
     
     @Deprecated

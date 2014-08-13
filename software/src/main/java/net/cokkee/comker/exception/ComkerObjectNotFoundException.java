@@ -6,7 +6,7 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerObjectNotFoundException extends ComkerAbstractException {
+public class ComkerObjectNotFoundException extends ComkerEntityProcessingException {
 
     public static final int CODE = 401;
 
@@ -22,8 +22,8 @@ public class ComkerObjectNotFoundException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerObjectNotFoundException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerObjectNotFoundException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

@@ -6,9 +6,9 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
-public class ComkerAccessDatabaseException extends ComkerAbstractException {
+public class ComkerAccessDatabaseException extends ComkerEntityProcessingException {
 
-    public static final int CODE = 1405;
+    public static final int CODE = 405;
 
     public ComkerAccessDatabaseException (String msg) {
         super(CODE, msg);
@@ -22,8 +22,8 @@ public class ComkerAccessDatabaseException extends ComkerAbstractException {
         super(CODE, msg, extension);
     }
 
-    public ComkerAccessDatabaseException (String msg, ComkerExceptionExtension extension, Throwable cause) {
-        super(CODE, msg, extension, cause);
+    public ComkerAccessDatabaseException (String msg, Throwable cause, ComkerExceptionExtension extension) {
+        super(CODE, msg, cause, extension);
     }
 
     @Deprecated

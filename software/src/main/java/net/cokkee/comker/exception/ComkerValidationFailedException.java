@@ -16,8 +16,11 @@ import org.springframework.validation.ObjectError;
  *
  * @author drupalex
  */
-public class ComkerValidationFailedException extends RuntimeException
+public class ComkerValidationFailedException extends ComkerAbstractException
         implements BindingResult {
+
+    public static final int CODE = 410;
+    
     /**
 	 * Prefix for the name of the NutrixValidationFailedException instance in a model,
 	 * followed by the object name.
@@ -35,6 +38,7 @@ public class ComkerValidationFailedException extends RuntimeException
 	 * @param bindingResult the BindingResult instance to wrap
 	 */
 	public ComkerValidationFailedException(BindingResult bindingResult) {
+        super(CODE);
 		Assert.notNull(bindingResult, "BindingResult must not be null");
 		this.bindingResult = bindingResult;
 	}
@@ -46,13 +50,14 @@ public class ComkerValidationFailedException extends RuntimeException
 	 * @see BeanPropertyBindingResult
 	 */
 	public ComkerValidationFailedException(Object target, String objectName) {
+        super(CODE);
 		Assert.notNull(target, "Target object must not be null");
 		this.bindingResult = new BeanPropertyBindingResult(target, objectName);
 	}
 
 
 	/**
-	 * Return the BindingResult that this NutrixValidationFailedException wraps.
+	 * Return the BindingResult that this ComkerValidationFailedException wraps.
 	 * Will typically be a BeanPropertyBindingResult.
 	 * @see BeanPropertyBindingResult
 	 */

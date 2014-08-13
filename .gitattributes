@@ -50,6 +50,7 @@ software/src/main/java/net/cokkee/comker/dao/impl/ComkerUserDaoHibernate.java -t
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchdogDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAccessDatabaseException.java -text
+software/src/main/java/net/cokkee/comker/exception/ComkerEntityProcessingException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerFieldDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerForbiddenAccessException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerIllegalAccessException.java -text
