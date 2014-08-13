@@ -18,6 +18,7 @@
 
     <bean id="comkerCrewStorage"
             class="net.cokkee.comker.storage.impl.ComkerCrewStorageImpl">
+        <property name="crewValidator" ref="comkerCrewValidator" />
         <property name="crewDao" ref="comkerCrewDao" />
         <property name="spotDao" ref="comkerSpotDao" />
         <property name="roleDao" ref="comkerRoleDao" />

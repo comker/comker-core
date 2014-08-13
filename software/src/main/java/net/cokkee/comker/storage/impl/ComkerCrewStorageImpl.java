@@ -24,6 +24,7 @@ import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerCrewValidator;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -33,15 +34,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class ComkerCrewStorageImpl implements ComkerCrewStorage {
+public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
+        implements ComkerCrewStorage {
 
     private static Logger log = LoggerFactory.getLogger(ComkerCrewStorageImpl.class);
 
-    private ComkerCrewDao crewDao = null;
+    private ComkerCrewValidator crewValidator = null;
 
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
+    public void setCrewValidator(ComkerCrewValidator crewValidator) {
+        this.crewValidator = crewValidator;
     }
+
+    private ComkerCrewDao crewDao = null;
 
     public void setCrewDao(ComkerCrewDao crewDao) {
         this.crewDao = crewDao;
@@ -49,29 +53,17 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
 
     private ComkerSpotDao spotDao = null;
 
-    public ComkerSpotDao getSpotDao() {
-        return spotDao;
-    }
-
     public void setSpotDao(ComkerSpotDao spotDao) {
         this.spotDao = spotDao;
     }
 
     private ComkerRoleDao roleDao = null;
 
-    public ComkerRoleDao getRoleDao() {
-        return roleDao;
-    }
-
     public void setRoleDao(ComkerRoleDao roleDao) {
         this.roleDao = roleDao;
     }
 
     private ComkerToolboxService toolboxService = null;
-
-    public ComkerToolboxService getToolboxService() {
-        return toolboxService;
-    }
 
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
@@ -80,14 +72,14 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return getCrewDao().count();
+        return crewDao.count();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerCrewDTO> findAll(ComkerPager filter) {
         List<ComkerCrewDTO> poList = new ArrayList<ComkerCrewDTO>();
-        List dbList = getCrewDao().findAll(filter);
+        List dbList = crewDao.findAll(filter);
         for(Object dbItem:dbList) {
             ComkerCrewDTO poItem = new ComkerCrewDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -116,7 +108,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
         Set<String> result = new LinkedHashSet<String>();
 
         Set<ComkerRole> roles = new LinkedHashSet<ComkerRole>();
-        getCrewDao().collectGlobalRole(roles, crew);
+        crewDao.collectGlobalRole(roles, crew);
 
         for(ComkerRole role:roles) {
             result.add(role.getCode());
@@ -131,11 +123,11 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
         Set<String> result = new LinkedHashSet<String>();
 
         Set<ComkerRole> roleSet = new LinkedHashSet<ComkerRole>();
-        getCrewDao().collectGlobalRole(roleSet, crew);
+        crewDao.collectGlobalRole(roleSet, crew);
 
         for(ComkerRole role:roleSet) {
             Set<ComkerPermission> permissionSet = new LinkedHashSet<ComkerPermission>();
-            getRoleDao().collectPermission(permissionSet, role);
+            roleDao.collectPermission(permissionSet, role);
             for(ComkerPermission permission:permissionSet) {
                 result.add(permission.getAuthority());
             }
@@ -150,7 +142,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
         Map<String,Set<String>> result = new LinkedHashMap<String,Set<String>>();
 
         Map<ComkerSpot,Set<ComkerRole>> bag = new LinkedHashMap<ComkerSpot,Set<ComkerRole>>();
-        getCrewDao().collectSpotWithRole(bag, crew);
+        crewDao.collectSpotWithRole(bag, crew);
         
         for(Map.Entry<ComkerSpot,Set<ComkerRole>> entry:bag.entrySet()) {
             String spotCode = entry.getKey().getCode();
@@ -174,7 +166,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
         Map<String,Set<String>> result = new LinkedHashMap<String,Set<String>>();
 
         Map<ComkerSpot,Set<ComkerRole>> bag = new LinkedHashMap<ComkerSpot,Set<ComkerRole>>();
-        getCrewDao().collectSpotWithRole(bag, crew);
+        crewDao.collectSpotWithRole(bag, crew);
 
         for(Map.Entry<ComkerSpot,Set<ComkerRole>> entry:bag.entrySet()) {
             String spotCode = entry.getKey().getCode();
@@ -186,7 +178,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
             Set<ComkerRole> roleSet = entry.getValue();
             for(ComkerRole role:roleSet) {
                 Set<ComkerPermission> permissionSet = new LinkedHashSet<ComkerPermission>();
-                getRoleDao().collectPermission(permissionSet, role);
+                roleDao.collectPermission(permissionSet, role);
                 for(ComkerPermission permission:permissionSet) {
                     permissionCodeSet.add(permission.getAuthority());
                 }
@@ -198,10 +190,12 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerCrewDTO create(ComkerCrewDTO item) {
+        invokeValidator(crewValidator, item);
+
         ComkerCrew dbItem = new ComkerCrew();
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
-        dbItem = getCrewDao().create(dbItem);
+        dbItem = crewDao.create(dbItem);
         
         ComkerCrewDTO poItem = new ComkerCrewDTO();
         ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -213,16 +207,19 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void update(ComkerCrewDTO item) {
         ComkerCrew dbItem = getNotNull(item.getId());
+
+        invokeValidator(crewValidator, item);
+        
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
-        getCrewDao().update(dbItem);
+        crewDao.update(dbItem);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
         ComkerCrew dbItem = getNotNull(id);
-        getCrewDao().delete(dbItem);
+        crewDao.delete(dbItem);
     }
 
     //--------------------------------------------------------------------------
@@ -287,7 +284,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
                 }
             }
             for(String newId:newIds) {
-                ComkerRole newRole = getRoleDao().get(newId);
+                ComkerRole newRole = roleDao.get(newId);
                 if (newRole == null) continue;
                 newList.add(new ComkerCrewJoinGlobalRole(dbItem, newRole));
             }
@@ -338,9 +335,9 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
             }
             for(Map.Entry<String,Set<String>> newId:newIds.entrySet()) {
                 for(String newRoleId:newId.getValue()) {
-                    ComkerSpot newSpot = getSpotDao().get(newId.getKey());
+                    ComkerSpot newSpot = spotDao.get(newId.getKey());
                     if (newSpot == null) continue;
-                    ComkerRole newRole = getRoleDao().get(newRoleId);
+                    ComkerRole newRole = roleDao.get(newRoleId);
                     if (newRole == null) continue;
                     newList.add(new ComkerCrewJoinRoleWithSpot(dbItem, newRole, newSpot));
                 }
@@ -358,7 +355,7 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerCrew getNotNull(String id) {
-        ComkerCrew dbItem = getCrewDao().get(id);
+        ComkerCrew dbItem = crewDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException("crew_not_found");
         }

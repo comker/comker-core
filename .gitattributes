@@ -305,6 +305,7 @@ software/src/main/webapp/api/lib/underscore-min.js -text
 software/src/main/webapp/api/swagger-ui.js -text
 software/src/main/webapp/api/swagger-ui.min.js -text
 software/src/main/webapp/comker/login.jsp -text
+software/src/test/java/net/cokkee/comker/api/ComkerCrewResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerMemberResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerNavbarResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerRoleResourceUnitTest.java -text
