@@ -26,6 +26,7 @@
 
     <bean id="comkerSpotStorage"
             class="net.cokkee.comker.storage.impl.ComkerSpotStorageImpl">
+        <property name="spotValidator" ref="comkerSpotValidator" />
         <property name="spotDao" ref="comkerSpotDao" />
         <property name="moduleDao" ref="comkerModuleDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
@@ -33,6 +34,7 @@
 
     <bean id="comkerRoleStorage"
             class="net.cokkee.comker.storage.impl.ComkerRoleStorageImpl">
+        <property name="roleValidator" ref="comkerRoleValidator" />
         <property name="roleDao" ref="comkerRoleDao" />
         <property name="permissionDao" ref="comkerPermissionDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
@@ -53,5 +55,24 @@
             class="net.cokkee.comker.storage.impl.ComkerWatchdogStorageImpl">
         <property name="watchdogDao" ref="comkerWatchdogDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
+    </bean>
+
+    <bean id="comkerSpotValidator"
+            class="net.cokkee.comker.validation.ComkerSpotValidator">
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="moduleDao" ref="comkerModuleDao" />
+    </bean>
+
+    <bean id="comkerRoleValidator"
+            class="net.cokkee.comker.validation.ComkerRoleValidator">
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="permissionDao" ref="comkerPermissionDao" />
+    </bean>
+
+    <bean id="comkerCrewValidator"
+            class="net.cokkee.comker.validation.ComkerCrewValidator">
+        <property name="crewDao" ref="comkerCrewDao" />
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="roleDao" ref="comkerRoleDao" />
     </bean>
 </beans>

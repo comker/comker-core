@@ -115,9 +115,11 @@ public class ComkerCrewValidatorUnitTest {
         Errors errors = new BindException(item, "net.drupalex.comker");
         ValidationUtils.invokeValidator(validator, item, errors);
 
-        Assert.assertEquals(3, errors.getFieldErrorCount("globalRoleIds"));
+        Assert.assertEquals(1, errors.getFieldErrorCount("globalRoleIds[3]"));
+        Assert.assertEquals(1, errors.getFieldErrorCount("globalRoleIds[4]"));
+        Assert.assertEquals(1, errors.getFieldErrorCount("globalRoleIds[5]"));
         
-        List<FieldError> fes = errors.getFieldErrors("globalRoleIds");
-        Assert.assertTrue(fes.size() == 3);
+        //List<FieldError> fes = errors.getFieldErrors("globalRoleIds");
+        //Assert.assertTrue(fes.size() == 3);
     }
 }

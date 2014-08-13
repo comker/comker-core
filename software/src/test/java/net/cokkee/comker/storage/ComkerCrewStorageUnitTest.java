@@ -11,7 +11,6 @@ import java.util.UUID;
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.impl.ComkerCrewStorageImpl;
 import net.cokkee.comker.model.ComkerPager;
@@ -26,6 +25,7 @@ import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.structure.ComkerKeyAndValueSet;
 import net.cokkee.comker.util.ComkerDataUtil;
+import org.hamcrest.CoreMatchers;
 
 import org.junit.runner.RunWith;
 import org.junit.Before;
@@ -33,7 +33,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.*;
 import static org.hamcrest.CoreMatchers.hasItems;
 
 import org.mockito.InjectMocks;
@@ -345,13 +344,13 @@ public class ComkerCrewStorageUnitTest {
         verify(crewDao).get("crew-01");
         assertArrayEquals(new String[]{"role-01", "role-02"}, result.getGlobalRoleIds());
 
-        ComkerKeyAndValueSet[] limitedSpotRoleIds = result.getLimitedSpotRoleIds();
+        ComkerKeyAndValueSet[] limitedSpotRoleIds = result.getScopedRoleIds();
         assertEquals(limitedSpotRoleIds.length, 2);
         for (ComkerKeyAndValueSet item : limitedSpotRoleIds) {
             if (item.getKey().equals("spot-01")) {
-                assertThat(item.getValueSet(), hasItems("role-04", "role-05"));
+                assertThat(item.getValues(), CoreMatchers.is(new String[] {"role-04", "role-05"}));
             } else {
-                assertThat(item.getValueSet(), hasItems("role-04"));
+                assertThat(item.getValues(), CoreMatchers.is(new String[] {"role-04"}));
             }
         }
     }
@@ -401,7 +400,7 @@ public class ComkerCrewStorageUnitTest {
 
         Set<ComkerKeyAndValueSet> spotAndRoles = new HashSet<ComkerKeyAndValueSet>();
         spotAndRoles.add(new ComkerKeyAndValueSet("spot-01", new String[]{"role-04", "role-06"}));
-        param.setLimitedSpotRoleIds(spotAndRoles.toArray(new ComkerKeyAndValueSet[0]));
+        param.setScopedRoleIds(spotAndRoles.toArray(new ComkerKeyAndValueSet[0]));
 
         ComkerCrewDTO result = crewStorage.create(param);
 
@@ -423,14 +422,14 @@ public class ComkerCrewStorageUnitTest {
         }
         assertEquals(newGlobalRoleIds.size(), 0);
 
-        for (ComkerKeyAndValueSet item : result.getLimitedSpotRoleIds()) {
+        for (ComkerKeyAndValueSet item : result.getScopedRoleIds()) {
             if (item.getKey().equals("spot-01")) {
-                assertThat(item.getValueSet(), hasItems("role-04", "role-06"));
+                assertThat(item.getValues(), CoreMatchers.is(new String[] {"role-04", "role-06"}));
             } else {
                 assertTrue("Cannot found:" + item.getKey(), true);
             }
         }
-        assertEquals(result.getLimitedSpotRoleIds().length, 1);
+        assertEquals(result.getScopedRoleIds().length, 1);
     }
 
     @Test
@@ -443,7 +442,7 @@ public class ComkerCrewStorageUnitTest {
         Set<ComkerKeyAndValueSet> spotAndRoles = new HashSet<ComkerKeyAndValueSet>();
         spotAndRoles.add(new ComkerKeyAndValueSet("spot-01", new String[]{"role-04", "role-06"}));
         spotAndRoles.add(new ComkerKeyAndValueSet("spot-02", new String[]{"role-05", "role-06"}));
-        param.setLimitedSpotRoleIds(spotAndRoles.toArray(new ComkerKeyAndValueSet[0]));
+        param.setScopedRoleIds(spotAndRoles.toArray(new ComkerKeyAndValueSet[0]));
 
         crewStorage.update(param);
 
@@ -467,16 +466,16 @@ public class ComkerCrewStorageUnitTest {
         }
         assertEquals(newGlobalRoleIds.size(), 0);
 
-        for (ComkerKeyAndValueSet item : result.getLimitedSpotRoleIds()) {
+        for (ComkerKeyAndValueSet item : result.getScopedRoleIds()) {
             if (item.getKey().equals("spot-01")) {
-                assertThat(item.getValueSet(), hasItems("role-04", "role-06"));
+                assertThat(item.getValues(), CoreMatchers.is(new String[] {"role-04", "role-06"}));
             } else if (item.getKey().equals("spot-02")) {
-                assertThat(item.getValueSet(), hasItems("role-05", "role-06"));
+                assertThat(item.getValues(), CoreMatchers.is(new String[] {"role-05", "role-06"}));
             } else {
                 assertTrue("Cannot found:" + item.getKey(), true);
             }
         }
-        assertEquals(result.getLimitedSpotRoleIds().length, 2);
+        assertEquals(result.getScopedRoleIds().length, 2);
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)

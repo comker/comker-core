@@ -1,5 +1,6 @@
 package net.cokkee.comker.dao.impl;
 
+import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -81,6 +83,17 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerPager.apply(c, filter);
         List list = c.list();
         return list;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Boolean exists(String id) {
+        Query query = this.getSessionFactory().getCurrentSession().
+                createQuery(MessageFormat.format(
+                    "select 1 from {0} t where t.id = :id",
+                    new Object[] {ComkerCrew.class.getSimpleName()}));
+        query.setString("id", id);
+        return (query.uniqueResult() != null);
     }
 
     @Override

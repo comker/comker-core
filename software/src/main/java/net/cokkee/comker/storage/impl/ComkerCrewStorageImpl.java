@@ -3,8 +3,8 @@ package net.cokkee.comker.storage.impl;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,9 +113,9 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Set<String> getGlobalRoleCodes(String id) {
         ComkerCrew crew = getNotNull(id);
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new LinkedHashSet<String>();
 
-        Set<ComkerRole> roles = new HashSet<ComkerRole>();
+        Set<ComkerRole> roles = new LinkedHashSet<ComkerRole>();
         getCrewDao().collectGlobalRole(roles, crew);
 
         for(ComkerRole role:roles) {
@@ -128,13 +128,13 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Set<String> getGlobalAuthorities(String id) {
         ComkerCrew crew = getNotNull(id);
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new LinkedHashSet<String>();
 
-        Set<ComkerRole> roleSet = new HashSet<ComkerRole>();
+        Set<ComkerRole> roleSet = new LinkedHashSet<ComkerRole>();
         getCrewDao().collectGlobalRole(roleSet, crew);
 
         for(ComkerRole role:roleSet) {
-            Set<ComkerPermission> permissionSet = new HashSet<ComkerPermission>();
+            Set<ComkerPermission> permissionSet = new LinkedHashSet<ComkerPermission>();
             getRoleDao().collectPermission(permissionSet, role);
             for(ComkerPermission permission:permissionSet) {
                 result.add(permission.getAuthority());
@@ -147,16 +147,16 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map<String,Set<String>> getSpotCodeWithRoleCodes(String id) {
         ComkerCrew crew = getNotNull(id);
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
+        Map<String,Set<String>> result = new LinkedHashMap<String,Set<String>>();
 
-        Map<ComkerSpot,Set<ComkerRole>> bag = new HashMap<ComkerSpot,Set<ComkerRole>>();
+        Map<ComkerSpot,Set<ComkerRole>> bag = new LinkedHashMap<ComkerSpot,Set<ComkerRole>>();
         getCrewDao().collectSpotWithRole(bag, crew);
         
         for(Map.Entry<ComkerSpot,Set<ComkerRole>> entry:bag.entrySet()) {
             String spotCode = entry.getKey().getCode();
             Set<String> roleCodeSet = result.get(spotCode);
             if (roleCodeSet == null) {
-                roleCodeSet = new HashSet<String>();
+                roleCodeSet = new LinkedHashSet<String>();
                 result.put(spotCode, roleCodeSet);
             }
             Set<ComkerRole> roleSet = entry.getValue();
@@ -171,21 +171,21 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Map<String,Set<String>> getSpotCodeWithAuthorities(String id) {
         ComkerCrew crew = getNotNull(id);
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
+        Map<String,Set<String>> result = new LinkedHashMap<String,Set<String>>();
 
-        Map<ComkerSpot,Set<ComkerRole>> bag = new HashMap<ComkerSpot,Set<ComkerRole>>();
+        Map<ComkerSpot,Set<ComkerRole>> bag = new LinkedHashMap<ComkerSpot,Set<ComkerRole>>();
         getCrewDao().collectSpotWithRole(bag, crew);
 
         for(Map.Entry<ComkerSpot,Set<ComkerRole>> entry:bag.entrySet()) {
             String spotCode = entry.getKey().getCode();
             Set<String> permissionCodeSet = result.get(spotCode);
             if (permissionCodeSet == null) {
-                permissionCodeSet = new HashSet<String>();
+                permissionCodeSet = new LinkedHashSet<String>();
                 result.put(spotCode, permissionCodeSet);
             }
             Set<ComkerRole> roleSet = entry.getValue();
             for(ComkerRole role:roleSet) {
-                Set<ComkerPermission> permissionSet = new HashSet<ComkerPermission>();
+                Set<ComkerPermission> permissionSet = new LinkedHashSet<ComkerPermission>();
                 getRoleDao().collectPermission(permissionSet, role);
                 for(ComkerPermission permission:permissionSet) {
                     permissionCodeSet.add(permission.getAuthority());
@@ -231,30 +231,30 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
     private void loadAggregationRefs(ComkerCrew crew, ComkerCrewDTO poItem) {
         if (crew == null || poItem == null) return;
 
-        List<String> idsOfGlobalRoleList = new ArrayList<String>();
+        Set<String> idsOfGlobalRoleList = new LinkedHashSet<String>();
         List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
         for(ComkerCrewJoinGlobalRole item:list) {
             idsOfGlobalRoleList.add(item.getRole().getId());
         }
         poItem.setGlobalRoleIds(idsOfGlobalRoleList.toArray(new String[0]));
 
-        Map<String,HashSet<String>> bag = new HashMap<String, HashSet<String>>();
+        Map<String,Set<String>> bag = new LinkedHashMap<String, Set<String>>();
         List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpot = crew.getCrewJoinRoleWithSpotList();
         for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpot) {
             ComkerSpot spot = item.getSpot();
-            HashSet<String> roleSet = bag.get(spot.getId());
+            Set<String> roleSet = bag.get(spot.getId());
             if (roleSet == null) {
-                roleSet = new HashSet<String>();
+                roleSet = new LinkedHashSet<String>();
                 bag.put(spot.getId(), roleSet);
             }
             roleSet.add(item.getRole().getId());
         }
 
-        Set<ComkerKeyAndValueSet> result = new HashSet<ComkerKeyAndValueSet>();
+        Set<ComkerKeyAndValueSet> result = new LinkedHashSet<ComkerKeyAndValueSet>();
         for(String key: bag.keySet()) {
-            result.add(new ComkerKeyAndValueSet(key, bag.get(key)));
+            result.add(new ComkerKeyAndValueSet(key, bag.get(key).toArray(new String[0])));
         }
-        poItem.setLimitedSpotRoleIds(result.toArray(new ComkerKeyAndValueSet[0]));
+        poItem.setScopedRoleIds(result.toArray(new ComkerKeyAndValueSet[0]));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -300,15 +300,15 @@ public class ComkerCrewStorageImpl implements ComkerCrewStorage {
             }
         }
 
-        if (poItem.getLimitedSpotRoleIds() != null) {
-            Map<String,Set<String>> newIds = new HashMap<String, Set<String>>();
-            for(ComkerKeyAndValueSet keyAndValueSet:poItem.getLimitedSpotRoleIds()) {
-                Set<String> valueSet = newIds.get(keyAndValueSet.getKey());
+        if (poItem.getScopedRoleIds() != null) {
+            Map<String,Set<String>> newIds = new LinkedHashMap<String, Set<String>>();
+            for(ComkerKeyAndValueSet keyAndValues:poItem.getScopedRoleIds()) {
+                Set<String> valueSet = newIds.get(keyAndValues.getKey());
                 if (valueSet == null) {
-                    valueSet = new HashSet<String>();
-                    newIds.put(keyAndValueSet.getKey(), valueSet);
+                    valueSet = new LinkedHashSet<String>();
+                    newIds.put(keyAndValues.getKey(), valueSet);
                 }
-                valueSet.addAll(keyAndValueSet.getValueSet());
+                valueSet.addAll(Arrays.asList(keyAndValues.getValues()));
             }
 
             if (log.isDebugEnabled()) {

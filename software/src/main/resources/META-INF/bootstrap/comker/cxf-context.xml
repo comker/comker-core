@@ -37,13 +37,15 @@
     </bean>
 
     <util:list id="comkerJsonKeys">
-        <value>permissions</value>
+        <value>collection</value>
+        <value>values</value>
+        <value>crewIds</value>
         <value>permissionIds</value>
+        <value>moduleIds</value>
         <value>children</value>
-        <value>valueSet</value>
-        <value>idsOfCrewList</value>
-        <value>idsOfGlobalRoleList</value>
-        <value>idsOfSpotWithRoleList</value>
+        <value>globalRoleIds</value>
+        <value>scopedRoleIds</value>
+        <value>limitedSpotRoleIds</value>
     </util:list>
 
     <util:list id="comkerJsonTypes">

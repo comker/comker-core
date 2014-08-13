@@ -169,6 +169,22 @@ public class ComkerCrewDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<crewIds.length; i++) {
+            Assert.assertTrue(testCrewDao.exists(crewIds[i]));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testCrewDao.exists(null));
+
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testCrewDao.exists("crew_id_" + i));
+        }
+    }
+
+    @Test
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         

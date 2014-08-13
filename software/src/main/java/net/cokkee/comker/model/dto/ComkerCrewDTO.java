@@ -26,7 +26,7 @@ public class ComkerCrewDTO extends ComkerAbstractDTO {
     private String description;
     
     private String[] globalRoleIds;
-    private ComkerKeyAndValueSet[] limitedSpotRoleIds;
+    private ComkerKeyAndValueSet[] scopedRoleIds;
 
     public String getId() {
         return id;
@@ -60,12 +60,12 @@ public class ComkerCrewDTO extends ComkerAbstractDTO {
         this.globalRoleIds = globalRoleIds;
     }
 
-    public ComkerKeyAndValueSet[] getLimitedSpotRoleIds() {
-        return limitedSpotRoleIds;
+    public ComkerKeyAndValueSet[] getScopedRoleIds() {
+        return scopedRoleIds;
     }
 
-    public void setLimitedSpotRoleIds(ComkerKeyAndValueSet[] limitedSpotRoleIds) {
-        this.limitedSpotRoleIds = limitedSpotRoleIds;
+    public void setScopedRoleIds(ComkerKeyAndValueSet[] scopedRoleIds) {
+        this.scopedRoleIds = scopedRoleIds;
     }
 
     @XmlRootElement

@@ -25,6 +25,8 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    Boolean exists(String id);
+
     ComkerCrew get(String id);
 
     ComkerCrew getByName(String name);
