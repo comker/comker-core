@@ -1,5 +1,6 @@
 package net.cokkee.comker.dao.impl;
 
+import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -97,6 +98,17 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
         return authorities;
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Boolean exists(String id) {
+        Query query = this.getSessionFactory().getCurrentSession().
+                createQuery(MessageFormat.format(
+                    "select 1 from {0} t where t.id = :id",
+                    new Object[] {ComkerRole.class.getSimpleName()}));
+        query.setString("id", id);
+        return (query.uniqueResult() != null);
+    }
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerRole get(String id) {

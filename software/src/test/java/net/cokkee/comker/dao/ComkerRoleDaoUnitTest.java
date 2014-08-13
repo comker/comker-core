@@ -143,6 +143,22 @@ public class ComkerRoleDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<roles.length; i++) {
+            Assert.assertTrue(testRoleDao.exists(roles[i].getId()));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testRoleDao.exists(null));
+
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testRoleDao.exists("role_id_" + i));
+        }
+    }
+    
+    @Test
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         

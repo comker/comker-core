@@ -28,6 +28,8 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
     @Deprecated
     Set<String> getAuthorities(ComkerRole role);
 
+    Boolean exists(String id);
+
     ComkerRole get(String id);
 
     ComkerRole getByCode(String code);
