@@ -27,6 +27,8 @@ import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerUserValidator;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 
 import org.junit.runner.RunWith;
 import org.junit.Before;
@@ -210,33 +212,6 @@ public class ComkerUserStorageUnitTest {
         crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(1))));
         crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(6)), spotMap.get(spotIdx.get(1))));
 
-        /*ComkerCrew crew;
-        crew = new ComkerCrew("Crew 01", "This is crew-01");
-        crew.setId(crewIdx.get(1));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-01")));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-02")));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-04"), spotMap.get("spot-01")));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-04"), spotMap.get("spot-02")));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-05"), spotMap.get("spot-02")));
-        crewMap.put(crew.getId(), crew);
-
-        crew = new ComkerCrew("Crew 02", "This is crew-02");
-        crew.setId(crewIdx.get(2));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-01")));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-03")));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-05"), spotMap.get("spot-01")));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-06"), spotMap.get("spot-01")));
-        crewMap.put(crew.getId(), crew);
-
-        crew = new ComkerCrew("Crew 03", "This is crew-03");
-        crew.setId("crew-03");
-        crewMap.put(crew.getId(), crew);
-
-        crew = new ComkerCrew("Crew 04", "This is crew-04");
-        crew.setId("crew-04");
-        crewMap.put(crew.getId(), crew);
-         */
-
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -369,6 +344,17 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
+        doAnswer(new Answer<ComkerUser>() {
+            @Override
+            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+                ComkerUser user = (ComkerUser) invocation.getArguments()[0];
+                user.setId(UUID.randomUUID().toString());
+                userMap.put(user.getId(), user);
+                userIdx.add(user.getId());
+                return user;
+            }
+        }).when(userDao).create(any(ComkerUser.class));
+
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -392,32 +378,32 @@ public class ComkerUserStorageUnitTest {
     }
 
     @Test
-    public void test_1_count() {
+    public void test_count() {
         Integer result = userStorage.count();
         assertEquals(result.intValue(), userMap.size());
     }
 
     @Test
-    public void test_1_find_all_user_objects() {
+    public void test_find_all_user_objects() {
         List<ComkerUserDTO> result = userStorage.findAll(null);
         assertEquals(result.size(), userMap.size());
     }
 
     @Test
-    public void test_2_get_user_object() {
+    public void test_get_user_object() {
         ComkerUserDTO result = userStorage.get(userIdx.get(1));
         verify(userDao).get(userIdx.get(1));
         assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_2_get_user_object_by_invalid_id() {
+    public void test_get_user_object_by_invalid_id() {
         ComkerUserDTO result = userStorage.get("user-not-found");
         verify(userDao).get("user-not-found");
     }
 
     @Test
-    public void test_2_get_user_object_by_username() {
+    public void test_get_user_object_by_username() {
         ComkerUser source = userMap.get(userIdx.get(1));
         ComkerUserDTO result = userStorage.getByUsername(source.getUsername());
         verify(userDao).getByUsername(source.getUsername());
@@ -425,13 +411,13 @@ public class ComkerUserStorageUnitTest {
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_2_get_user_object_by_invalid_username() {
+    public void test_get_user_object_by_invalid_username() {
         ComkerUserDTO result = userStorage.getByUsername("user-not-found");
         verify(userDao).getByUsername("user-not-found");
     }
 
     @Test
-    public void test_2_get_user_object_by_email() {
+    public void test_get_user_object_by_email() {
         ComkerUser source = userMap.get(userIdx.get(1));
         ComkerUserDTO result = userStorage.getByEmail(source.getEmail());
         verify(userDao).getByEmail(source.getEmail());
@@ -439,25 +425,25 @@ public class ComkerUserStorageUnitTest {
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_2_get_user_object_by_invalid_email() {
+    public void test_get_user_object_by_invalid_email() {
         ComkerUserDTO result = userStorage.getByEmail("user-not-found");
         verify(userDao).getByEmail("user-not-found");
     }
 
     @Test
-    public void test_3_get_user_global_authorities() {
+    public void test_get_user_global_authorities() {
         Set<String> result = userStorage.getGlobalAuthorities(userIdx.get(1));
         assertThat(result, hasItems("PERMISSION_01", "PERMISSION_02",
                 "PERMISSION_03", "PERMISSION_04"));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_3_get_user_global_authorities_by_wrong_id() {
+    public void test_get_user_global_authorities_by_wrong_id() {
         userStorage.getGlobalAuthorities("user-not-found");
     }
 
     @Test
-    public void test_3_get_user_spot_code_with_authorities() {
+    public void test_get_user_spot_code_with_authorities() {
         Map<String, Set<String>> result = userStorage.getSpotCodeWithAuthorities(userIdx.get(1));
         assertThat(result.keySet(), hasItems("SPOT_01", "SPOT_02"));
 
@@ -473,19 +459,81 @@ public class ComkerUserStorageUnitTest {
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_3_get_user_spot_code_with_authorities_by_wrong_id() {
+    public void test_get_user_spot_code_with_authorities_by_wrong_id() {
         userStorage.getSpotCodeWithAuthorities("user-not-found");
     }
 
     @Test
-    public void test_6_delete_user_object_by_id() {
+    public void test_create_user_object() {
+        ComkerUserDTO param = new ComkerUserDTO(
+                "user" + userIdx.size() + "9@comker.net",
+                "user" + userIdx.size(),
+                "Matkhau$1",
+                "Duong Thi Trang");
+        param.setCrewIds(new String[] {crewIdx.get(1), crewIdx.get(2)});
+
+        ComkerUserDTO result = userStorage.create(param);
+
+        Assert.assertNotNull(result);
+        Assert.assertNotNull(result.getId());
+        Assert.assertEquals(result.getEmail(), param.getEmail());
+        Assert.assertEquals(result.getUsername(), param.getUsername());
+        Assert.assertEquals(result.getFullname(), param.getFullname());
+
+        Assert.assertThat(result.getCrewIds(), CoreMatchers.is(param.getCrewIds()));
+        
+        Set<String> newCrewIds = new HashSet<String>();
+        if (param.getCrewIds() != null) {
+            newCrewIds.addAll(Arrays.asList(param.getCrewIds()));
+        }
+        for (String globalRoleId : result.getCrewIds()) {
+            if (newCrewIds.contains(globalRoleId)) {
+                newCrewIds.remove(globalRoleId);
+            }
+        }
+        assertEquals(newCrewIds.size(), 0);
+    }
+
+    @Test
+    public void test_update_user_object_with_valid_crewIds() {
+        ComkerUser source = userMap.get(userIdx.get(1));
+
+        ComkerUserDTO param = new ComkerUserDTO(
+                "updated" + source.getEmail(),
+                source.getUsername() + "abc",
+                "Matkhau@9",
+                source.getFullname() + " Updated");
+
+        param.setId(source.getId());
+        param.setCrewIds(new String[] { crewIdx.get(3), crewIdx.get(4)});
+
+        userStorage.update(param);
+
+        ComkerUserDTO result = userStorage.get(source.getId());
+        Assert.assertEquals(source.getEmail(), result.getEmail());
+        Assert.assertEquals(source.getUsername(), result.getUsername());
+        Assert.assertEquals(source.getFullname(), result.getFullname());
+        Assert.assertThat(
+                new String[] { crewIdx.get(3), crewIdx.get(4)},
+                CoreMatchers.is(result.getCrewIds()));
+    }
+
+    @Test(expected = ComkerObjectNotFoundException.class)
+    public void test_update_user_object_with_wrong_id() {
+        ComkerUserDTO param = new ComkerUserDTO("email@gmail.com", "user", "passwd", "Fullname");
+        param.setId("user-not-found");
+        userStorage.update(param);
+    }
+
+    @Test
+    public void test_delete_user_object_by_id() {
         String id = userIdx.get(2);
         userStorage.delete(id);
         assertNull(userMap.get(id));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
-    public void test_6_delete_user_object_by_invalid_id() {
+    public void test_delete_user_object_by_invalid_id() {
         userStorage.delete("user-not-found");
     }
 }

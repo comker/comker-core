@@ -279,6 +279,7 @@ public class ComkerCrewStorageUnitTest {
                 ComkerCrew crew = (ComkerCrew) invocation.getArguments()[0];
                 crew.setId(UUID.randomUUID().toString());
                 crewMap.put(crew.getId(), crew);
+                crewIdx.add(crew.getId());
                 return crew;
             }
         }).when(crewDao).create(any(ComkerCrew.class));
@@ -298,6 +299,7 @@ public class ComkerCrewStorageUnitTest {
                 ComkerCrew crew = (ComkerCrew) invocation.getArguments()[0];
                 if (crew != null) {
                     crewMap.remove(crew.getId());
+                    crewIdx.remove(crew.getId());
                 }
                 return null;
             }
