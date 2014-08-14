@@ -21,6 +21,8 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 
+    Boolean exists(String id);
+    
     ComkerUser get(String id);
 
     ComkerUser getByEmail(String email);

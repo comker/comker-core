@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
@@ -25,6 +26,7 @@ import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerUserValidator;
 
 import org.junit.runner.RunWith;
 import org.junit.Before;
@@ -32,7 +34,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import static org.junit.Assert.*;
-import static org.junit.matchers.JUnitMatchers.*;
 import static org.hamcrest.CoreMatchers.hasItems;
 
 import org.mockito.InjectMocks;
@@ -51,6 +52,12 @@ import static org.mockito.Mockito.*;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ComkerUserStorageUnitTest {
 
+    private List<String> userIdx = new ArrayList<String>();
+    private List<String> crewIdx = new ArrayList<String>();
+    private List<String> spotIdx = new ArrayList<String>();
+    private List<String> roleIdx = new ArrayList<String>();
+    private List<String> permissionIdx = new ArrayList<String>();
+
     private Map<String, ComkerUser> userMap = new HashMap<String, ComkerUser>();
     private Map<String, ComkerCrew> crewMap = new HashMap<String, ComkerCrew>();
     private Map<String, ComkerSpot> spotMap = new HashMap<String, ComkerSpot>();
@@ -59,6 +66,9 @@ public class ComkerUserStorageUnitTest {
 
     @InjectMocks
     private ComkerUserStorageImpl userStorage;
+
+    @InjectMocks
+    private ComkerUserValidator userValidator;
 
     @Mock
     private ComkerUserDao userDao;
@@ -76,18 +86,25 @@ public class ComkerUserStorageUnitTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
 
+        userStorage.setUserValidator(userValidator);
+        
         /*
          * Demo data for spotDao
          */
-        ComkerSpot spot;
+        for(int i=0; i<3; i++) {
+            ComkerSpot spot = new ComkerSpot("SPOT_0" + i, "Spot 0" + i, "This is spot-0" + i);
+            spot.setId(UUID.randomUUID().toString());
+            spotMap.put(spot.getId(), spot);
+            spotIdx.add(spot.getId());
+        }
 
-        spot = new ComkerSpot("SPOT_01", "Spot 01", "This is spot-01");
-        spot.setId("spot-01");
-        spotMap.put(spot.getId(), spot);
-
-        spot = new ComkerSpot("SPOT_02", "Spot 02", "This is spot-02");
-        spot.setId("spot-02");
-        spotMap.put(spot.getId(), spot);
+        when(spotDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                String id = (String) invocation.getArguments()[0];
+                return spotMap.containsKey(id);
+            }
+        });
 
         when(spotDao.get(anyString())).thenAnswer(new Answer<ComkerSpot>() {
             @Override
@@ -100,82 +117,54 @@ public class ComkerUserStorageUnitTest {
         /*
          * Demo data for permissionDao
          */
-        ComkerPermission permission;
-
-        permission = new ComkerPermission("PERMISSION_01");
-        permission.setId("permission-01");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_02");
-        permission.setId("permission-02");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_03");
-        permission.setId("permission-03");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_04");
-        permission.setId("permission-04");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_05");
-        permission.setId("permission-05");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_06");
-        permission.setId("permission-06");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_07");
-        permission.setId("permission-07");
-        permissionMap.put(permission.getId(), permission);
-
-        permission = new ComkerPermission("PERMISSION_08");
-        permission.setId("permission-08");
-        permissionMap.put(permission.getId(), permission);
+        for(int i=0; i<9; i++) {
+            ComkerPermission permission = new ComkerPermission("PERMISSION_0" + i);
+            permission.setId(UUID.randomUUID().toString());
+            permissionMap.put(permission.getId(), permission);
+            permissionIdx.add(permission.getId());
+        }
 
         /*
          * Demo data for roleDao
          */
         ComkerRole role;
-        role = new ComkerRole("ROLE_01", "Role 01", "This is role-01");
-        role.setId("role-01");
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-01")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-02")));
-        roleMap.put(role.getId(), role);
 
-        role = new ComkerRole("ROLE_02", "Role 02", "This is role-02");
-        role.setId("role-02");
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-01")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-02")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-03")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-04")));
-        roleMap.put(role.getId(), role);
+        for(int i=0; i<7; i++) {
+            role = new ComkerRole("ROLE_0" + i, "Role 0" + i, "This is role-0" + i);
+            role.setId(UUID.randomUUID().toString());
+            roleMap.put(role.getId(), role);
+            roleIdx.add(role.getId());
+        }
 
-        role = new ComkerRole("ROLE_03", "Role 03", "This is role-03");
-        role.setId("role-03");
-        roleMap.put(role.getId(), role);
+        role = roleMap.get(roleIdx.get(1));
+        for(int j=1; j<=2; j++) {
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+        }
 
-        role = new ComkerRole("ROLE_04", "Role 04", "This is role-04");
-        role.setId("role-04");
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-05")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-06")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-07")));
-        roleMap.put(role.getId(), role);
+        role = roleMap.get(roleIdx.get(2));
+        for(int j=1; j<=4; j++) {
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+        }
 
-        role = new ComkerRole("ROLE_05", "Role 05", "This is role-05");
-        role.setId("role-05");
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-06")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-07")));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get("permission-08")));
-        roleMap.put(role.getId(), role);
+        role = roleMap.get(roleIdx.get(4));
+        for(int j=5; j<=7; j++) {
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+        }
 
-        role = new ComkerRole("ROLE_06", "Role 06", "This is role-06");
-        role.setId("role-06");
-        roleMap.put(role.getId(), role);
+        role = roleMap.get(roleIdx.get(5));
+        for(int j=6; j<=8; j++) {
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+        }
+
+        when(roleDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                String id = (String) invocation.getArguments()[0];
+                return roleMap.containsKey(id);
+            }
+        });
 
         when(roleDao.get(anyString())).thenAnswer(new Answer<ComkerRole>() {
-
             @Override
             public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
@@ -184,7 +173,6 @@ public class ComkerUserStorageUnitTest {
         });
 
         doAnswer(new Answer() {
-
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Set<ComkerPermission> bag = (Set<ComkerPermission>) invocation.getArguments()[0];
@@ -201,8 +189,30 @@ public class ComkerUserStorageUnitTest {
          * Demo data for crewDao
          */
         ComkerCrew crew;
+
+        for(int i=0; i<5; i++) {
+            crew = new ComkerCrew("Crew 0" + i, "This is crew-0" + i);
+            crew.setId(UUID.randomUUID().toString());
+            crewMap.put(crew.getId(), crew);
+            crewIdx.add(crew.getId());
+        }
+
+        crew = crewMap.get(crewIdx.get(1));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(1))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(2))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(1))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(2))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(2))));
+
+        crew = crewMap.get(crewIdx.get(2));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(1))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(3))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(1))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(6)), spotMap.get(spotIdx.get(1))));
+
+        /*ComkerCrew crew;
         crew = new ComkerCrew("Crew 01", "This is crew-01");
-        crew.setId("crew-01");
+        crew.setId(crewIdx.get(1));
         crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-01")));
         crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-02")));
         crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-04"), spotMap.get("spot-01")));
@@ -211,7 +221,7 @@ public class ComkerUserStorageUnitTest {
         crewMap.put(crew.getId(), crew);
 
         crew = new ComkerCrew("Crew 02", "This is crew-02");
-        crew.setId("crew-02");
+        crew.setId(crewIdx.get(2));
         crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-01")));
         crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get("role-03")));
         crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get("role-05"), spotMap.get("spot-01")));
@@ -225,9 +235,9 @@ public class ComkerUserStorageUnitTest {
         crew = new ComkerCrew("Crew 04", "This is crew-04");
         crew.setId("crew-04");
         crewMap.put(crew.getId(), crew);
+         */
 
         doAnswer(new Answer() {
-
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Set<ComkerRole> bag = (Set<ComkerRole>) invocation.getArguments()[0];
@@ -241,7 +251,6 @@ public class ComkerUserStorageUnitTest {
         }).when(crewDao).collectGlobalRole(anySet(), any(ComkerCrew.class));
 
         doAnswer(new Answer() {
-
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Map<ComkerSpot, Set<ComkerRole>> bag = (Map<ComkerSpot, Set<ComkerRole>>) invocation.getArguments()[0];
@@ -260,8 +269,15 @@ public class ComkerUserStorageUnitTest {
             }
         }).when(crewDao).collectSpotWithRole(anyMap(), any(ComkerCrew.class));
 
-        when(crewDao.get(anyString())).thenAnswer(new Answer<ComkerCrew>() {
+        when(crewDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
+            @Override
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                String id = (String) invocation.getArguments()[0];
+                return crewMap.containsKey(id);
+            }
+        });
 
+        when(crewDao.get(anyString())).thenAnswer(new Answer<ComkerCrew>() {
             @Override
             public ComkerCrew answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
@@ -271,18 +287,24 @@ public class ComkerUserStorageUnitTest {
 
         ComkerUser user;
 
-        user = new ComkerUser("user-01@comker.net", "user01", "123456", "User 01");
-        user.setId("user-01");
-        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get("crew-01")));
-        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get("crew-02")));
+        user = new ComkerUser("user0@comker.net", "user0", "Matkhau$1", "Phạm Ngọc Hùng");
+        user.setId(UUID.randomUUID().toString());
         userMap.put(user.getId(), user);
+        userIdx.add(user.getId());
 
-        user = new ComkerUser("user-03@comker.net", "user03", "123456", "User 03");
-        user.setId("user-03");
+        user = new ComkerUser("user1@comker.net", "user1", "Matkhau#1", "Nguyễn Tuấn Anh");
+        user.setId(UUID.randomUUID().toString());
+        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get(crewIdx.get(1))));
+        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get(crewIdx.get(2))));
         userMap.put(user.getId(), user);
+        userIdx.add(user.getId());
+
+        user = new ComkerUser("user2@comker.net", "user2", "Matkhau$1", "Trương Minh Tuấn");
+        user.setId(UUID.randomUUID().toString());
+        userMap.put(user.getId(), user);
+        userIdx.add(user.getId());
 
         doAnswer(new Answer() {
-
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Set<ComkerCrew> bag = (Set<ComkerCrew>) invocation.getArguments()[0];
@@ -362,6 +384,7 @@ public class ComkerUserStorageUnitTest {
                 ComkerUser user = (ComkerUser) invocation.getArguments()[0];
                 if (user != null) {
                     userMap.remove(user.getId());
+                    userIdx.remove(user.getId());
                 }
                 return null;
             }
@@ -371,21 +394,20 @@ public class ComkerUserStorageUnitTest {
     @Test
     public void test_1_count() {
         Integer result = userStorage.count();
-        assertEquals(result.intValue(), 2);
         assertEquals(result.intValue(), userMap.size());
     }
 
     @Test
     public void test_1_find_all_user_objects() {
         List<ComkerUserDTO> result = userStorage.findAll(null);
-        assertEquals(result.size(), 2);
+        assertEquals(result.size(), userMap.size());
     }
 
     @Test
     public void test_2_get_user_object() {
-        ComkerUserDTO result = userStorage.get("user-01");
-        verify(userDao).get("user-01");
-        assertThat(Arrays.asList(result.getCrewIds()), hasItems("crew-01", "crew-02"));
+        ComkerUserDTO result = userStorage.get(userIdx.get(1));
+        verify(userDao).get(userIdx.get(1));
+        assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
@@ -396,9 +418,10 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_2_get_user_object_by_username() {
-        ComkerUserDTO result = userStorage.getByUsername("user01");
-        verify(userDao).getByUsername("user01");
-        assertThat(Arrays.asList(result.getCrewIds()), hasItems("crew-01", "crew-02"));
+        ComkerUser source = userMap.get(userIdx.get(1));
+        ComkerUserDTO result = userStorage.getByUsername(source.getUsername());
+        verify(userDao).getByUsername(source.getUsername());
+        assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
@@ -409,9 +432,10 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_2_get_user_object_by_email() {
-        ComkerUserDTO result = userStorage.getByEmail("user-01@comker.net");
-        verify(userDao).getByEmail("user-01@comker.net");
-        assertThat(Arrays.asList(result.getCrewIds()), hasItems("crew-01", "crew-02"));
+        ComkerUser source = userMap.get(userIdx.get(1));
+        ComkerUserDTO result = userStorage.getByEmail(source.getEmail());
+        verify(userDao).getByEmail(source.getEmail());
+        assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)
@@ -422,7 +446,7 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_3_get_user_global_authorities() {
-        Set<String> result = userStorage.getGlobalAuthorities("user-01");
+        Set<String> result = userStorage.getGlobalAuthorities(userIdx.get(1));
         assertThat(result, hasItems("PERMISSION_01", "PERMISSION_02",
                 "PERMISSION_03", "PERMISSION_04"));
     }
@@ -434,7 +458,7 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_3_get_user_spot_code_with_authorities() {
-        Map<String, Set<String>> result = userStorage.getSpotCodeWithAuthorities("user-01");
+        Map<String, Set<String>> result = userStorage.getSpotCodeWithAuthorities(userIdx.get(1));
         assertThat(result.keySet(), hasItems("SPOT_01", "SPOT_02"));
 
         assertNotNull(result.get("SPOT_01"));
@@ -455,8 +479,9 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_6_delete_user_object_by_id() {
-        userStorage.delete("user-03");
-        assertNull(userMap.get("user-03"));
+        String id = userIdx.get(2);
+        userStorage.delete(id);
+        assertNull(userMap.get(id));
     }
 
     @Test(expected = ComkerObjectNotFoundException.class)

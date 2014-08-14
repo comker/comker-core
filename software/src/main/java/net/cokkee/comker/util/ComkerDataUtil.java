@@ -31,11 +31,52 @@ public class ComkerDataUtil {
 		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public static boolean verifyEmail(String code) {
-        if (code == null) return false;
-        return code.matches(EMAIL_PATTERN);
+    public static boolean verifyEmail(String email) {
+        if (email == null) return false;
+        return email.matches(EMAIL_PATTERN);
     }
 
+    //--------------------------------------------------------------------------
+
+    private static final String USERNAME_PATTERN =
+		"^[a-z0-9_-]{3,16}$";
+
+    public static boolean verifyUsername(String username) {
+        if (username == null) return false;
+        return username.matches(USERNAME_PATTERN);
+    }
+
+    //--------------------------------------------------------------------------
+    /* http://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
+        ^                 # start-of-string
+        (?=.*[0-9])       # a digit must occur at least once
+        (?=.*[a-z])       # a lower case letter must occur at least once
+        (?=.*[A-Z])       # an upper case letter must occur at least once
+        (?=.*[@#$%^&+=])  # a special character must occur at least once
+        (?=\S+$)          # no whitespace allowed in the entire string
+        .{8,}             # anything, at least eight places though
+        $                 # end-of-string
+    */
+    private static final String PASSWORD_PATTERN =
+		"^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+
+    public static boolean verifyPassword(String password) {
+        if (password == null) return false;
+        return password.matches(PASSWORD_PATTERN);
+    }
+
+    //--------------------------------------------------------------------------
+
+    private static final String FULLNAME_PATTERN =
+            "^[a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" +
+            "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" +
+            "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$";
+
+    public static boolean verifyFullname(String fullname) {
+        if (fullname == null) return false;
+        return fullname.matches(FULLNAME_PATTERN);
+    }
+    
     //--------------------------------------------------------------------------
 
     public static String mergeStringArray(String[] strs) {

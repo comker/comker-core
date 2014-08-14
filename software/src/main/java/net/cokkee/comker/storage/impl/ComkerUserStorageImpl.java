@@ -24,6 +24,7 @@ import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerUserValidator;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -33,15 +34,18 @@ import org.slf4j.LoggerFactory;
  *
  * @author drupalex
  */
-public class ComkerUserStorageImpl implements ComkerUserStorage {
+public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
+        implements ComkerUserStorage {
 
     private static Logger log = LoggerFactory.getLogger(ComkerUserStorageImpl.class);
+
+    private ComkerUserValidator userValidator = null;
+
+    public void setUserValidator(ComkerUserValidator userValidator) {
+        this.userValidator = userValidator;
+    }
     
     private ComkerUserDao userDao = null;
-
-    public ComkerUserDao getUserDao() {
-        return userDao;
-    }
 
     public void setUserDao(ComkerUserDao userDao) {
         this.userDao = userDao;
@@ -49,29 +53,17 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
     
     private ComkerCrewDao crewDao = null;
 
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
-    }
-
     public void setCrewDao(ComkerCrewDao crewDao) {
         this.crewDao = crewDao;
     }
     
     private ComkerRoleDao roleDao = null;
 
-    public ComkerRoleDao getRoleDao() {
-        return roleDao;
-    }
-
     public void setRoleDao(ComkerRoleDao roleDao) {
         this.roleDao = roleDao;
     }
 
     private ComkerToolboxService toolboxService = null;
-
-    public ComkerToolboxService getToolboxService() {
-        return toolboxService;
-    }
 
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
@@ -80,14 +72,14 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return getUserDao().count();
+        return userDao.count();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerUserDTO> findAll(ComkerPager filter) {
         List<ComkerUserDTO> poList = new ArrayList<ComkerUserDTO>();
-        List dbList = getUserDao().findAll(filter);
+        List dbList = userDao.findAll(filter);
         for(Object dbItem:dbList) {
             ComkerUserDTO poItem = new ComkerUserDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -146,15 +138,15 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
         ComkerUser user = getNotNull(id);
 
         Set<ComkerCrew> crewSet = new HashSet<ComkerCrew>();
-        getUserDao().collectCrew(crewSet, user);
+        userDao.collectCrew(crewSet, user);
 
         for(ComkerCrew crew:crewSet) {
             Set<ComkerRole> roleSet = new HashSet<ComkerRole>();
-            getCrewDao().collectGlobalRole(roleSet, crew);
+            crewDao.collectGlobalRole(roleSet, crew);
 
             Set<ComkerPermission> permissionSet = new HashSet<ComkerPermission>();
             for(ComkerRole role:roleSet) {
-                getRoleDao().collectPermission(permissionSet, role);
+                roleDao.collectPermission(permissionSet, role);
             }
 
             for(ComkerPermission permission:permissionSet) {
@@ -176,11 +168,11 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
         ComkerUser user = getNotNull(id);
 
         Set<ComkerCrew> crewSet = new HashSet<ComkerCrew>();
-        getUserDao().collectCrew(crewSet, user);
+        userDao.collectCrew(crewSet, user);
 
         for(ComkerCrew crew:crewSet) {
             Map<ComkerSpot,Set<ComkerRole>> bag = new HashMap<ComkerSpot,Set<ComkerRole>>();
-            getCrewDao().collectSpotWithRole(bag, crew);
+            crewDao.collectSpotWithRole(bag, crew);
 
             for(Map.Entry<ComkerSpot,Set<ComkerRole>> entry:bag.entrySet()) {
                 String spotCode = entry.getKey().getCode();
@@ -192,7 +184,7 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
                 Set<ComkerRole> roleSet = entry.getValue();
                 for(ComkerRole role:roleSet) {
                     Set<ComkerPermission> permissionSet = new HashSet<ComkerPermission>();
-                    getRoleDao().collectPermission(permissionSet, role);
+                    roleDao.collectPermission(permissionSet, role);
                     for(ComkerPermission permission:permissionSet) {
                         permissionCodeSet.add(permission.getAuthority());
                     }
@@ -204,13 +196,16 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerUserDTO create(ComkerUserDTO item) {
+        invokeValidator(userValidator, item);
+
         ComkerUser dbItem = new ComkerUser();
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
-        dbItem = getUserDao().create(dbItem);
+        dbItem = userDao.create(dbItem);
         
         ComkerUserDTO poItem = new ComkerUserDTO();
         ComkerDataUtil.copyProperties(dbItem, poItem);
+        loadAggregationRefs(dbItem, poItem);
         return poItem;
     }
 
@@ -218,16 +213,19 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void update(ComkerUserDTO item) {
         ComkerUser dbItem = getNotNull(item.getId());
+
+        invokeValidator(userValidator, item);
+
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
-        getUserDao().update(dbItem);
+        userDao.update(dbItem);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
         ComkerUser dbItem = getNotNull(id);
-        getUserDao().delete(dbItem);
+        userDao.delete(dbItem);
     }
 
     //--------------------------------------------------------------------------
@@ -273,7 +271,7 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
             }
         }
         for(String newId:newIds) {
-            ComkerCrew crew = getCrewDao().get(newId);
+            ComkerCrew crew = crewDao.get(newId);
             if (crew == null) continue;
             newList.add(new ComkerUserJoinCrew(dbItem, crew));
         }
@@ -288,7 +286,7 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     private ComkerUser getNotNull(String id) {
-        ComkerUser dbItem = getUserDao().get(id);
+        ComkerUser dbItem = userDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with id:{0} not found", new Object[] {id}),
@@ -299,7 +297,7 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     private ComkerUser getNotNullByUsername(String username) {
-        ComkerUser dbItem = getUserDao().getByUsername(username);
+        ComkerUser dbItem = userDao.getByUsername(username);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with username:{0} not found", new Object[] {username}),
@@ -310,7 +308,7 @@ public class ComkerUserStorageImpl implements ComkerUserStorage {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     private ComkerUser getNotNullByEmail(String email) {
-        ComkerUser dbItem = getUserDao().getByEmail(email);
+        ComkerUser dbItem = userDao.getByEmail(email);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with email:{0} not found", new Object[] {email}),

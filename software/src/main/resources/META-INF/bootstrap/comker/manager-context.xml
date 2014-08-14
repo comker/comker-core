@@ -10,6 +10,7 @@
 
     <bean id="comkerUserStorage"
             class="net.cokkee.comker.storage.impl.ComkerUserStorageImpl">
+        <property name="userValidator" ref="comkerUserValidator" />
         <property name="userDao" ref="comkerUserDao" />
         <property name="crewDao" ref="comkerCrewDao" />
         <property name="roleDao" ref="comkerRoleDao" />
@@ -75,5 +76,11 @@
         <property name="crewDao" ref="comkerCrewDao" />
         <property name="spotDao" ref="comkerSpotDao" />
         <property name="roleDao" ref="comkerRoleDao" />
+    </bean>
+
+    <bean id="comkerUserValidator"
+            class="net.cokkee.comker.validation.ComkerUserValidator">
+        <property name="userDao" ref="comkerUserDao" />
+        <property name="crewDao" ref="comkerCrewDao" />
     </bean>
 </beans>

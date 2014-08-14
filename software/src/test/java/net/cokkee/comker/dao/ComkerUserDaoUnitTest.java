@@ -152,6 +152,22 @@ public class ComkerUserDaoUnitTest {
     }
 
     @Test
+    public void test_exists_by_id() {
+        for(int i=0; i<users.length; i++) {
+            Assert.assertTrue(testUserDao.exists(users[i].getId()));
+        }
+    }
+
+    @Test
+    public void test_exists_by_invalid_id() {
+        Assert.assertFalse(testUserDao.exists(null));
+
+        for(int i=0; i<10; i++) {
+            Assert.assertFalse(testUserDao.exists("user_id_" + i));
+        }
+    }
+
+    @Test
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         
