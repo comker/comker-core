@@ -87,6 +87,6 @@ public class ComkerSessionResourceUnitTest {
 
     @Test
     public void test_get_information_on_anonymous_session() {
-        
+
     }
 }
