@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
@@ -17,7 +18,6 @@ import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,10 +32,6 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     private ComkerCrewDao crewDao = null;
 
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
-    }
-
     public void setCrewDao(ComkerCrewDao crewDao) {
         this.crewDao = crewDao;
     }
@@ -44,7 +40,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerUserDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
         c.setProjection(Projections.rowCount());
@@ -53,10 +49,10 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerUserDTO.Filter filter, ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 
@@ -69,24 +65,19 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
         ComkerUser item = (ComkerUser)c.uniqueResult();
-        loadAggregationRefs(item);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         List list = c.list();
-
-        for(Object item:list) {
-            loadAggregationRefs((ComkerUser) item);
-        }
         return list;
     }
 
@@ -106,7 +97,6 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     public ComkerUser get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
         ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
-        loadAggregationRefs(item);
         return item;
     }
 
@@ -132,11 +122,11 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
         Session session = this.getSessionFactory().getCurrentSession();
 
         if (getByUsername(item.getUsername()) != null) {
-            throw new ComkerFieldDuplicatedException(400, "Username has already existed");
+            throw new ComkerFieldDuplicatedException("Username has already existed");
         }
 
         if (getByEmail(item.getEmail()) != null) {
-            throw new ComkerFieldDuplicatedException(400, "Email has already existed");
+            throw new ComkerFieldDuplicatedException("Email has already existed");
         }
 
         session.save(item);
@@ -174,7 +164,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
         List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
         for(ComkerUserJoinCrew item:list) {
-            getCrewDao().collectCodeOfGlobalPermission(result, item.getCrew());
+            crewDao.collectCodeOfGlobalPermission(result, item.getCrew());
         }
         return result;
     }
@@ -217,21 +207,9 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
         List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
         for(ComkerUserJoinCrew item:list) {
-            getCrewDao().collectCodeOfSpotWithPermission(result, item.getCrew());
+            crewDao.collectCodeOfSpotWithPermission(result, item.getCrew());
         }
         return result;
-    }
-
-    //----------------------------------------------------------------------
-
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private void loadAggregationRefs(ComkerUser user) {
-        if (user == null) return;
-        user.getIdsOfCrewList().clear();
-        List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
-        for(ComkerUserJoinCrew item:list) {
-            user.getIdsOfCrewList().add(item.getCrew().getId());
-        }
     }
 }
 

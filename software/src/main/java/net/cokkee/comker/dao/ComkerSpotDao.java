@@ -3,6 +3,7 @@ package net.cokkee.comker.dao;
 import java.util.List;
 import java.util.Map;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerSpotDTO;
 
 import net.cokkee.comker.model.po.ComkerSpot;
 
@@ -12,9 +13,9 @@ import net.cokkee.comker.model.po.ComkerSpot;
  */
 public interface ComkerSpotDao extends ComkerAbstractDao {
 
-    Integer count();
+    Integer count(ComkerSpotDTO.Filter filter);
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerSpotDTO.Filter filter,ComkerPager pager);
 
     ComkerSpot findWhere(Map<String,Object> params);
 

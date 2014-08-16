@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import net.cokkee.comker.model.po.ComkerRole;
@@ -14,13 +15,13 @@ import net.cokkee.comker.model.po.ComkerRole;
  */
 public interface ComkerRoleDao extends ComkerAbstractDao {
 
-    Integer count();
+    Integer count(ComkerRoleDTO.Filter filter);
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerRoleDTO.Filter filter, ComkerPager pager);
 
     ComkerRole findWhere(Map<String,Object> params);
 
-    List findAllWhere(Map<String,Object> params, ComkerPager filter);
+    List findAllWhere(Map<String,Object> params, ComkerPager pager);
 
     @Deprecated
     Set<String> getAuthorities(String id);

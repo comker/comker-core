@@ -79,12 +79,12 @@ public class ComkerUserDaoUnitTest {
 
     @Test
     public void test_count() {
-        Assert.assertTrue(testUserDao.count() == users.length);
+        Assert.assertTrue(testUserDao.count(null) == users.length);
     }
 
     @Test
     public void test_list_all() {
-        List<ComkerUser> list = testUserDao.findAll(null);
+        List<ComkerUser> list = testUserDao.findAll(null, null);
         Assert.assertTrue(list.size() == users.length);
 
         int count = 0;
@@ -101,7 +101,7 @@ public class ComkerUserDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerUser> list = testUserDao.findAll(new ComkerPager(1, 3));
+        List<ComkerUser> list = testUserDao.findAll(null, new ComkerPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getUsername(), "username02");
         Assert.assertEquals(list.get(2).getUsername(), "username04");
@@ -109,7 +109,7 @@ public class ComkerUserDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerUser> list = testUserDao.findAll(new ComkerPager(4, 10));
+        List<ComkerUser> list = testUserDao.findAll(null, new ComkerPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getUsername(), "username05");
     }
@@ -171,7 +171,7 @@ public class ComkerUserDaoUnitTest {
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         
-        int currentCount = testUserDao.count();
+        int currentCount = testUserDao.count(null);
         Assert.assertTrue(currentCount == users.length);
 
         ComkerUser item = new ComkerUser("email06@gmail.com", "username06",
@@ -184,7 +184,7 @@ public class ComkerUserDaoUnitTest {
                 (ComkerCrew) session.get(ComkerCrew.class, crewIds[3])));
         testUserDao.create(item);
 
-        Assert.assertTrue(testUserDao.count() == currentCount + 1);
+        Assert.assertTrue(testUserDao.count(null) == currentCount + 1);
         
         ComkerUser result = testUserDao.getByUsername("username06");
         Assert.assertTrue(result.getUserJoinCrewList().size() == 3);
@@ -214,6 +214,6 @@ public class ComkerUserDaoUnitTest {
         testUserDao.delete(testUserDao.getByUsername("username03"));
         Assert.assertNull(testUserDao.getByUsername("username03"));
         Assert.assertNull(testUserDao.getByEmail("email03@gmail.com"));
-        Assert.assertTrue(testUserDao.count() == (users.length - 1));
+        Assert.assertTrue(testUserDao.count(null) == (users.length - 1));
     }
 }

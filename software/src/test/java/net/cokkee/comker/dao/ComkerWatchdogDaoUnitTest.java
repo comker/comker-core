@@ -60,12 +60,12 @@ public class ComkerWatchdogDaoUnitTest {
 
     @Test
     public void test_count() {
-        Assert.assertTrue(testWatchdogDao.count() == watchdogIds.size());
+        Assert.assertTrue(testWatchdogDao.count(null) == watchdogIds.size());
     }
 
     @Test
     public void test_find_all() {
-        List list = testWatchdogDao.findAll(null);
+        List list = testWatchdogDao.findAll(null, null);
         List<String> resultSet = new ArrayList<String>();
         for(Object item:list) {
             ComkerWatchdog permission = (ComkerWatchdog) item;
@@ -76,7 +76,7 @@ public class ComkerWatchdogDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List list = testWatchdogDao.findAll(new ComkerPager());
+        List list = testWatchdogDao.findAll(null,new ComkerPager());
         Assert.assertTrue(list.size() == ComkerPager.DEFAULT_LIMIT);
     }
 

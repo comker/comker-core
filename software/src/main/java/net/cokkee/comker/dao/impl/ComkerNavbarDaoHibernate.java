@@ -1,6 +1,5 @@
 package net.cokkee.comker.dao.impl;
 
-import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +15,11 @@ import net.cokkee.comker.model.po.ComkerNavbarNode;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.LockOptions;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -147,6 +146,17 @@ public class ComkerNavbarDaoHibernate extends ComkerAbstractDaoHibernate
         }
 
         return result;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Boolean exists(String id) {
+        Query query = this.getSessionFactory().getCurrentSession().
+                createQuery(MessageFormat.format(
+                    "select 1 from {0} t where t.id = :id",
+                    new Object[] {ComkerNavbarNode.class.getSimpleName()}));
+        query.setString("id", id);
+        return (query.uniqueResult() != null);
     }
 
     @Override

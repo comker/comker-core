@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 /**
@@ -16,11 +17,11 @@ public interface ComkerPermissionDao {
     
     ComkerPermission findWhere(Map<String,Object> params);
 
-    Integer count();
+    Integer count(ComkerPermissionDTO.Filter filter);
 
     Integer countWhere(Map<String,Object> params);
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerPermissionDTO.Filter filter,ComkerPager pager);
 
     List findAllWhere(Map<String,Object> params, ComkerPager filter);
 

@@ -82,12 +82,12 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_count() {
-        Assert.assertTrue(testRoleDao.count() == roles.length);
+        Assert.assertTrue(testRoleDao.count(null) == roles.length);
     }
 
     @Test
     public void test_list_all() {
-        List<ComkerRole> list = testRoleDao.findAll(null);
+        List<ComkerRole> list = testRoleDao.findAll(null, null);
         Assert.assertTrue(list.size() == roles.length);
 
         int count = 0;
@@ -104,7 +104,7 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerRole> list = testRoleDao.findAll(new ComkerPager(1, 3));
+        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_02");
         Assert.assertEquals(list.get(2).getCode(), "ROLE_04");
@@ -112,7 +112,7 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerRole> list = testRoleDao.findAll(new ComkerPager(4, 10));
+        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_05");
     }
@@ -162,7 +162,7 @@ public class ComkerRoleDaoUnitTest {
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         
-        int currentCount = testRoleDao.count();
+        int currentCount = testRoleDao.count(null);
         Assert.assertTrue(currentCount == roles.length);
 
         ComkerRole item = new ComkerRole("ROLE_06", "Role 06", "Description Role 06");
@@ -174,7 +174,7 @@ public class ComkerRoleDaoUnitTest {
                 (ComkerPermission) session.get(ComkerPermission.class, permissionIds[3])));
         testRoleDao.create(item);
 
-        Assert.assertTrue(testRoleDao.count() == currentCount + 1);
+        Assert.assertTrue(testRoleDao.count(null) == currentCount + 1);
         
         ComkerRole result = testRoleDao.getByCode("ROLE_06");
         Assert.assertTrue(result.getRoleJoinPermissionList().size() == 3);
@@ -203,6 +203,6 @@ public class ComkerRoleDaoUnitTest {
     public void test_delete() {
         testRoleDao.delete(testRoleDao.getByCode("ROLE_03"));
         Assert.assertNull(testRoleDao.getByCode("ROLE_03"));
-        Assert.assertTrue(testRoleDao.count() == (roles.length - 1));
+        Assert.assertTrue(testRoleDao.count(null) == (roles.length - 1));
     }
 }

@@ -12,7 +12,11 @@ public interface ComkerPermissionStorage {
 
     Integer count();
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerPager pager);
+
+    Integer count(ComkerPermissionDTO.Filter filter);
+
+    List findAll(ComkerPermissionDTO.Filter filter, ComkerPager pager);
 
     ComkerPermissionDTO get(String id);
 

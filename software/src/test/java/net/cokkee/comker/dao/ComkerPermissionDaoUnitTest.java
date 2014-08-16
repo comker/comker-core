@@ -57,12 +57,12 @@ public class ComkerPermissionDaoUnitTest {
 
     @Test
     public void test_count_permissions() {
-        Assert.assertTrue(testPermissionDao.count() == 20);
+        Assert.assertTrue(testPermissionDao.count(null) == 20);
     }
 
     @Test
     public void test_find_all_permissions() {
-        List list = testPermissionDao.findAll(null);
+        List list = testPermissionDao.findAll(null, null);
         Set<String> resultSet = new HashSet<String>();
         for(Object item:list) {
             ComkerPermission permission = (ComkerPermission) item;
@@ -73,7 +73,7 @@ public class ComkerPermissionDaoUnitTest {
 
     @Test
     public void test_find_all_permissions_with_pager() {
-        List list = testPermissionDao.findAll(new ComkerPager());
+        List list = testPermissionDao.findAll(null,new ComkerPager());
         Assert.assertTrue(list.size() == ComkerPager.DEFAULT_LIMIT);
     }
 
@@ -120,11 +120,11 @@ public class ComkerPermissionDaoUnitTest {
 
     @Test
     public void test_create() {
-        int currentCount = testPermissionDao.count();
+        int currentCount = testPermissionDao.count(null);
 
         ComkerPermission item = new ComkerPermission("PERMISSION_A");
         testPermissionDao.save(item);
 
-        Assert.assertTrue(testPermissionDao.count() == currentCount + 1);
+        Assert.assertTrue(testPermissionDao.count(null) == currentCount + 1);
     }
 }

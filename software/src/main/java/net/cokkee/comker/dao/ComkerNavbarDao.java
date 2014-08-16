@@ -30,6 +30,8 @@ public interface ComkerNavbarDao {
     
     List getList(String fromNodeId, String excludedNodeId);
 
+    Boolean exists(String id);
+
     ComkerNavbarNode get(String id);
 
     ComkerNavbarNode getByCode(String code);

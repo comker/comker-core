@@ -79,12 +79,12 @@ public class ComkerSpotDaoUnitTest {
 
     @Test
     public void test_count() {
-        Assert.assertTrue(testSpotDao.count() == spotObjects.length);
+        Assert.assertTrue(testSpotDao.count(null) == spotObjects.length);
     }
 
     @Test
     public void test_list_all() {
-        List<ComkerSpot> list = testSpotDao.findAll(null);
+        List<ComkerSpot> list = testSpotDao.findAll(null, null);
         Assert.assertTrue(list.size() == spotObjects.length);
 
         int count = 0;
@@ -101,7 +101,7 @@ public class ComkerSpotDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerSpot> list = testSpotDao.findAll(new ComkerPager(1, 3));
+        List<ComkerSpot> list = testSpotDao.findAll(null,new ComkerPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getCode(), "SPOT_02");
         Assert.assertEquals(list.get(2).getCode(), "SPOT_04");
@@ -109,7 +109,7 @@ public class ComkerSpotDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerSpot> list = testSpotDao.findAll(new ComkerPager(4, 10));
+        List<ComkerSpot> list = testSpotDao.findAll(null,new ComkerPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getCode(), "SPOT_05");
     }
@@ -159,7 +159,7 @@ public class ComkerSpotDaoUnitTest {
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         
-        int currentCount = testSpotDao.count();
+        int currentCount = testSpotDao.count(null);
         Assert.assertTrue(currentCount == spotObjects.length);
 
         ComkerSpot item = new ComkerSpot("SPOT_06", "Spot 06", "Description Spot 06");
@@ -171,7 +171,7 @@ public class ComkerSpotDaoUnitTest {
                 (ComkerModule) session.get(ComkerModule.class, moduleIds[3])));
         testSpotDao.create(item);
 
-        Assert.assertTrue(testSpotDao.count() == currentCount + 1);
+        Assert.assertTrue(testSpotDao.count(null) == currentCount + 1);
         
         ComkerSpot result = testSpotDao.getByCode("SPOT_06");
         Assert.assertTrue(result.getSpotJoinModuleList().size() == 3);
@@ -200,6 +200,6 @@ public class ComkerSpotDaoUnitTest {
     public void test_delete() {
         testSpotDao.delete(testSpotDao.getByCode("SPOT_03"));
         Assert.assertNull(testSpotDao.getByCode("SPOT_03"));
-        Assert.assertTrue(testSpotDao.count() == (spotObjects.length - 1));
+        Assert.assertTrue(testSpotDao.count(null) == (spotObjects.length - 1));
     }
 }

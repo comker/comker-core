@@ -1,11 +1,11 @@
 package net.cokkee.comker.dao.impl;
 
-import net.cokkee.comker.dao.ComkerAbstractDao;
 import net.cokkee.comker.dao.ComkerWatchdogDao;
 
 import java.util.List;
 import java.util.Map;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.model.po.ComkerWatchdog;
 
 import org.hibernate.Criteria;
@@ -25,7 +25,7 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerWatchdogDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerWatchdog.class);
         c.setProjection(Projections.rowCount());
@@ -34,10 +34,10 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerWatchdogDTO.Filter filter,ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerWatchdog.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 
@@ -56,13 +56,13 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerWatchdog.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 

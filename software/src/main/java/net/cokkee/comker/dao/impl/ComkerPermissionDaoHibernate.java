@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import org.hibernate.Criteria;
@@ -46,7 +47,7 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerPermissionDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerPermission.class);
         c.setProjection(Projections.rowCount());
@@ -55,10 +56,10 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerPermissionDTO.Filter filter,ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerPermission.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 

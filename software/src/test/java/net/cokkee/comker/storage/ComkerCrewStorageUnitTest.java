@@ -239,7 +239,7 @@ public class ComkerCrewStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(crewDao.count()).thenAnswer(new Answer<Integer>() {
+        when(crewDao.count(any(ComkerCrewDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
 
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
@@ -250,7 +250,8 @@ public class ComkerCrewStorageUnitTest {
         /*
          * mocks for findAll() method
          */
-        when(crewDao.findAll(any(ComkerPager.class))).thenAnswer(new Answer<List<ComkerCrew>>() {
+        when(crewDao.findAll(any(ComkerCrewDTO.Filter.class),any(ComkerPager.class)))
+                .thenAnswer(new Answer<List<ComkerCrew>>() {
 
             @Override
             public List<ComkerCrew> answer(InvocationOnMock invocation) throws Throwable {

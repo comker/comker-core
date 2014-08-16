@@ -13,7 +13,11 @@ public interface ComkerRoleStorage {
 
     Integer count();
 
-    List<ComkerRoleDTO> findAll(ComkerPager filter);
+    List<ComkerRoleDTO> findAll(ComkerPager pager);
+
+    Integer count(ComkerRoleDTO.Filter filter);
+
+    List<ComkerRoleDTO> findAll(ComkerRoleDTO.Filter filter, ComkerPager pager);
 
     ComkerRoleDTO get(String id);
 

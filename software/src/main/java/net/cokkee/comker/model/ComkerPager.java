@@ -105,16 +105,16 @@ public class ComkerPager implements Serializable {
         return c;
     }
 
-    public static Query apply(Query query, ComkerPager filter) {
-        if (filter != null) {
-            filter.applyTo(query);
+    public static Query apply(Query query, ComkerPager pager) {
+        if (pager != null) {
+            pager.applyTo(query);
         }
         return query;
     }
 
-    public static Criteria apply(Criteria c, ComkerPager filter) {
-        if (filter != null) {
-            filter.applyTo(c);
+    public static Criteria apply(Criteria c, ComkerPager pager) {
+        if (pager != null) {
+            pager.applyTo(c);
         }
         return c;
     }

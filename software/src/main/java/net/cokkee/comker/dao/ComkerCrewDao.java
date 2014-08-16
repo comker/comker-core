@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -17,9 +18,9 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     public static final String FIELD_SPOT = "pk.spot";
     public static final String FIELD_ROLE = "pk.role";
 
-    Integer count();
+    Integer count(ComkerCrewDTO.Filter filter);
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerCrewDTO.Filter filter,ComkerPager pager);
     
     ComkerCrew findWhere(Map<String,Object> params);
 

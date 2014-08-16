@@ -72,14 +72,26 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return userDao.count();
+        return count(null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerUserDTO> findAll(ComkerPager filter) {
+    public List<ComkerUserDTO> findAll(ComkerPager pager) {
+        return findAll(null, pager);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Integer count(ComkerUserDTO.Filter filter) {
+        return userDao.count(filter);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<ComkerUserDTO> findAll(ComkerUserDTO.Filter filter, ComkerPager pager) {
         List<ComkerUserDTO> poList = new ArrayList<ComkerUserDTO>();
-        List dbList = userDao.findAll(filter);
+        List dbList = userDao.findAll(filter, pager);
         for(Object dbItem:dbList) {
             ComkerUserDTO poItem = new ComkerUserDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);

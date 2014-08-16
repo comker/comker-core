@@ -72,14 +72,26 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return crewDao.count();
+        return count(null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerCrewDTO> findAll(ComkerPager filter) {
+    public List<ComkerCrewDTO> findAll(ComkerPager pager) {
+        return findAll(null, pager);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Integer count(ComkerCrewDTO.Filter filter) {
+        return crewDao.count(filter);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<ComkerCrewDTO> findAll(ComkerCrewDTO.Filter filter, ComkerPager pager) {
         List<ComkerCrewDTO> poList = new ArrayList<ComkerCrewDTO>();
-        List dbList = crewDao.findAll(filter);
+        List dbList = crewDao.findAll(filter, pager);
         for(Object dbItem:dbList) {
             ComkerCrewDTO poItem = new ComkerCrewDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);

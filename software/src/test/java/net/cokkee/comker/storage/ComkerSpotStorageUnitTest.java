@@ -110,14 +110,15 @@ public class ComkerSpotStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(spotDao.count()).thenAnswer(new Answer<Integer>() {
+        when(spotDao.count(any(ComkerSpotDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return spotIdx.size();
             }
         });
 
-        when(spotDao.findAll(any(ComkerPager.class))).thenAnswer(new Answer<List<ComkerSpot>>() {
+        when(spotDao.findAll(any(ComkerSpotDTO.Filter.class),any(ComkerPager.class)))
+                .thenAnswer(new Answer<List<ComkerSpot>>() {
             @Override
             public List<ComkerSpot> answer(InvocationOnMock invocation) throws Throwable {
                 List<ComkerSpot> result = new ArrayList<ComkerSpot>(spotIdx);

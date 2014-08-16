@@ -292,14 +292,15 @@ public class ComkerUserStorageUnitTest {
             }
         }).when(userDao).collectCrew(anySet(), any(ComkerUser.class));
 
-        when(userDao.count()).thenAnswer(new Answer<Integer>() {
+        when(userDao.count(any(ComkerUserDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return userMap.size();
             }
         });
 
-        when(userDao.findAll(any(ComkerPager.class))).thenAnswer(new Answer<List<ComkerUser>>() {
+        when(userDao.findAll(any(ComkerUserDTO.Filter.class), any(ComkerPager.class)))
+                .thenAnswer(new Answer<List<ComkerUser>>() {
             @Override
             public List<ComkerUser> answer(InvocationOnMock invocation) throws Throwable {
                 List<ComkerUser> result = new ArrayList<ComkerUser>();

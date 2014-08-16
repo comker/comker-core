@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerUser;
 
@@ -13,13 +14,13 @@ import net.cokkee.comker.model.po.ComkerUser;
  */
 public interface ComkerUserDao extends ComkerAbstractDao {
 
-    Integer count();
+    Integer count(ComkerUserDTO.Filter filter);
 
-    List findAll(ComkerPager filter);
+    List findAll(ComkerUserDTO.Filter filter, ComkerPager pager);
 
     ComkerUser findWhere(Map<String,Object> params);
 
-    List findAllWhere(Map<String,Object> params, ComkerPager filter);
+    List findAllWhere(Map<String,Object> params, ComkerPager pager);
 
     Boolean exists(String id);
     

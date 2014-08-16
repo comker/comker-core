@@ -45,14 +45,26 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return getWatchdogDao().count();
+        return count(null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerWatchdogDTO> findAll(ComkerPager filter) {
+    public List<ComkerWatchdogDTO> findAll(ComkerPager pager) {
+        return findAll(null, pager);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Integer count(ComkerWatchdogDTO.Filter filter) {
+        return getWatchdogDao().count(filter);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<ComkerWatchdogDTO> findAll(ComkerWatchdogDTO.Filter filter, ComkerPager pager) {
         List<ComkerWatchdogDTO> poList = new ArrayList<ComkerWatchdogDTO>();
-        List dbList = getWatchdogDao().findAll(filter);
+        List dbList = getWatchdogDao().findAll(filter, pager);
         for(Object dbItem:dbList) {
             ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);

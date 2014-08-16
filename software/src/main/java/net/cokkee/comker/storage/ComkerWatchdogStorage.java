@@ -12,7 +12,11 @@ public interface ComkerWatchdogStorage {
 
     Integer count();
 
-    List<ComkerWatchdogDTO> findAll(ComkerPager filter);
+    List<ComkerWatchdogDTO> findAll(ComkerPager pager);
+
+    Integer count(ComkerWatchdogDTO.Filter filter);
+
+    List<ComkerWatchdogDTO> findAll(ComkerWatchdogDTO.Filter filter, ComkerPager pager);
 
     ComkerWatchdogDTO get(String id);
 

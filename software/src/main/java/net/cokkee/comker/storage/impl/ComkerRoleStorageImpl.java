@@ -59,14 +59,26 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
-        return roleDao.count();
+        return count(null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerRoleDTO> findAll(ComkerPager filter) {
+    public List<ComkerRoleDTO> findAll(ComkerPager pager) {
+        return findAll(null, pager);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public Integer count(ComkerRoleDTO.Filter filter) {
+        return roleDao.count(filter);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<ComkerRoleDTO> findAll(ComkerRoleDTO.Filter filter, ComkerPager pager) {
         List<ComkerRoleDTO> dtoList = new ArrayList<ComkerRoleDTO>();
-        List dpoList = roleDao.findAll(filter);
+        List dpoList = roleDao.findAll(filter, pager);
         for(Object dpoItem:dpoList) {
             ComkerRoleDTO dtoItem = new ComkerRoleDTO();
             ComkerDataUtil.copyProperties(dpoItem, dtoItem);

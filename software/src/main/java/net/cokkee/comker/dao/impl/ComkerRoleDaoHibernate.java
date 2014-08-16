@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import net.cokkee.comker.model.po.ComkerRole;
@@ -35,7 +36,7 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerRoleDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRole.class);
         c.setProjection(Projections.rowCount());
@@ -44,10 +45,10 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerRoleDTO.Filter filter, ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRole.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 

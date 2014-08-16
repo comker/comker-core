@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk;
@@ -43,7 +44,7 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerCrewDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerCrew.class);
         c.setProjection(Projections.rowCount());
@@ -52,10 +53,10 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerCrewDTO.Filter filter,ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerCrew.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 

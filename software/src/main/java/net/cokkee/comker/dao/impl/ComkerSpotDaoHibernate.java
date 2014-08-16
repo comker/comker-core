@@ -2,22 +2,18 @@ package net.cokkee.comker.dao.impl;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
+import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerSpot;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -33,7 +29,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count() {
+    public Integer count(ComkerSpotDTO.Filter filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
         c.setProjection(Projections.rowCount());
@@ -42,10 +38,10 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerSpotDTO.Filter filter,ComkerPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
-        ComkerPager.apply(c, filter);
+        ComkerPager.apply(c, pager);
         return c.list();
     }
 
@@ -108,7 +104,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
         Session session = this.getSessionFactory().getCurrentSession();
 
         if (getByCode(item.getCode()) != null) {
-            throw new ComkerFieldDuplicatedException(400, "Spot has already existed");
+            throw new ComkerFieldDuplicatedException("Spot has already existed");
         }
 
         session.save(item);

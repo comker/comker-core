@@ -18,19 +18,11 @@ public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
 
     private ComkerPermissionDao permissionDao = null;
 
-    public ComkerPermissionDao getPermissionDao() {
-        return permissionDao;
-    }
-
     public void setPermissionDao(ComkerPermissionDao permissionDao) {
         this.permissionDao = permissionDao;
     }
 
     private ComkerToolboxService toolboxService = null;
-
-    public ComkerToolboxService getToolboxService() {
-        return toolboxService;
-    }
 
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
@@ -38,13 +30,23 @@ public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
 
     @Override
     public Integer count() {
-        return getPermissionDao().count();
+        return count(null);
     }
 
     @Override
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerPager pager) {
+        return findAll(null, pager);
+    }
+
+    @Override
+    public Integer count(ComkerPermissionDTO.Filter filter) {
+        return permissionDao.count(filter);
+    }
+
+    @Override
+    public List findAll(ComkerPermissionDTO.Filter filter, ComkerPager pager) {
         List<ComkerPermissionDTO> polist = new ArrayList<ComkerPermissionDTO>();
-        List dblist = getPermissionDao().findAll(filter);
+        List dblist = permissionDao.findAll(filter, pager);
         for(Object dbitem:dblist) {
             ComkerPermissionDTO poitem = new ComkerPermissionDTO();
             ComkerDataUtil.copyProperties(dbitem, poitem);
@@ -55,7 +57,7 @@ public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
 
     @Override
     public ComkerPermissionDTO get(String id) {
-        ComkerPermission dbItem = getPermissionDao().get(id);
+        ComkerPermission dbItem = permissionDao.get(id);
         ComkerPermissionDTO poitem = new ComkerPermissionDTO();
         ComkerDataUtil.copyProperties(dbItem, poitem);
         return poitem;
@@ -63,7 +65,7 @@ public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
 
     @Override
     public ComkerPermissionDTO getByAuthority(String authority) {
-        ComkerPermission dbItem = getPermissionDao().getByAuthority(authority);
+        ComkerPermission dbItem = permissionDao.getByAuthority(authority);
         ComkerPermissionDTO poitem = new ComkerPermissionDTO();
         ComkerDataUtil.copyProperties(dbItem, poitem);
         return poitem;

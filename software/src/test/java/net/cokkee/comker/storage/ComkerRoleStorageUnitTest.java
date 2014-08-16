@@ -108,14 +108,15 @@ public class ComkerRoleStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(roleDao.count()).thenAnswer(new Answer<Integer>() {
+        when(roleDao.count(any(ComkerRoleDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return roleIdx.size();
             }
         });
 
-        when(roleDao.findAll(any(ComkerPager.class))).thenAnswer(new Answer<List<ComkerRole>>() {
+        when(roleDao.findAll(any(ComkerRoleDTO.Filter.class), any(ComkerPager.class)))
+                .thenAnswer(new Answer<List<ComkerRole>>() {
             @Override
             public List<ComkerRole> answer(InvocationOnMock invocation) throws Throwable {
                 List<ComkerRole> result = new ArrayList<ComkerRole>(roleIdx);

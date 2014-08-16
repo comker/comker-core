@@ -14,7 +14,11 @@ public interface ComkerUserStorage {
 
     Integer count();
 
-    List<ComkerUserDTO> findAll(ComkerPager filter);
+    List<ComkerUserDTO> findAll(ComkerPager pager);
+
+    Integer count(ComkerUserDTO.Filter filter);
+
+    List<ComkerUserDTO> findAll(ComkerUserDTO.Filter filter, ComkerPager pager);
 
     ComkerUserDTO get(String id);
 

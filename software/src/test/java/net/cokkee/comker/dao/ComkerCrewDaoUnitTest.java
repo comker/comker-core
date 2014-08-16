@@ -102,12 +102,12 @@ public class ComkerCrewDaoUnitTest {
 
     @Test
     public void test_count() {
-        Assert.assertTrue(testCrewDao.count() == crewIds.length);
+        Assert.assertTrue(testCrewDao.count(null) == crewIds.length);
     }
 
     @Test
     public void test_list_all() {
-        List<ComkerCrew> list = testCrewDao.findAll(null);
+        List<ComkerCrew> list = testCrewDao.findAll(null, null);
         Assert.assertTrue(list.size() == crewIds.length);
 
         int count = 0;
@@ -124,7 +124,7 @@ public class ComkerCrewDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerCrew> list = testCrewDao.findAll(new ComkerPager(1, 3));
+        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getName(), "Crew 02");
         Assert.assertEquals(list.get(2).getName(), "Crew 04");
@@ -132,7 +132,7 @@ public class ComkerCrewDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerCrew> list = testCrewDao.findAll(new ComkerPager(4, 10));
+        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getName(), "Crew 05");
     }
@@ -188,7 +188,7 @@ public class ComkerCrewDaoUnitTest {
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();
         
-        int currentCount = testCrewDao.count();
+        int currentCount = testCrewDao.count(null);
         Assert.assertTrue(currentCount == crewIds.length);
 
         ComkerCrew item = new ComkerCrew("Crew 06", "Description Crew 06");
@@ -200,7 +200,7 @@ public class ComkerCrewDaoUnitTest {
                 (ComkerRole) session.get(ComkerRole.class, roleIds[3])));
         testCrewDao.create(item);
 
-        Assert.assertTrue(testCrewDao.count() == currentCount + 1);
+        Assert.assertTrue(testCrewDao.count(null) == currentCount + 1);
         
         ComkerCrew result = testCrewDao.getByName("Crew 06");
         Assert.assertTrue(result.getCrewJoinGlobalRoleList().size() == 3);
@@ -229,6 +229,6 @@ public class ComkerCrewDaoUnitTest {
     public void test_delete() {
         testCrewDao.delete(testCrewDao.getByName("Crew 03"));
         Assert.assertNull(testCrewDao.getByName("Crew 03"));
-        Assert.assertTrue(testCrewDao.count() == (crewIds.length - 1));
+        Assert.assertTrue(testCrewDao.count(null) == (crewIds.length - 1));
     }
 }
