@@ -250,4 +250,58 @@ public class ComkerCrewResourceUnitTest {
         Response resp = crewClient.getCrewItem("ID_INVALID");
         Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
     }
+
+    @Test
+    public void test_create_crew() {
+        int position = crewMap.size();
+        ComkerCrewDTO source = new ComkerCrewDTO(
+                "Crew " + position,
+                "Description of crew " + position);
+
+        Response resp = crewClient.createCrewItem(source);
+        Assert.assertTrue(resp.getStatus() == 200);
+
+        ComkerCrewDTO result = resp.readEntity(ComkerCrewDTO.class);
+        Assert.assertTrue(result.getId().length() > 0);
+        Assert.assertEquals(source.getName(), result.getName());
+        Assert.assertEquals(source.getDescription(), result.getDescription());
+    }
+
+    @Test
+    public void test_update_crew() {
+        ComkerCrewDTO source = crewMap.get(crewIdx.get(5));
+
+        ComkerCrewDTO actual = new ComkerCrewDTO(
+                source.getName() + " - updated",
+                source.getDescription());
+        actual.setId(source.getId());
+        actual.setGlobalRoleIds(new String[] {
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString()});
+
+        Response resp = crewClient.updateCrewItem(source.getId(), actual);
+        Assert.assertTrue(resp.getStatus() == 200);
+        ComkerCrewDTO result = resp.readEntity(ComkerCrewDTO.class);
+
+        assertEquals(actual, result);
+    }
+
+    @Test
+    public void test_delete_crew() {
+        ComkerCrewDTO source = crewMap.get(crewIdx.get(5));
+
+        Response resp = crewClient.deleteCrewItem(source.getId());
+        Assert.assertTrue(resp.getStatus() == 200);
+        ComkerCrewDTO result = resp.readEntity(ComkerCrewDTO.class);
+
+        assertEquals(source, result);
+    }
+
+    private void assertEquals(ComkerCrewDTO source, ComkerCrewDTO result) {
+        Assert.assertTrue(result.getId().length() > 0);
+        Assert.assertEquals(source.getName(), result.getName());
+        Assert.assertEquals(source.getDescription(), result.getDescription());
+
+        Assert.assertThat(source.getGlobalRoleIds(), CoreMatchers.is(result.getGlobalRoleIds()));
+    }
 }

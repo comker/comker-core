@@ -31,11 +31,56 @@ public interface ComkerCrewResource {
     @ApiOperation(
         value = "Find crew by ID",
         notes = "Returns a crew by ID (UUID)",
-    response = ComkerCrewDTO.class)
+        response = ComkerCrewDTO.class)
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = "Invalid ID supplied"),
         @ApiResponse(code = 404, message = "Crew not found")})
     public Response getCrewItem(
             @ApiParam(value = "ID of crew that needs to be fetched", required = true)
+            @javax.ws.rs.PathParam("id") String id);
+
+    @javax.ws.rs.POST
+    @javax.ws.rs.Path("/crud")
+    @javax.ws.rs.Consumes({MediaType.APPLICATION_JSON})
+    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(
+        value = "Add a new crew to the database",
+        response = ComkerCrewDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 409, message = "Duplicated input")})
+    public Response createCrewItem(
+            @ApiParam(value = "Crew object that needs to be added to the store", required = true)
+            ComkerCrewDTO item);
+
+    @javax.ws.rs.PUT
+    @javax.ws.rs.Path("/crud/{id}")
+    @javax.ws.rs.Consumes({MediaType.APPLICATION_JSON})
+    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(
+        value = "Update an existing crew",
+        response = ComkerCrewDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 400, message = "Invalid ID supplied"),
+        @ApiResponse(code = 404, message = "Crew not found"),
+        @ApiResponse(code = 405, message = "Validation exception")})
+    public Response updateCrewItem(
+            @ApiParam(value = "ID of crew that needs to be updated", required = true)
+            @javax.ws.rs.PathParam("id")
+                String id,
+            @ApiParam(value = "Crew object that needs to be updated", required = true)
+                ComkerCrewDTO item);
+
+    @javax.ws.rs.DELETE
+    @javax.ws.rs.Path("/crud/{id}")
+    @javax.ws.rs.Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(
+        value = "Delete an existing crew",
+        response = ComkerCrewDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 400, message = "Invalid ID supplied"),
+        @ApiResponse(code = 404, message = "Crew not found"),
+        @ApiResponse(code = 405, message = "Access database failure")})
+    public Response deleteCrewItem(
+            @ApiParam(value = "ID of crew that needs to be deleted", required = true)
             @javax.ws.rs.PathParam("id") String id);
 }
