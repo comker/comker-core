@@ -21,4 +21,6 @@ public interface ComkerPermissionStorage {
     ComkerPermissionDTO get(String id);
 
     ComkerPermissionDTO getByAuthority(String authority);
+
+    ComkerPermissionDTO create(ComkerPermissionDTO item);
 }

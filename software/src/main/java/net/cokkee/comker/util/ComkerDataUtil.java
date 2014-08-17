@@ -17,6 +17,16 @@ public class ComkerDataUtil {
 
     //--------------------------------------------------------------------------
 
+    public static final String AUTHORITY_PATTERN =
+            "^[A-Z][A-Z0-9_]{0,31}$";
+
+    public static boolean verifyAuthority(String authority) {
+        if (authority == null) return false;
+        return authority.matches(AUTHORITY_PATTERN);
+    }
+
+    //--------------------------------------------------------------------------
+
     public static final String CODE_PATTERN =
             "^[A-Z0-9_\\-]{1,32}$";
 

@@ -9,13 +9,23 @@ import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
+import net.cokkee.comker.validation.ComkerPermissionValidator;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author drupalex
  */
-public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
+public class ComkerPermissionStorageImpl extends ComkerAbstractStorageImpl
+        implements ComkerPermissionStorage {
 
+    private ComkerPermissionValidator permissionValidator = null;
+
+    public void setPermissionValidator(ComkerPermissionValidator permissionValidator) {
+        this.permissionValidator = permissionValidator;
+    }
+    
     private ComkerPermissionDao permissionDao = null;
 
     public void setPermissionDao(ComkerPermissionDao permissionDao) {
@@ -70,5 +80,18 @@ public class ComkerPermissionStorageImpl implements ComkerPermissionStorage {
         ComkerDataUtil.copyProperties(dbItem, poitem);
         return poitem;
     }
-    
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public ComkerPermissionDTO create(ComkerPermissionDTO item) {
+        invokeValidator(permissionValidator, item);
+
+        ComkerPermission dbItem = new ComkerPermission();
+        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem = permissionDao.save(dbItem);
+
+        ComkerPermissionDTO poItem = new ComkerPermissionDTO();
+        ComkerDataUtil.copyProperties(dbItem, poItem);
+        return poItem;
+    }
 }

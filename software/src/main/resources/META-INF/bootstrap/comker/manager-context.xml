@@ -44,6 +44,7 @@
 
     <bean id="comkerPermissionStorage"
             class="net.cokkee.comker.storage.impl.ComkerPermissionStorageImpl">
+        <property name="permissionValidator" ref="comkerPermissionValidator" />
         <property name="permissionDao" ref="comkerPermissionDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
@@ -82,5 +83,10 @@
             class="net.cokkee.comker.validation.ComkerUserValidator">
         <property name="userDao" ref="comkerUserDao" />
         <property name="crewDao" ref="comkerCrewDao" />
+    </bean>
+
+    <bean id="comkerPermissionValidator"
+            class="net.cokkee.comker.validation.ComkerPermissionValidator">
+        <property name="permissionDao" ref="comkerPermissionDao" />
     </bean>
 </beans>

@@ -150,6 +150,7 @@ software/src/main/java/net/cokkee/comker/util/ComkerBootstrapPublisher.java -tex
 software/src/main/java/net/cokkee/comker/util/ComkerDataUtil.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerAbstractValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerCrewValidator.java -text
+software/src/main/java/net/cokkee/comker/validation/ComkerPermissionValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerRoleValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerSpotValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerUserValidator.java -text
@@ -218,6 +219,7 @@ software/src/test/java/net/cokkee/comker/storage/ComkerSettingStorageUnitTest.ja
 software/src/test/java/net/cokkee/comker/storage/ComkerSpotStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerUserStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerCrewValidatorUnitTest.java -text
+software/src/test/java/net/cokkee/comker/validation/ComkerPermissionValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerRoleValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerSpotValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerUserValidatorUnitTest.java -text
