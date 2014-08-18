@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:cxf="http://cxf.apache.org/core"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core
+        http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:net/cokkee/comker/stories/ComkerAbstractScenario.xml" />
+
+    <bean id="rac" class="net.cokkee.comker.stories.ComkerRestAssuredConfig">
+        <property name="serverAddress" value="${server.address}/role"/>
+    </bean>
+
+    <jaxrs:server id="comkerRoleJaxrsServer" address="${server.address}/role">
+        <jaxrs:serviceBeans>
+            <ref bean="comkerRoleResource" />
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="comkerJaxbProvider" />
+            <ref bean="comkerJsonProvider" />
+            <ref bean="comkerExceptionMapper" />
+        </jaxrs:providers>
+        <jaxrs:features>
+            <cxf:logging/>
+        </jaxrs:features>
+    </jaxrs:server>
+
+    <bean id="comkerManageRoleSteps"
+            class="net.cokkee.comker.stories.steps.ComkerManageRoleSteps"/>
+</beans>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:cxf="http://cxf.apache.org/core"
+  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/core
+        http://cxf.apache.org/schemas/core.xsd
+        http://cxf.apache.org/jaxrs
+        http://cxf.apache.org/schemas/jaxrs.xsd">
+
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-http-jetty.xml" />
+
+    <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/interceptor-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/manager-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/cxf-context.xml" />
+
+    <context:annotation-config />
+    
+    <bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:/net/cokkee/comker/stories/test.properties" />
+	</bean>
+
+    <util:properties id="comkerHibernateProperties">
+        <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+        <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+        <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+    </util:properties>
+
+    <bean id="globalDataSource" name="comkerDataSource"
+            class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+</beans>

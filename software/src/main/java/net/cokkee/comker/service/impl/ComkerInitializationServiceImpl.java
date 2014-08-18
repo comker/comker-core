@@ -34,19 +34,11 @@ public class ComkerInitializationServiceImpl
 
     private ComkerUserDao userDao = null;
 
-    public ComkerUserDao getUserDao() {
-        return userDao;
-    }
-
     public void setUserDao(ComkerUserDao userDao) {
         this.userDao = userDao;
     }
 
     private ComkerSpotDao spotDao = null;
-
-    public ComkerSpotDao getSpotDao() {
-        return spotDao;
-    }
 
     public void setSpotDao(ComkerSpotDao spotDao) {
         this.spotDao = spotDao;
@@ -54,19 +46,11 @@ public class ComkerInitializationServiceImpl
 
     private ComkerSettingDao settingDao = null;
 
-    public ComkerSettingDao getSettingDao() {
-        return settingDao;
-    }
-
     public void setSettingDao(ComkerSettingDao settingDao) {
         this.settingDao = settingDao;
     }
 
     private ComkerCrewDao crewDao = null;
-
-    public ComkerCrewDao getCrewDao() {
-        return crewDao;
-    }
 
     public void setCrewDao(ComkerCrewDao crewDao) {
         this.crewDao = crewDao;
@@ -74,19 +58,11 @@ public class ComkerInitializationServiceImpl
 
     private ComkerRoleDao roleDao = null;
 
-    public ComkerRoleDao getRoleDao() {
-        return roleDao;
-    }
-
     public void setRoleDao(ComkerRoleDao roleDao) {
         this.roleDao = roleDao;
     }
 
     private ComkerPermissionDao permissionDao = null;
-
-    public ComkerPermissionDao getPermissionDao() {
-        return permissionDao;
-    }
 
     public void setPermissionDao(ComkerPermissionDao permissionDao) {
         this.permissionDao = permissionDao;
@@ -95,20 +71,12 @@ public class ComkerInitializationServiceImpl
 
     private ComkerNavbarDao navbarDao = null;
 
-    public ComkerNavbarDao getNavbarDao() {
-        return navbarDao;
-    }
-
     public void setNavbarDao(ComkerNavbarDao navbarDao) {
         this.navbarDao = navbarDao;
     }
 
 
     private MessageDigestPasswordEncoder passwordEncoder = null;
-
-    public MessageDigestPasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
-    }
 
     public void setPasswordEncoder(MessageDigestPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
@@ -157,21 +125,21 @@ public class ComkerInitializationServiceImpl
 
         // -- init Application settings
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_APPLICATION_TITLE, ComkerSettingKey.TYPE_STRING, "");
-        getSettingDao().define(spotUnknown, userUnknown, sKey, "Application Title");
+        settingDao.define(spotUnknown, userUnknown, sKey, "Application Title");
 
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_APPLICATION_MESSAGE, ComkerSettingKey.TYPE_STRING, "");
-        getSettingDao().define(spotUnknown, userUnknown, sKey, "Welcome to Application");
+        settingDao.define(spotUnknown, userUnknown, sKey, "Welcome to Application");
 
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_APPLICATION_PAGER_SIZE, ComkerSettingKey.TYPE_LIST, "");
-        getSettingDao().define(spotUnknown, userUnknown, sKey, "10,50,100");
+        settingDao.define(spotUnknown, userUnknown, sKey, "10,50,100");
 
         // -- init Default spot settings
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_SPOT_THEME, ComkerSettingKey.TYPE_STRING, "");
-        getSettingDao().define(spotDefault, userUnknown, sKey, "cokkee");
+        settingDao.define(spotDefault, userUnknown, sKey, "cokkee");
 
         // -- init Default spot/user settings
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_USER_LANGUAGE, ComkerSettingKey.TYPE_STRING, "");
-        getSettingDao().define(spotDefault, userDefault, sKey, "vi");
+        settingDao.define(spotDefault, userDefault, sKey, "vi");
 
         // init permissions
         ComkerPermission permAllSysa = getOrCreatePermission("PERM_COMKER_SYSA");
@@ -187,12 +155,12 @@ public class ComkerInitializationServiceImpl
 
         // init roles
         ComkerRole roleAdm = getAdministratorRole();
-        getRoleDao().addPermission(roleAdm, permAdmUser);
-        getRoleDao().addPermission(roleAdm, permAdmSpot);
-        getRoleDao().addPermission(roleAdm, permAdmCrew);
-        getRoleDao().addPermission(roleAdm, permAdmRole);
-        getRoleDao().addPermission(roleAdm, permAdmPermission);
-        getRoleDao().addPermission(roleAdm, permAdmSetting);
+        roleDao.addPermission(roleAdm, permAdmUser);
+        roleDao.addPermission(roleAdm, permAdmSpot);
+        roleDao.addPermission(roleAdm, permAdmCrew);
+        roleDao.addPermission(roleAdm, permAdmRole);
+        roleDao.addPermission(roleAdm, permAdmPermission);
+        roleDao.addPermission(roleAdm, permAdmSetting);
 
         ComkerRole roleMgr = getManagerRole();
 
@@ -208,16 +176,16 @@ public class ComkerInitializationServiceImpl
         ComkerUser userAdmin = getOrCreateUser(
                 "admin@cokkee.net",
                 "admin",
-                getPasswordEncoder().encodePassword("dobietday", null),
+                passwordEncoder.encodePassword("dobietday", null),
                 "Administrator");
-        getUserDao().addCrew(userAdmin, crewAdmins);
+        userDao.addCrew(userAdmin, crewAdmins);
 
         ComkerUser userGuest = getOrCreateUser(
                 "guest@cokkee.net",
                 "guest",
-                getPasswordEncoder().encodePassword("nopassword", null),
+                passwordEncoder.encodePassword("nopassword", null),
                 "Guest");
-        getUserDao().addCrew(userGuest, crewGuests);
+        userDao.addCrew(userGuest, crewGuests);
 
         //this.initComkerNavbars();
     }
@@ -237,12 +205,12 @@ public class ComkerInitializationServiceImpl
         String value = null;
 
         key = getOrCreateSettingKey(ComkerSettingKey.CODE_SPOT_THEME, ComkerSettingKey.TYPE_STRING, "");
-        value = getSettingDao().getValue(spotDefault, userUnknown, key);
-        getSettingDao().define(spot, userUnknown, key, value);
+        value = settingDao.getValue(spotDefault, userUnknown, key);
+        settingDao.define(spot, userUnknown, key, value);
 
         key = getOrCreateSettingKey(ComkerSettingKey.CODE_USER_LANGUAGE, ComkerSettingKey.TYPE_STRING, "");
-        value = getSettingDao().getValue(spotDefault, userDefault, key);
-        getSettingDao().define(spot, userDefault, key, value);
+        value = settingDao.getValue(spotDefault, userDefault, key);
+        settingDao.define(spot, userDefault, key, value);
 
         // -- init crews (groups)
         ComkerRole roleMgr = getManagerRole();
@@ -272,12 +240,12 @@ public class ComkerInitializationServiceImpl
         String value = null;
 
         key = getOrCreateSettingKey(ComkerSettingKey.CODE_USER_LANGUAGE, ComkerSettingKey.TYPE_STRING, "");
-        value = getSettingDao().getValue(spot, userDefault, key);
-        getSettingDao().define(spot, user, key, value);
+        value = settingDao.getValue(spot, userDefault, key);
+        settingDao.define(spot, user, key, value);
 
         // init user group
         ComkerCrew crew = getOrCreateCrew(spot, role);
-        getUserDao().addCrew(user, crew);
+        userDao.addCrew(user, crew);
     }
 
     @Override
@@ -295,8 +263,8 @@ public class ComkerInitializationServiceImpl
         ComkerRole roleMgr = getManagerRole();
 
         ComkerRole roleMbr = getMemberRole();
-        getRoleDao().addPermission(roleMbr, permSmpPlanOwner);
-        getRoleDao().addPermission(roleMbr, permSmpPlanShared);
+        roleDao.addPermission(roleMbr, permSmpPlanOwner);
+        roleDao.addPermission(roleMbr, permSmpPlanShared);
     }
 
     @Override
@@ -309,61 +277,61 @@ public class ComkerInitializationServiceImpl
         ComkerRole roleMgr = getManagerRole();
         ComkerRole roleMbr = getMemberRole();
 
-        ComkerSpot spotBnho = getOrCreateSpot("buocnho.com", "Buocnho Training & Technology", "");
+        ComkerSpot spotBnho = getOrCreateSpot("BUOCNHO_COM", "Buocnho Training & Technology", "");
         initDefaultSpot(spotBnho);
 
         ComkerUser userBnho0 = getOrCreateUser(
                 "manager@buocnho.com",
                 "BNA00000",
-                getPasswordEncoder().encodePassword("dobietday", null),
+                passwordEncoder.encodePassword("dobietday", null),
                 "Buocnho Manager");
         initDefaultUser(userBnho0, spotBnho, roleMgr);
 
         ComkerUser userBnho1 = getOrCreateUser(
                 "member1@buocnho.com",
                 "BNA00001",
-                getPasswordEncoder().encodePassword("nopassword", null),
+                passwordEncoder.encodePassword("nopassword", null),
                 "Buocnho Member One");
         initDefaultUser(userBnho1, spotBnho, roleMbr);
 
         ComkerUser userBnho2 = getOrCreateUser(
                 "member2@buocnho.com",
                 "BNA00002",
-                getPasswordEncoder().encodePassword("nopassword", null),
+                passwordEncoder.encodePassword("nopassword", null),
                 "Buocnho Member Two");
         initDefaultUser(userBnho2, spotBnho, roleMbr);
 
-        ComkerSpot spotPctu = getOrCreateSpot("pctu.edu.vn", "Đại học Phan Châu Trinh - Hội An", "");
+        ComkerSpot spotPctu = getOrCreateSpot("PCTU_EDU_VN", "Đại học Phan Châu Trinh - Hội An", "");
         initDefaultSpot(spotPctu);
 
         ComkerUser userPctu0 = getOrCreateUser(
                 "manager@pctu.edu.vn",
                 "PCT00000",
-                getPasswordEncoder().encodePassword("dobietday", null),
+                passwordEncoder.encodePassword("dobietday", null),
                 "Pctu Manager");
         initDefaultUser(userPctu0, spotPctu, roleMgr);
 
         ComkerUser userPctu1 = getOrCreateUser(
                 "member1@pctu.edu.vn",
                 "PCT00001",
-                getPasswordEncoder().encodePassword("nopassword", null),
+                passwordEncoder.encodePassword("nopassword", null),
                 "Pctu Member One");
         initDefaultUser(userPctu1, spotPctu, roleMbr);
 
         ComkerUser userPctu2 = getOrCreateUser(
                 "member2@pctu.edu.vn",
                 "PCT00002",
-                getPasswordEncoder().encodePassword("nopassword", null),
+                passwordEncoder.encodePassword("nopassword", null),
                 "Pctu Member Two");
         initDefaultUser(userPctu2, spotPctu, roleMbr);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerSpot getOrCreateSpot(String code, String name, String description) {
-        ComkerSpot item = getSpotDao().getByCode(code);
+        ComkerSpot item = spotDao.getByCode(code);
         if (item == null) {
             item = new ComkerSpot(code, name, description);
-            getSpotDao().create(item);
+            spotDao.create(item);
         }
         return item;
     }
@@ -381,10 +349,10 @@ public class ComkerInitializationServiceImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerUser getOrCreateUser(String email, String username, String password, String fullname){
-        ComkerUser item = getUserDao().getByUsername(username);
+        ComkerUser item = userDao.getByUsername(username);
         if (item == null) {
             item = new ComkerUser(email, username, password, fullname);
-            getUserDao().create(item);
+            userDao.create(item);
         }
         return item;
     }
@@ -402,10 +370,10 @@ public class ComkerInitializationServiceImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerSettingKey getOrCreateSettingKey(String code, String type, String range) {
-        ComkerSettingKey item = getSettingDao().getByCode(code);
+        ComkerSettingKey item = settingDao.getByCode(code);
         if (item == null) {
             item = new ComkerSettingKey(code, type, range);
-            getSettingDao().create(item);
+            settingDao.create(item);
         }
         return item;
     }
@@ -413,11 +381,11 @@ public class ComkerInitializationServiceImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerCrew getOrCreateCrew(ComkerSpot spot, ComkerRole role, String name, String description) {
-        ComkerCrew item = getCrewDao().getBySpotWithRole(spot, role);
+        ComkerCrew item = crewDao.getBySpotWithRole(spot, role);
         if (item == null) {
             item = new ComkerCrew(name, description);
-            getCrewDao().save(item);
-            getCrewDao().addRoleWithSpot(item, role, spot);
+            crewDao.save(item);
+            crewDao.addRoleWithSpot(item, role, spot);
         }
         return item;
     }
@@ -427,11 +395,11 @@ public class ComkerInitializationServiceImpl
         Assert.notNull(spot, "Spot should be not null");
         Assert.notNull(role, "Role should be not null");
 
-        ComkerCrew item = getCrewDao().getBySpotWithRole(spot, role);
+        ComkerCrew item = crewDao.getBySpotWithRole(spot, role);
         if (item == null) {
             item = new ComkerCrew(role.getCode() + " group of [" + spot.getName() + "]", "");
-            getCrewDao().save(item);
-            getCrewDao().addRoleWithSpot(item, role, spot);
+            crewDao.save(item);
+            crewDao.addRoleWithSpot(item, role, spot);
         }
         return item;
     }
@@ -439,10 +407,10 @@ public class ComkerInitializationServiceImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerRole getOrCreateRole(String code, String name, String description) {
-        ComkerRole item = getRoleDao().getByCode(code);
+        ComkerRole item = roleDao.getByCode(code);
         if (item == null) {
             item = new ComkerRole(code, name, description);
-            getRoleDao().create(item);
+            roleDao.create(item);
         }
         return item;
     }
@@ -470,10 +438,10 @@ public class ComkerInitializationServiceImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     private ComkerPermission getOrCreatePermission(String authority) {
-        ComkerPermission item = getPermissionDao().getByAuthority(authority);
+        ComkerPermission item = permissionDao.getByAuthority(authority);
         if (item == null) {
             item = new ComkerPermission(authority);
-            getPermissionDao().save(item);
+            permissionDao.save(item);
         }
         return item;
     }
@@ -483,14 +451,14 @@ public class ComkerInitializationServiceImpl
     private void initComkerNavbars() {
         ComkerNavbarNode nodeRoot = new ComkerNavbarNode("__NAVBAR_ROOT__", null, 
                 new String[] {"PERM_COMKER_GUEST"});
-        nodeRoot = getNavbarDao().create(nodeRoot);
+        nodeRoot = navbarDao.create(nodeRoot);
 
         ComkerNavbarNode parent = nodeRoot;
         ComkerNavbarNode node = new ComkerNavbarNode("home", "#", 
                 new String[] {"PERM_COMKER_GUEST"});
         parent.getChildren().add(node);
         node.setParent(parent);
-        node = getNavbarDao().create(node);
+        node = navbarDao.create(node);
 
         // Administration sub-menu
         parent = nodeRoot;
@@ -501,7 +469,7 @@ public class ComkerInitializationServiceImpl
                     "PERM_COMKER_ADM_SPOT"});
         parent.getChildren().add(node);
         node.setParent(parent);
-        node = getNavbarDao().create(node);
+        node = navbarDao.create(node);
 
         parent = node;
 
@@ -511,7 +479,7 @@ public class ComkerInitializationServiceImpl
                     "PERM_COMKER_ADM_USER"});
         parent.getChildren().add(node);
         node.setParent(parent);
-        node = getNavbarDao().create(node);
+        node = navbarDao.create(node);
 
         node = new ComkerNavbarNode("administration.crewList", "#crew/list",
                 new String[] {
@@ -519,7 +487,7 @@ public class ComkerInitializationServiceImpl
                     "PERM_COMKER_ADM_CREW"});
         parent.getChildren().add(node);
         node.setParent(parent);
-        node = getNavbarDao().create(node);
+        node = navbarDao.create(node);
 
         // Tools sub-menu
     }
