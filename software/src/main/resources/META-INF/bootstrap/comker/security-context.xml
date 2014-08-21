@@ -37,7 +37,7 @@
         
         <!-- Form login support -->
         <security:custom-filter before="FORM_LOGIN_FILTER" ref="comkerAjaxFormLoginFilter"/>
-        
+
         <security:form-login
                 login-page="/comker/#auth/login"
                 login-processing-url="/login"
@@ -309,10 +309,6 @@
             <security:password-encoder hash="md5"/>
         </security:authentication-provider>
     </security:authentication-manager>
-
-    <bean id="comkerPasswordEncoder"
-            class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
-    </bean>
 
     <bean id="comkerUserDetailsService"
             class="net.cokkee.comker.service.ComkerUserDetailsService">

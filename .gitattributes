@@ -118,6 +118,8 @@ software/src/main/java/net/cokkee/comker/service/ComkerSecurityService.java -tex
 software/src/main/java/net/cokkee/comker/service/ComkerSessionService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerToolboxService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerUserDetailsService.java -text
+software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationCommonImpl.java -text
+software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationSampleData.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerLocaleMessageServiceImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerSecurityContextHolderImpl.java -text

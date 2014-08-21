@@ -11,7 +11,8 @@
     <bean id="comkerBeanPostPublisher" class="net.cokkee.comker.util.ComkerBootstrapPublisher" />
 
     <bean id="comkerBeanPostInitializer" class="net.cokkee.comker.util.ComkerBootstrapInitializer">
-        <property name="initializationService" ref="comkerInitializationService"/>
+        <property name="defaultInitializationService" ref="comkerInitializationService" />
+        <property name="initializationServices" ref="comkerInitializationServiceList" />
     </bean>
 
     <bean id="comkerTaskExecutor"
@@ -22,19 +23,19 @@
     </bean>
 
     <bean id="comkerInitializationService"
-            class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="proxyInterfaces">
-            <value>net.cokkee.comker.service.ComkerInitializationService</value>
-        </property>
-        <property name="interceptorNames">
-            <list>
-            </list>
-        </property>
-        <property name="target" ref="comkerInitializationServiceImpl" />
-    </bean>
-    
-    <bean id="comkerInitializationServiceImpl"
             class="net.cokkee.comker.service.impl.ComkerInitializationServiceImpl">
+        <property name="userDao" ref="comkerUserDao" />
+        <property name="spotDao" ref="comkerSpotDao" />
+        <property name="settingDao" ref="comkerSettingDao" />
+        <property name="crewDao" ref="comkerCrewDao" />
+        <property name="roleDao" ref="comkerRoleDao" />
+        <property name="permissionDao" ref="comkerPermissionDao" />
+        <property name="navbarDao" ref="comkerNavbarDao" />
+        <property name="passwordEncoder" ref="comkerPasswordEncoder" />
+    </bean>
+
+    <bean id="comkerInitializationSampleData"
+            class="net.cokkee.comker.service.impl.ComkerInitializationSampleData">
         <property name="userDao" ref="comkerUserDao" />
         <property name="spotDao" ref="comkerSpotDao" />
         <property name="settingDao" ref="comkerSettingDao" />
@@ -74,5 +75,9 @@
         <property name="basename">
             <value>messages</value>
         </property>
+    </bean>
+
+    <bean id="comkerPasswordEncoder"
+            class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
     </bean>
 </beans>

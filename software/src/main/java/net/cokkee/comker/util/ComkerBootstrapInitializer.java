@@ -1,5 +1,6 @@
 package net.cokkee.comker.util;
 
+import java.util.List;
 import net.cokkee.comker.service.ComkerInitializationService;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
@@ -9,20 +10,28 @@ import org.springframework.core.Ordered;
  */
 public class ComkerBootstrapInitializer implements ApplicationListener<ComkerBootstrapEvent>, Ordered {
 
-    private ComkerInitializationService initializationService;
+    private ComkerInitializationService defaultInitializationService;
 
-    public ComkerInitializationService getInitializationService() {
-        return initializationService;
+    public void setDefaultInitializationService(ComkerInitializationService initializationService) {
+        this.defaultInitializationService = initializationService;
     }
 
-    public void setInitializationService(ComkerInitializationService initializationService) {
-        this.initializationService = initializationService;
+    private List<ComkerInitializationService> initializationServices;
+
+    public void setInitializationServices(List<ComkerInitializationService> initializationServices) {
+        this.initializationServices = initializationServices;
     }
 
     @Override
     public void onApplicationEvent(ComkerBootstrapEvent e) {
-        getInitializationService().initComkerApplication();
-        getInitializationService().initDemonstrationData();
+        if (defaultInitializationService != null) {
+            defaultInitializationService.init();
+        }
+        if (initializationServices != null) {
+            for(ComkerInitializationService service:initializationServices) {
+                service.init();
+            }
+        }
     }
 
     @Override

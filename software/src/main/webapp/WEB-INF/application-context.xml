@@ -28,6 +28,11 @@
         </property>
     </bean>
 
+    <util:list id="comkerInitializationServiceList"
+            value-type="net.cokkee.comker.service.ComkerInitializationService">
+        <ref bean="comkerInitializationSampleData" />
+    </util:list>
+
     <util:properties id="comkerHibernateProperties">
         <prop key="hibernate.dialect">${hibernate.dialect}</prop>
         <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
