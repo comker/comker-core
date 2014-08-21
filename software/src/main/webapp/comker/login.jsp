@@ -10,21 +10,21 @@
     <body>
         <div id="LoginPanel">
             <div class="section">
-                <form action="../j_spring_security_check" method="post">
+                <form action="../login" method="post">
                     <div class="field">
                         <label for="j_username">Username:</label>
-                        <input type="text" name="j_username" id="j_username" value="BNA00001"/>
+                        <input type="text" name="username" id="j_username" value="BNA00001"/>
                     </div>
                     <div class="field">
                         <label for="j_password">Password:</label>
-                        <input type="password" name="j_password" id="j_password" />
+                        <input type="password" name="password" id="j_password" />
                     </div>
                     <div class="field">
                         <label for="remember_me">Remember Me:</label>
                         <input type="checkbox" name="_spring_security_remember_me" id="remember_me" />
                     </div>
                     <div class="button">
-                        <input name="submit" id="submit" type="submit" value="<fmt:message key="button.login"/>" />
+                        <input name="submit" id="submit" type="submit" value="Login" />
                     </div>
                 </form>
             </div>
