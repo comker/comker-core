@@ -18,8 +18,10 @@
         <spring.version>3.1.2.RELEASE</spring.version>
         <spring.security.version>3.1.2.RELEASE</spring.security.version>
         <aspectj.version>1.6.5.RELEASE</aspectj.version>
-        <cxf.version>2.7.7</cxf.version>
+        <cxf.version>2.7.12</cxf.version>
+        <jetty.version>9.0.3.v20130506</jetty.version>
         <powermock.version>1.4.12</powermock.version>
+        <jbehave.version>3.9.3</jbehave.version>
     </properties>
 
     <repositories>
@@ -66,7 +68,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -176,6 +178,12 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.12.1.GA</version>
         </dependency>
         
         <dependency>
@@ -442,6 +450,13 @@
             <version>2.2.4</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -467,27 +482,88 @@
                 </dependencies>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.6</version>
+                <version>2.17</version>
                 <executions>
                     <execution>
+                        <id>integration-test</id>
                         <goals>
                             <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
                             <goal>verify</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-jbehave-site-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jbehave.site</groupId>
+                                    <artifactId>jbehave-site-resources</artifactId>
+                                    <version>2.0.2</version>
+                                    <outputDirectory>${project.build.directory}/jbehave-reports/rendered</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-jbehave-reports-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jbehave</groupId>
+                                    <artifactId>jbehave-core</artifactId>
+                                    <version>${jbehave.version}</version>
+                                    <outputDirectory>${project.build.directory}/jbehave-reports/rendered</outputDirectory>
+                                    <includes>**\/*.css,**\/*.ftl,**\/*.js</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jbehave</groupId>
                 <artifactId>jbehave-maven-plugin</artifactId>
+                <version>${jbehave.version}</version>
                 <executions>
                     <execution>
                         <id>run-stories</id>
                         <phase>integration-test</phase>
                         <configuration>
                             <includes>
-                                <include>**/*Scenario.java</include>
+                                <include>**/ComkerSessionSpecs.java</include>
+                                <include>**/ComkerManageRoleSpecs.java</include>
                             </includes>
                             <scope>test</scope>
                         </configuration>
@@ -495,12 +571,46 @@
                             <goal>run-stories-as-embeddables</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>render-reports-generated</id>
+                        <phase>post-integration-test</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jbehave-reports</outputDirectory>
+                            <formats>
+                                <format>txt</format>
+                                <format>html</format>
+                                <format>xml</format>
+                            </formats>
+                            <templateProperties>
+                                <property>
+                                    <name>defaultFormats</name>
+                                    <value>stats</value>
+                                </property>
+                                <property>
+                                    <name>renderedDirectory</name>
+                                    <value>rendered</value>
+                                </property>
+                            </templateProperties>
+                            <skip>false</skip>
+                            <ignoreFailure>true</ignoreFailure>
+                        </configuration>
+                        <goals>
+                            <goal>report-stepdocs</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                        <version>1.2.16</version>
+                    </dependency>
+                </dependencies>
             </plugin>
-            <!--
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
                 <configuration>
                     <webApp>
                         <contextPath>/comker-app</contextPath>
@@ -512,10 +622,11 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
                     <jettyXml>src/main/etc/jetty.xml</jettyXml>
                     <httpConnector>
-                        <port>8080</port>
+                        <port>7777</port>
                     </httpConnector>
-                    <stopPort>8005</stopPort>
+                    <stopPort>7778</stopPort>
                     <stopKey>STOP</stopKey>
+                    <stopWait>10</stopWait>
                 </configuration>
                 <executions>
                     <execution>
@@ -537,8 +648,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-util</artifactId>
+                        <version>${jetty.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
-            -->
         </plugins>
     </build>
 

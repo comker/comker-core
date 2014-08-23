@@ -231,6 +231,9 @@ software/src/test/java/net/cokkee/comker/stories/ComkerManageRoleScenario.xml -t
 software/src/test/java/net/cokkee/comker/stories/ComkerRestAssuredConfig.java -text
 software/src/test/java/net/cokkee/comker/stories/ComkerSessionScenario.java -text
 software/src/test/java/net/cokkee/comker/stories/ComkerSessionScenario.xml -text
+software/src/test/java/net/cokkee/comker/stories/specs/ComkerManageRoleSpecs.java -text
+software/src/test/java/net/cokkee/comker/stories/specs/ComkerSessionSpecs.java -text
+software/src/test/java/net/cokkee/comker/stories/steps/ComkerAbstractSteps.java -text
 software/src/test/java/net/cokkee/comker/stories/steps/ComkerExampleSteps.java -text
 software/src/test/java/net/cokkee/comker/stories/steps/ComkerManageRoleSteps.java -text
 software/src/test/java/net/cokkee/comker/stories/steps/ComkerSessionSteps.java -text

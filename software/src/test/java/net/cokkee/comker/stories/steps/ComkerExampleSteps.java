@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author drupalex
  */
 @Component("exampleSteps")
-public class ComkerExampleSteps {
+public class ComkerExampleSteps extends ComkerAbstractSteps {
 
     int x;
 

@@ -7,3 +7,8 @@ permissions, checkpoint..
 Scenario: Anonymous Session Information
 When I request the session information
 Then a session information object should be return
+
+Scenario: Logged-in Session Information
+Given <username> and <password>
+When I request the session information
+Then a session information object should be return

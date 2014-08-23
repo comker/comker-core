@@ -20,7 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  * @author drupalex
  */
-public abstract class ComkerAbstractScenario extends JUnitStories {
+public class ComkerAbstractScenario extends JUnitStories {
 
     public ComkerAbstractScenario() {
         configuredEmbedder().embedderControls()
