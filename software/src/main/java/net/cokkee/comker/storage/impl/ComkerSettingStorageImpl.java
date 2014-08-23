@@ -79,7 +79,7 @@ public class ComkerSettingStorageImpl implements ComkerSettingStorage {
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("Setting Key object with id:{0} not found", new Object[] {id}),
-                    new ComkerExceptionExtension("setting_key_with_id_not_found", new Object[] {id}));
+                    new ComkerExceptionExtension("setting_key_with_id_not_found", new Object[] {id}, null));
         }
         return dbItem;
     }
@@ -90,7 +90,7 @@ public class ComkerSettingStorageImpl implements ComkerSettingStorage {
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("Setting Key object with code:{0} not found", new Object[] {code}),
-                    new ComkerExceptionExtension("setting_key_with_code_not_found", new Object[] {code}));
+                    new ComkerExceptionExtension("setting_key_with_code_not_found", new Object[] {code}, null));
         }
         return dbItem;
     }

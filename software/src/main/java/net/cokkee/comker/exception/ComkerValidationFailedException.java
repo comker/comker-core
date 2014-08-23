@@ -21,16 +21,8 @@ public class ComkerValidationFailedException extends ComkerAbstractException
 
     public static final int CODE = 410;
     
-    /**
-	 * Prefix for the name of the NutrixValidationFailedException instance in a model,
-	 * followed by the object name.
-	 * @deprecated in favor of <code>BindingResult.MODEL_KEY_PREFIX
-	 * @see BindingResult#MODEL_KEY_PREFIX
-	 */
-	public static final String ERROR_KEY_PREFIX = ComkerValidationFailedException.class.getName() + ".";
 
-
-	private final BindingResult bindingResult;
+    private final BindingResult bindingResult;
 
 
 	/**

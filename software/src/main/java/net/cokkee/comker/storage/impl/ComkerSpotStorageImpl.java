@@ -212,7 +212,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("Spot object with id:{0} not found", new Object[] {id}),
-                    new ComkerExceptionExtension("spot_with_id_not_found", new Object[] {id}));
+                    new ComkerExceptionExtension("spot_with_id_not_found", new Object[] {id}, null));
         }
         return dbItem;
     }
@@ -223,7 +223,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("Spot object with code:{0} not found", new Object[] {code}),
-                    new ComkerExceptionExtension("spot_with_code_not_found", new Object[] {code}));
+                    new ComkerExceptionExtension("spot_with_code_not_found", new Object[] {code}, null));
         }
         return dbItem;
     }

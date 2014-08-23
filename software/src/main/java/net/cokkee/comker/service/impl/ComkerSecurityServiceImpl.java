@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -82,6 +84,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     }
     
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerUserDetails loadUserDetails(String username, String spotCode)
             throws UsernameNotFoundException, DataAccessException {
 

@@ -44,20 +44,19 @@ public class ComkerExceptionMapper implements ExceptionMapper<Exception> {
             ComkerEntityProcessingException e = (ComkerEntityProcessingException) exception;
             ComkerExceptionExtension ext = e.getExtension();
             
-            String msgName = (ext != null) ? ext.getName() : null;
-            String message = (ext != null) ? localeMessageService.getMessage(ext.getPattern(),
+            String message = (ext != null) ? localeMessageService.getMessage(ext.getCode(),
                         ext.getArguments(), e.getMessage()) : e.getMessage();
             
             return Response
                     .status(e.getCode())
-                    .entity(new ComkerExceptionResponse(e.getCode(), message, msgName))
+                    .entity(new ComkerExceptionResponse(e, message))
                     .type("application/json").build();
         } else if (exception instanceof ComkerValidationFailedException) {
             ComkerValidationFailedException e = (ComkerValidationFailedException) exception;
 
             return Response
                     .status(e.getCode())
-                    .entity(new ComkerExceptionResponse(e.getCode(), exception.getMessage()))
+                    .entity(new ComkerExceptionResponse(e, e.getMessage()))
                     .type("application/json").build();
         } else {
             return Response

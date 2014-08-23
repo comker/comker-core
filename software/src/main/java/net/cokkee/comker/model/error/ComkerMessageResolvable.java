@@ -1,4 +1,4 @@
-package net.cokkee.comker.model;
+package net.cokkee.comker.model.error;
 
 import java.io.Serializable;
 
@@ -6,15 +6,12 @@ import java.io.Serializable;
  *
  * @author drupalex
  */
+public class ComkerMessageResolvable implements Serializable {
 
-public class ComkerExceptionExtension implements Serializable {
-    
-    public ComkerExceptionExtension() {
-        super();
+    public ComkerMessageResolvable() {
     }
 
-    public ComkerExceptionExtension(String code, Object[] arguments, String defaultMessage) {
-        this();
+    public ComkerMessageResolvable(String code, Object[] arguments, String defaultMessage) {
         this.code = code;
         this.arguments = arguments;
         this.defaultMessage = defaultMessage;
@@ -28,10 +25,10 @@ public class ComkerExceptionExtension implements Serializable {
         return code;
     }
 
-    public void setCode(String pattern) {
-        this.code = pattern;
+    public void setCode(String code) {
+        this.code = code;
     }
-
+    
     public Object[] getArguments() {
         return arguments;
     }

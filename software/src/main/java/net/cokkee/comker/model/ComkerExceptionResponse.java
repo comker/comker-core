@@ -1,5 +1,14 @@
 package net.cokkee.comker.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import net.cokkee.comker.exception.ComkerEntityProcessingException;
+import net.cokkee.comker.exception.ComkerValidationFailedException;
+import net.cokkee.comker.model.error.ComkerEntityError;
+import net.cokkee.comker.model.error.ComkerFieldError;
+import net.cokkee.comker.util.ComkerDataUtil;
+import org.springframework.validation.FieldError;
+
 @javax.xml.bind.annotation.XmlRootElement
 public class ComkerExceptionResponse {
 
@@ -18,6 +27,9 @@ public class ComkerExceptionResponse {
     private String name;
     private String message;
 
+    private ComkerEntityError entityError = null;
+    private List<ComkerFieldError> fieldErrors = null;
+
     public ComkerExceptionResponse() {
     }
 
@@ -33,9 +45,35 @@ public class ComkerExceptionResponse {
         this.message = message;
     }
 
-    public ComkerExceptionResponse(int code, String message, String name) {
-        this(code, message);
-        this.name = name;
+    public ComkerExceptionResponse(ComkerEntityProcessingException exception,
+            String message) {
+        this((exception != null)?exception.getCode():500, message);
+        if (exception != null && exception.getExtension() != null) {
+            this.entityError = new ComkerEntityError();
+            ComkerDataUtil.copyProperties(exception.getExtension(), this.entityError);
+        }
+    }
+
+    public ComkerExceptionResponse(ComkerValidationFailedException exception,
+            String message) {
+        this((exception != null)?exception.getCode():500, message);
+        if (exception != null && exception.getFieldErrorCount()>0) {
+            this.fieldErrors = new ArrayList<ComkerFieldError>();
+            List<FieldError> errors = exception.getFieldErrors();
+            for(FieldError error:errors) {
+                Object[] args = null;
+                if (error.getArguments()!=null) {
+                    args = new Object[error.getArguments().length];
+                    for(int i=0; i<args.length; i++) {
+                        args[i] = ComkerDataUtil.convertObjectToString(error.getArguments()[i]);
+                    }
+                }
+                ComkerFieldError comkerError = new ComkerFieldError(error.getField(),
+                        error.getRejectedValue(), error.getCode(), args, error.getDefaultMessage());
+                //ComkerDataUtil.copyPropertiesExcludes(error, comkerError, "arguments");
+                this.fieldErrors.add(comkerError);
+            }
+        }
     }
 
     public int getCode() {
@@ -68,5 +106,21 @@ public class ComkerExceptionResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public ComkerEntityError getEntityError() {
+        return entityError;
+    }
+
+    public void setEntityError(ComkerEntityError extension) {
+        this.entityError = extension;
+    }
+
+    public List<ComkerFieldError> getFieldErrors() {
+        return fieldErrors;
+    }
+
+    public void setFieldErrors(List<ComkerFieldError> fieldErrors) {
+        this.fieldErrors = fieldErrors;
     }
 }

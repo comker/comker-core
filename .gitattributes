@@ -77,6 +77,9 @@ software/src/main/java/net/cokkee/comker/model/dto/ComkerRoleDTO.java -text
 software/src/main/java/net/cokkee/comker/model/dto/ComkerSpotDTO.java -text
 software/src/main/java/net/cokkee/comker/model/dto/ComkerUserDTO.java -text
 software/src/main/java/net/cokkee/comker/model/dto/ComkerWatchdogDTO.java -text
+software/src/main/java/net/cokkee/comker/model/error/ComkerEntityError.java -text
+software/src/main/java/net/cokkee/comker/model/error/ComkerFieldError.java -text
+software/src/main/java/net/cokkee/comker/model/error/ComkerMessageResolvable.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAbstractItem.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAnswer.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAuditEntity.java -text

@@ -17,6 +17,16 @@ public class ComkerDataUtil {
 
     //--------------------------------------------------------------------------
 
+    public static final String UUID_PATTERN =
+            "^[a-fA-F0-9]{8}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{4}-?[a-fA-F0-9]{12}$";
+
+    public static boolean verifyUUID(String uuid) {
+        if (uuid == null) return false;
+        return uuid.matches(UUID_PATTERN);
+    }
+    
+    //--------------------------------------------------------------------------
+
     public static final String AUTHORITY_PATTERN =
             "^[A-Z][A-Z0-9_]{0,31}$";
 
@@ -156,11 +166,11 @@ public class ComkerDataUtil {
                 BeanUtils.copyProperties(dest, src);
             }
         } catch (IllegalAccessException e) {
-            throw new ComkerIllegalAccessException(404, "IllegalAccessException");
+            throw new ComkerIllegalAccessException("IllegalAccessException");
         } catch (InvocationTargetException e) {
-            throw new ComkerIllegalAccessException(404, "InvocationTargetException");
+            throw new ComkerIllegalAccessException("InvocationTargetException");
         } catch (NoSuchMethodException e) {
-            throw new ComkerIllegalAccessException(404, "NoSuchMethodException");
+            throw new ComkerIllegalAccessException("NoSuchMethodException");
         }
     }
 
@@ -190,5 +200,12 @@ public class ComkerDataUtil {
     public static Object convertXStreamToObject(String json) {
         XStream xstream = new XStream(new DomDriver());
         return xstream.fromXML(json);
+    }
+
+    //--------------------------------------------------------------------------
+    
+    public static String convertObjectToString(Object value) {
+        if (value == null) return null;
+        return value.toString();
     }
 }

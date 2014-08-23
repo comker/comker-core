@@ -302,7 +302,7 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with id:{0} not found", new Object[] {id}),
-                    new ComkerExceptionExtension("user_with_id_not_found", new Object[] {id}));
+                    new ComkerExceptionExtension("user_with_id_not_found", new Object[] {id}, null));
         }
         return dbItem;
     }
@@ -313,7 +313,7 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with username:{0} not found", new Object[] {username}),
-                    new ComkerExceptionExtension("user_with_username_not_found", new Object[] {username}));
+                    new ComkerExceptionExtension("user_with_username_not_found", new Object[] {username}, null));
         }
         return dbItem;
     }
@@ -324,7 +324,7 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     MessageFormat.format("User object with email:{0} not found", new Object[] {email}),
-                    new ComkerExceptionExtension("user_with_email_not_found", new Object[] {email}));
+                    new ComkerExceptionExtension("user_with_email_not_found", new Object[] {email}, null));
         }
         return dbItem;
     }
