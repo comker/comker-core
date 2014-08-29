@@ -19,7 +19,7 @@
         <spring.security.version>3.1.2.RELEASE</spring.security.version>
         <aspectj.version>1.6.5.RELEASE</aspectj.version>
         <cxf.version>2.7.12</cxf.version>
-        <jetty.version>9.0.3.v20130506</jetty.version>
+        <jetty.version>8.1.15.v20140411</jetty.version>
         <powermock.version>1.4.12</powermock.version>
         <jbehave.version>3.9.3</jbehave.version>
     </properties>
@@ -451,12 +451,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
             <scope>test</scope>
         </dependency>
+        -->
     </dependencies>
 
     <build>
@@ -471,8 +473,11 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.doxia</groupId>
@@ -484,14 +489,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.17</version>
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -610,7 +613,6 @@
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
                 <configuration>
                     <webApp>
                         <contextPath>/comker-app</contextPath>
@@ -648,6 +650,7 @@
                         </goals>
                     </execution>
                 </executions>
+                <!--
                 <dependencies>
                     <dependency>
                         <groupId>org.eclipse.jetty</groupId>
@@ -655,6 +658,7 @@
                         <version>${jetty.version}</version>
                     </dependency>
                 </dependencies>
+                -->
             </plugin>
         </plugins>
     </build>
@@ -723,5 +727,19 @@
             </build>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>Cokkee Maven Repository</id>
+            <name>Cokkee Maven Repository - Releases</name>
+            <url>http://repo.cokkee.net/artifactory/libs-release-local</url>
+        </repository>
+        
+        <snapshotRepository>
+            <id>Cokkee Maven Repository</id>
+            <name>Cokkee Maven Repository - Snapshot</name>
+            <url>http://repo.cokkee.net/artifactory/libs-snapshot-local</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
 

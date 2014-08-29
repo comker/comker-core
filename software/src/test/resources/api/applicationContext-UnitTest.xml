@@ -82,7 +82,7 @@
     <bean id="comkerMessageSource"
             class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basename">
-            <value>messages</value>
+            <value>service/messages</value>
         </property>
     </bean>
 </beans>
