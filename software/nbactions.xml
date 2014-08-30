@@ -11,35 +11,17 @@
             </activatedProfiles>
         </action>
         <action>
-            <actionName>CUSTOM-build as release</actionName>
-            <displayName>build as release</displayName>
-            <activatedProfiles>
-                <activatedProfile>release</activatedProfile>
-            </activatedProfiles>
-            <goals>
-                <goal>install</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-jetty:run with release</actionName>
-            <displayName>jetty:run-war</displayName>
-            <goals>
-                <goal>jetty:run-war</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-install</actionName>
-            <displayName>install</displayName>
-            <goals>
-                <goal>install</goal>
-            </goals>
-        </action>
-        <action>
             <actionName>CUSTOM-verify</actionName>
             <displayName>verify</displayName>
             <goals>
                 <goal>verify</goal>
             </goals>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>debug</activatedProfile>
+            </activatedProfiles>
         </action>
         <action>
             <actionName>CUSTOM-test debug</actionName>
@@ -52,41 +34,6 @@
             </activatedProfiles>
         </action>
         <action>
-            <actionName>CUSTOM-test</actionName>
-            <displayName>test</displayName>
-            <goals>
-                <goal>test</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-run-stories</actionName>
-            <displayName>run-stories</displayName>
-            <goals>
-                <goal>run-stories</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-integration-test</actionName>
-            <displayName>integration-test</displayName>
-            <goals>
-                <goal>integration-test</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-failsafe:verify</actionName>
-            <displayName>failsafe:verify</displayName>
-            <goals>
-                <goal>failsafe:verify</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-failsafe:integration-test</actionName>
-            <displayName>failsafe:integration-test</displayName>
-            <goals>
-                <goal>failsafe:integration-test</goal>
-            </goals>
-        </action>
-        <action>
             <actionName>CUSTOM-deploy</actionName>
             <displayName>deploy</displayName>
             <goals>
@@ -95,5 +42,8 @@
             <properties>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
+            <activatedProfiles>
+                <activatedProfile>debug</activatedProfile>
+            </activatedProfiles>
         </action>
     </actions>

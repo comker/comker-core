@@ -2,11 +2,41 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.xsd">
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--
+    <tx:advice id="comkerSecurityServiceAdvice" transaction-manager="comkerTransactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="reload*" read-only="true" />
+            <tx:method name=""/>
+        </tx:attributes>
+    </tx:advice>
+
+    <tx:advice id="comkerSecurityServiceAdvice" transaction-manager="comkerTransactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="reload*" read-only="true" />
+            <tx:method name=""/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="comkerSecurityServiceOperation"
+                expression="execution(net.cokkee.comker.service.ComkerSecurityService.*(..))"/>
+        <aop:advisor pointcut-ref="comkerSecurityServiceOperation"
+                advice-ref="comkerSecurityServiceAdvice"/>
+
+    </aop:config>
 
     <bean id="comkerTransactionAdvisor"
             class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
@@ -47,34 +77,11 @@
 
     <tx:annotation-driven transaction-manager="comkerTransactionManager" />
     
-    <!--
-    <bean id="comkerTransactionManager"
-            class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="comkerEntityManagerFactory" />
-    </bean>
-
-    <tx:annotation-driven transaction-manager="comkerTransactionManager" />
-
-    <bean id="comkerEntityManagerFactory"
-            class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="comkerDataSource" />
-        <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="showSql" value="true" />
-            </bean>
-        </property>
-        
-    </bean>
-    -->
-
-    <!--
-    <property name="persistenceXmlLocation" value="classpath*:META-INF/persistence-booking.xml"/>
-    -->
-
     <bean id="comkerTransactionManager"
             class="org.springframework.orm.hibernate3.HibernateTransactionManager">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
+    -->
 
     <bean id="comkerSessionFactory"
             class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
