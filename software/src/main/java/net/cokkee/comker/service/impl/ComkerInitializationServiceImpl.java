@@ -48,7 +48,7 @@ public class ComkerInitializationServiceImpl extends ComkerInitializationCommonI
         ComkerUser userDefault = getDefaultUser();
 
         // init settings
-        ComkerSettingKey sKey = null;
+        ComkerSettingKey sKey;
 
         // -- init Application settings
         sKey = getOrCreateSettingKey(ComkerSettingKey.CODE_APPLICATION_TITLE, ComkerSettingKey.TYPE_STRING, "");

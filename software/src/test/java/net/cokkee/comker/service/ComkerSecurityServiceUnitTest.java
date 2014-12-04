@@ -77,8 +77,8 @@ public class ComkerSecurityServiceUnitTest {
 
         ComkerUserDetails userDetails = securityService.getUserDetails();
         Assert.assertNotNull(userDetails);
-        Assert.assertEquals(userDetails.getUsername(), "username");
-        Assert.assertEquals(userDetails.getPassword(), "password");
+        Assert.assertEquals("username", userDetails.getUsername());
+        Assert.assertEquals("password", userDetails.getPassword());
     }
 
     @Test

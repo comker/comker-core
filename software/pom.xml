@@ -15,8 +15,8 @@
         <final.version>1.0.0</final.version>
         <artifact.name>${artifactId}</artifact.name>
         <java.version>1.6</java.version>
-        <spring.version>3.1.2.RELEASE</spring.version>
-        <spring.security.version>3.1.2.RELEASE</spring.security.version>
+        <spring.version>3.2.12.RELEASE</spring.version>
+        <spring.security.version>3.2.5.RELEASE</spring.security.version>
         <aspectj.version>1.6.5.RELEASE</aspectj.version>
         <cxf.version>2.7.12</cxf.version>
         <jetty.version>8.1.15.v20140411</jetty.version>
@@ -28,10 +28,6 @@
         <repository>
             <id>repo1</id>
             <url>http://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
-            <id>java-net</id>
-            <url>http://download.java.net/maven/2</url>
         </repository>
         <repository>
             <id>spring-releases</id>
@@ -73,104 +69,93 @@
         </dependency>
 
         <dependency>
-            <groupId>net.cokkee</groupId>
-            <artifactId>cokkee-gonsole</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.core</artifactId>
+            <artifactId>spring-core</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.aop</artifactId>
+            <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.beans</artifactId>
+            <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.context</artifactId>
+            <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.context.support</artifactId>
+            <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.jdbc</artifactId>
+            <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.orm</artifactId>
+            <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.transaction</artifactId>
+            <artifactId>spring-tx</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.web.servlet</artifactId>
+            <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>org.springframework.test</artifactId>
+            <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>org.springframework.security.core</artifactId>
+            <artifactId>spring-security-core</artifactId>
             <version>${spring.security.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
-                    <artifactId>org.springframework.beans</artifactId>
+                    <artifactId>spring-beans</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
-                    <artifactId>org.springframework.context</artifactId>
+                    <artifactId>spring-context</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.springframework</groupId>
-                    <artifactId>org.springframework.core</artifactId>
+                    <artifactId>spring-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>org.springframework.security.config</artifactId>
+            <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>org.springframework.security.taglibs</artifactId>
+            <artifactId>spring-security-taglibs</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>org.springframework.security.web</artifactId>
+            <artifactId>spring-security-web</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
 
@@ -239,10 +224,10 @@
         </dependency>
 
         <dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http-jetty</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http-jetty</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -277,11 +262,11 @@
         </dependency>
 
         <dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.0</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.0</version>
             <scope>test</scope>
-		</dependency>
+        </dependency>
 
         <dependency>
             <groupId>org.powermock</groupId>
@@ -450,15 +435,6 @@
             <version>2.2.4</version>
             <scope>compile</scope>
         </dependency>
-
-        <!--
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
-            <scope>test</scope>
-        </dependency>
-        -->
     </dependencies>
 
     <build>
@@ -477,188 +453,10 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <skipTests>false</skipTests>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-jbehave-site-resources</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.jbehave.site</groupId>
-                                    <artifactId>jbehave-site-resources</artifactId>
-                                    <version>2.0.2</version>
-                                    <outputDirectory>${project.build.directory}/jbehave-reports/rendered</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-jbehave-reports-resources</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.jbehave</groupId>
-                                    <artifactId>jbehave-core</artifactId>
-                                    <version>${jbehave.version}</version>
-                                    <outputDirectory>${project.build.directory}/jbehave-reports/rendered</outputDirectory>
-                                    <includes>**\/*.css,**\/*.ftl,**\/*.js</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jbehave</groupId>
-                <artifactId>jbehave-maven-plugin</artifactId>
-                <version>${jbehave.version}</version>
-                <executions>
-                    <execution>
-                        <id>run-stories</id>
-                        <phase>integration-test</phase>
-                        <configuration>
-                            <includes>
-                                <include>**/ComkerSessionSpecs.java</include>
-                                <include>**/ComkerManageRoleSpecs.java</include>
-                            </includes>
-                            <scope>test</scope>
-                        </configuration>
-                        <goals>
-                            <goal>run-stories-as-embeddables</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>render-reports-generated</id>
-                        <phase>post-integration-test</phase>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/jbehave-reports</outputDirectory>
-                            <formats>
-                                <format>txt</format>
-                                <format>html</format>
-                                <format>xml</format>
-                            </formats>
-                            <templateProperties>
-                                <property>
-                                    <name>defaultFormats</name>
-                                    <value>stats</value>
-                                </property>
-                                <property>
-                                    <name>renderedDirectory</name>
-                                    <value>rendered</value>
-                                </property>
-                            </templateProperties>
-                            <skip>false</skip>
-                            <ignoreFailure>true</ignoreFailure>
-                        </configuration>
-                        <goals>
-                            <goal>report-stepdocs</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                        <version>1.2.16</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <webApp>
-                        <contextPath>/comker-app</contextPath>
-                        <resourceBases>
-                            <resourceBase>src/main/webapp</resourceBase>
-                            <resourceBase>src/main/resources/META-INF/resources</resourceBase>
-                        </resourceBases>
-                    </webApp>
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
-                    <jettyXml>src/main/etc/jetty.xml</jettyXml>
-                    <httpConnector>
-                        <port>7777</port>
-                    </httpConnector>
-                    <stopPort>7778</stopPort>
-                    <stopKey>STOP</stopKey>
-                    <stopWait>10</stopWait>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <scanIntervalSeconds>10</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <!--
-                <dependencies>
-                    <dependency>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-util</artifactId>
-                        <version>${jetty.version}</version>
-                    </dependency>
-                </dependencies>
-                -->
             </plugin>
         </plugins>
     </build>
