@@ -73,21 +73,47 @@ public class ComkerInitializationServiceImpl extends ComkerInitializationCommonI
         ComkerPermission permAllUser = getOrCreatePermission("PERM_COMKER_USER");
         ComkerPermission permAllTest = getOrCreatePermission("PERM_COMKER_TEST");
 
-        ComkerPermission permAdmUser = getOrCreatePermission("PERM_COMKER_ADM_USER");
-        ComkerPermission permAdmSpot = getOrCreatePermission("PERM_COMKER_ADM_SPOT");
-        ComkerPermission permAdmCrew = getOrCreatePermission("PERM_COMKER_ADM_CREW");
-        ComkerPermission permAdmRole = getOrCreatePermission("PERM_COMKER_ADM_ROLE");
-        ComkerPermission permAdmPermission = getOrCreatePermission("PERM_COMKER_ADM_PERMISSION");
-        ComkerPermission permAdmSetting = getOrCreatePermission("PERM_COMKER_ADM_SETTING");
-
         // init roles
         ComkerRole roleAdm = getAdministratorRole();
-        roleDao.addPermission(roleAdm, permAdmUser);
-        roleDao.addPermission(roleAdm, permAdmSpot);
-        roleDao.addPermission(roleAdm, permAdmCrew);
-        roleDao.addPermission(roleAdm, permAdmRole);
-        roleDao.addPermission(roleAdm, permAdmPermission);
-        roleDao.addPermission(roleAdm, permAdmSetting);
+
+        String[] permStrs = new String[] {
+            "PERM_COMKER_MODULE_L",
+            "PERM_COMKER_MODULE_R",
+            
+            "PERM_COMKER_SPOT_L",
+            "PERM_COMKER_SPOT_R",
+            "PERM_COMKER_SPOT_W",
+            "PERM_COMKER_SPOT_W",
+            "PERM_COMKER_SPOT_D",
+            
+            "PERM_COMKER_PERMISSION_L",
+            "PERM_COMKER_PERMISSION_R",
+            
+            "PERM_COMKER_ROLE_L",
+            "PERM_COMKER_ROLE_R",
+            "PERM_COMKER_ROLE_W",
+            "PERM_COMKER_ROLE_W",
+            "PERM_COMKER_ROLE_D",
+            
+            "PERM_COMKER_CREW_L",
+            "PERM_COMKER_CREW_R",
+            "PERM_COMKER_CREW_W",
+            "PERM_COMKER_CREW_W",
+            "PERM_COMKER_CREW_D",
+            
+            "PERM_COMKER_USER_L",
+            "PERM_COMKER_USER_R",
+            "PERM_COMKER_USER_W",
+            "PERM_COMKER_USER_W",
+            "PERM_COMKER_USER_D",
+            
+            "PERM_COMKER_WATCHDOG_L",
+            "PERM_COMKER_WATCHDOG_R",
+        };
+        
+        for(String permStr: permStrs) {
+            roleDao.addPermission(roleAdm, getOrCreatePermission(permStr));
+        }
 
         ComkerRole roleMgr = getManagerRole();
 
@@ -96,8 +122,8 @@ public class ComkerInitializationServiceImpl extends ComkerInitializationCommonI
         ComkerRole roleGst = getGuestRole();
 
         // init crews
-        ComkerCrew crewAdmins = getOrCreateCrew(spotUnknown, roleAdm, "Administrators", "Administrator Group");
-        ComkerCrew crewGuests = getOrCreateCrew(spotUnknown, roleGst, "Guests", "Guest Group");
+        ComkerCrew crewAdmins = getOrCreateCrew(roleAdm, "Administrators", "Administrator Group");
+        ComkerCrew crewGuests = getOrCreateCrew(roleGst, "Guests", "Guest Group");
 
         // init users
         ComkerUser userAdmin = getOrCreateUser(

@@ -17,9 +17,9 @@ public class ComkerLocaleMessageServiceImpl
 
     public static final Locale LOCALE_DEFAULT = Locale.US;
 
-    @Autowired
     private MessageSource messageSource;
 
+    @Autowired
     @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;

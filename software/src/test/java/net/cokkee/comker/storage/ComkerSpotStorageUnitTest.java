@@ -8,7 +8,7 @@ import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
 import net.cokkee.comker.storage.impl.ComkerSpotStorageImpl;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerModule;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -117,7 +117,7 @@ public class ComkerSpotStorageUnitTest {
             }
         });
 
-        when(spotDao.findAll(any(ComkerSpotDTO.Filter.class),any(ComkerPager.class)))
+        when(spotDao.findAll(any(ComkerSpotDTO.Filter.class),any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerSpot>>() {
             @Override
             public List<ComkerSpot> answer(InvocationOnMock invocation) throws Throwable {

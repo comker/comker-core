@@ -40,6 +40,6 @@ public class ComkerAjaxAuthenticationEntryPoint implements AuthenticationEntryPo
             AuthenticationException authException)
             throws IOException, ServletException {
         helper.writeAjaxResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED,
-                new ComkerExceptionResponse(1, "Unauthorized"));
+                new ComkerExceptionResponse("Unauthorized"));
     }
 }

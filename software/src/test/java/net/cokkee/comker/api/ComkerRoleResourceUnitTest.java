@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.impl.ComkerRoleResourceImpl;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerRoleStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.util.ComkerDataUtil;
@@ -75,11 +75,11 @@ public class ComkerRoleResourceUnitTest {
             }
         });
 
-        Mockito.when(roleStorage.findAll(Mockito.any(ComkerPager.class)))
+        Mockito.when(roleStorage.findAll(Mockito.any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerRoleDTO>>() {
             @Override
             public List<ComkerRoleDTO> answer(InvocationOnMock invocation) throws Throwable {
-                ComkerPager p = (ComkerPager) invocation.getArguments()[0];
+                ComkerQueryPager p = (ComkerQueryPager) invocation.getArguments()[0];
                 List<ComkerRoleDTO> result = new ArrayList<ComkerRoleDTO>(roleMap.values());
 
                 if (p != null) {
@@ -144,12 +144,12 @@ public class ComkerRoleResourceUnitTest {
 
         Mockito.when(sessionService.getPager(Mockito.any(Class.class),
                     Mockito.any(Integer.class), Mockito.any(Integer.class)))
-                .thenAnswer(new Answer<ComkerPager>() {
+                .thenAnswer(new Answer<ComkerQueryPager>() {
             @Override
-            public ComkerPager answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerQueryPager answer(InvocationOnMock invocation) throws Throwable {
                 Integer start = (Integer) invocation.getArguments()[1];
                 Integer limit = (Integer) invocation.getArguments()[2];
-                ComkerPager pager = new ComkerPager();
+                ComkerQueryPager pager = new ComkerQueryPager();
                 if (start != null) pager.setStart(start);
                 if (limit != null) pager.setLimit(limit);
                 return pager;
@@ -167,7 +167,7 @@ public class ComkerRoleResourceUnitTest {
         ComkerRoleDTO.Pack pack = resp.readEntity(ComkerRoleDTO.Pack.class);
         Assert.assertTrue(pack.getTotal() == roleMap.size());
         Assert.assertTrue(pack.getCollection().size() <= roleMap.size());
-        Assert.assertTrue(pack.getCollection().size() <= ComkerPager.DEFAULT_LIMIT);
+        Assert.assertTrue(pack.getCollection().size() <= ComkerQueryPager.DEFAULT_LIMIT);
 
         List<String> resultIds = new ArrayList<String>();
         List<ComkerRoleDTO> collection = pack.getCollection();

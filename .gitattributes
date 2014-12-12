@@ -26,6 +26,14 @@ software/src/main/java/net/cokkee/comker/api/impl/ComkerSessionResourceImpl.java
 software/src/main/java/net/cokkee/comker/api/impl/ComkerSpotResourceImpl.java -text
 software/src/main/java/net/cokkee/comker/api/impl/ComkerUserResourceImpl.java -text
 software/src/main/java/net/cokkee/comker/api/impl/ComkerWatchdogResourceImpl.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmCrewController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmPermissionController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmRoleController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmSpotController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmUserController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmWatchdogController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerExceptionHandler.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerSessionController.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerAbstractDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerAuditEntityDao.java -text
 software/src/main/java/net/cokkee/comker/dao/ComkerCrewDao.java -text
@@ -50,10 +58,10 @@ software/src/main/java/net/cokkee/comker/dao/impl/ComkerUserDaoHibernate.java -t
 software/src/main/java/net/cokkee/comker/dao/impl/ComkerWatchdogDaoHibernate.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAbstractException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerAccessDatabaseException.java -text
+software/src/main/java/net/cokkee/comker/exception/ComkerCopyPropertiesException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerEntityProcessingException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerFieldDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerForbiddenAccessException.java -text
-software/src/main/java/net/cokkee/comker/exception/ComkerIllegalAccessException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerInvalidParameterException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectDuplicatedException.java -text
 software/src/main/java/net/cokkee/comker/exception/ComkerObjectNotFoundException.java -text
@@ -63,7 +71,8 @@ software/src/main/java/net/cokkee/comker/model/ComkerExceptionExtension.java -te
 software/src/main/java/net/cokkee/comker/model/ComkerExceptionResponse.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerHashMap.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerObject.java -text
-software/src/main/java/net/cokkee/comker/model/ComkerPager.java -text
+software/src/main/java/net/cokkee/comker/model/ComkerQueryPager.java -text
+software/src/main/java/net/cokkee/comker/model/ComkerQuerySieve.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerSessionInfo.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerStatus.java -text
 software/src/main/java/net/cokkee/comker/model/ComkerUserDetails.java -text
@@ -79,7 +88,7 @@ software/src/main/java/net/cokkee/comker/model/dto/ComkerUserDTO.java -text
 software/src/main/java/net/cokkee/comker/model/dto/ComkerWatchdogDTO.java -text
 software/src/main/java/net/cokkee/comker/model/error/ComkerEntityError.java -text
 software/src/main/java/net/cokkee/comker/model/error/ComkerFieldError.java -text
-software/src/main/java/net/cokkee/comker/model/error/ComkerMessageResolvable.java -text
+software/src/main/java/net/cokkee/comker/model/error/ComkerResolvableMessage.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAbstractItem.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAnswer.java -text
 software/src/main/java/net/cokkee/comker/model/po/ComkerAuditEntity.java -text
@@ -114,6 +123,7 @@ software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxA
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationFailureHandler.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationHelper.java -text
 software/src/main/java/net/cokkee/comker/security/web/authentication/ComkerAjaxAuthenticationSuccessHandler.java -text
+software/src/main/java/net/cokkee/comker/service/ComkerExceptionTransformer.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerInitializationService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerLocaleMessageService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerSecurityContextHolder.java -text
@@ -121,6 +131,7 @@ software/src/main/java/net/cokkee/comker/service/ComkerSecurityService.java -tex
 software/src/main/java/net/cokkee/comker/service/ComkerSessionService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerToolboxService.java -text
 software/src/main/java/net/cokkee/comker/service/ComkerUserDetailsService.java -text
+software/src/main/java/net/cokkee/comker/service/impl/ComkerExceptionTransformerImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationCommonImpl.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationSampleData.java -text
 software/src/main/java/net/cokkee/comker/service/impl/ComkerInitializationServiceImpl.java -text
@@ -147,6 +158,7 @@ software/src/main/java/net/cokkee/comker/storage/impl/ComkerSpotStorageImpl.java
 software/src/main/java/net/cokkee/comker/storage/impl/ComkerUserStorageImpl.java -text
 software/src/main/java/net/cokkee/comker/storage/impl/ComkerWatchdogStorageImpl.java -text
 software/src/main/java/net/cokkee/comker/structure/ComkerKeyAndValueSet.java -text
+software/src/main/java/net/cokkee/comker/swagger/ComkerSpringSwaggerConfig.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerAddHeaderFilter.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerBeanPostProcessor.java -text
 software/src/main/java/net/cokkee/comker/util/ComkerBootstrapEvent.java -text
@@ -160,6 +172,7 @@ software/src/main/java/net/cokkee/comker/validation/ComkerRoleValidator.java -te
 software/src/main/java/net/cokkee/comker/validation/ComkerSpotValidator.java -text
 software/src/main/java/net/cokkee/comker/validation/ComkerUserValidator.java -text
 software/src/main/resources/META-INF/bootstrap/comker/api-context.xml -text
+software/src/main/resources/META-INF/bootstrap/comker/controller-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/cxf-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/dao-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/interceptor-context.xml -text
@@ -170,6 +183,10 @@ software/src/main/resources/META-INF/bootstrap/comker/security-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/service-context.xml -text
 software/src/main/resources/META-INF/bootstrap/comker/swagger-context.xml -text
 software/src/main/resources/META-INF/web-fragment.xml -text
+software/src/main/resources/messages.properties -text
+software/src/main/resources/messages_en_US.properties -text
+software/src/main/resources/messages_vi_VN.properties -text
+software/src/main/resources/swagger.properties -text
 software/src/main/webapp/META-INF/MANIFEST.MF -text
 software/src/main/webapp/META-INF/context.xml -text
 software/src/main/webapp/WEB-INF/application-context.xml -text
@@ -223,6 +240,9 @@ software/src/test/java/net/cokkee/comker/storage/ComkerRoleStorageUnitTest.java 
 software/src/test/java/net/cokkee/comker/storage/ComkerSettingStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerSpotStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/storage/ComkerUserStorageUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/integration/ComkerAdmRoleIntegrationTest.java -text
+software/src/test/java/net/cokkee/comker/test/integration/ComkerSecurityIntegrationTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmRoleControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerCrewValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerPermissionValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerRoleValidatorUnitTest.java -text
@@ -252,3 +272,9 @@ software/src/test/resources/service/ComkerLocaleMessageServiceUnitTest.xml -text
 software/src/test/resources/service/messages.properties -text
 software/src/test/resources/service/messages_en_US.properties -text
 software/src/test/resources/service/messages_vi_VN.properties -text
+software/src/test/resources/test/integration/ComkerAdmRoleIntegrationTest.xml -text
+software/src/test/resources/test/integration/ComkerSecurityIntegrationTest.xml -text
+software/src/test/resources/test/integration/applicationContextIntegrationTest.xml -text
+software/src/test/resources/test/integration/test.properties -text
+software/src/test/resources/test/unit/controller/ComkerAdmRoleControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/applicationContextControllerUnitTest.xml -text

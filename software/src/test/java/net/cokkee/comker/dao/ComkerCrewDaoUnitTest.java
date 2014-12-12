@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
@@ -124,7 +124,7 @@ public class ComkerCrewDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerPager(1, 3));
+        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerQueryPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getName(), "Crew 02");
         Assert.assertEquals(list.get(2).getName(), "Crew 04");
@@ -132,7 +132,7 @@ public class ComkerCrewDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerPager(4, 10));
+        List<ComkerCrew> list = testCrewDao.findAll(null,new ComkerQueryPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getName(), "Crew 05");
     }
@@ -184,6 +184,16 @@ public class ComkerCrewDaoUnitTest {
         }
     }
 
+    @Test
+    public void findAllWhere_with_valid_GlobalRole() {
+        Session session = testSessionFactory.getCurrentSession();
+        ComkerRole role = (ComkerRole) session.get(ComkerRole.class, roleIds[3]);
+        List<ComkerCrew> list = testCrewDao.findAllWhere(role);
+        Assert.assertTrue(list.size() == 2);
+        Assert.assertEquals(crewIds[0], list.get(0).getId());
+        Assert.assertEquals(crewIds[1], list.get(1).getId());
+    }
+    
     @Test
     public void test_create() {
         Session session = testSessionFactory.getCurrentSession();

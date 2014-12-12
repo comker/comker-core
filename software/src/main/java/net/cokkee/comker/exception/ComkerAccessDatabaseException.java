@@ -1,11 +1,14 @@
 package net.cokkee.comker.exception;
 
 import net.cokkee.comker.model.ComkerExceptionExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
  * @author drupalex
  */
+@ResponseStatus(HttpStatus.CONFLICT)
 public class ComkerAccessDatabaseException extends ComkerEntityProcessingException {
 
     public static final int CODE = 405;
@@ -24,10 +27,5 @@ public class ComkerAccessDatabaseException extends ComkerEntityProcessingExcepti
 
     public ComkerAccessDatabaseException (String msg, Throwable cause, ComkerExceptionExtension extension) {
         super(CODE, msg, cause, extension);
-    }
-
-    @Deprecated
-    public ComkerAccessDatabaseException (int code, String msg) {
-        super(code, msg);
     }
 }

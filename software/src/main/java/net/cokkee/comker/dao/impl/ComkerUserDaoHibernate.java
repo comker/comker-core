@@ -3,13 +3,11 @@ package net.cokkee.comker.dao.impl;
 import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerUserDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerUser;
 import net.cokkee.comker.model.po.ComkerUserJoinCrew;
@@ -40,7 +38,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerUserDTO.Filter filter) {
+    public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
         c.setProjection(Projections.rowCount());
@@ -49,10 +47,10 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerUserDTO.Filter filter, ComkerPager pager) {
+    public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
@@ -70,13 +68,13 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager pager) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerUser.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         List list = c.list();
         return list;
     }
@@ -120,17 +118,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerUser create(ComkerUser item) {
         Session session = this.getSessionFactory().getCurrentSession();
-
-        if (getByUsername(item.getUsername()) != null) {
-            throw new ComkerFieldDuplicatedException("Username has already existed");
-        }
-
-        if (getByEmail(item.getEmail()) != null) {
-            throw new ComkerFieldDuplicatedException("Email has already existed");
-        }
-
         session.save(item);
-
         return item;
     }
 
@@ -155,18 +143,6 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
         Session session = this.getSessionFactory().getCurrentSession();
         ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
         session.delete(item);
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Set<String> getCodeOfGlobalPermission(ComkerUser user) {
-        Set<String> result = new HashSet<String>();
-
-        List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
-        for(ComkerUserJoinCrew item:list) {
-            crewDao.collectCodeOfGlobalPermission(result, item.getCrew());
-        }
-        return result;
     }
 
     @Override
@@ -198,18 +174,6 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
         for(ComkerUserJoinCrew item:list) {
             bag.add(item.getCrew());
         }
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerUser user) {
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
-
-        List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
-        for(ComkerUserJoinCrew item:list) {
-            crewDao.collectCodeOfSpotWithPermission(result, item.getCrew());
-        }
-        return result;
     }
 }
 

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerPermissionDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import org.hibernate.Criteria;
@@ -29,25 +29,15 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerPermission find(String query, Map<String,Object> params) {
-        Query q = getSessionFactory().getCurrentSession().createQuery(query);
-        for(Map.Entry<String,Object> param : params.entrySet()) {
-            q.setParameter(param.getKey(), param.getValue());
-        }
-        return (ComkerPermission) q.uniqueResult();
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerPermission findWhere(Map<String,Object> params) {
-        List result = findAllWhere(params, ComkerPager.ONE);
+        List result = findAllWhere(params, ComkerQueryPager.ONE);
         if (result.isEmpty()) return null;
         return (ComkerPermission)result.get(0);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerPermissionDTO.Filter filter) {
+    public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerPermission.class);
         c.setProjection(Projections.rowCount());
@@ -56,34 +46,22 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPermissionDTO.Filter filter,ComkerPager pager) {
+    public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerPermission.class);
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer countWhere(Map<String,Object> params) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerPermission.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        c.setProjection(Projections.rowCount());
-        return ((Long) c.uniqueResult()).intValue();
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerPermission.class);
-        for(Map.Entry<String,Object> param : params.entrySet()) {
-            c.add(Restrictions.eq(param.getKey(), param.getValue()));
-        }
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         return c.list();
     }
 

@@ -38,22 +38,24 @@ public class ComkerAjaxAuthenticationSuccessHandler
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-            log.debug(MessageFormat.format("run onAuthenticationSuccess()", new Object[] {}));
+    public void onAuthenticationSuccess(HttpServletRequest request, 
+            HttpServletResponse response, Authentication authentication) 
+                throws IOException, ServletException {
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format("run onAuthenticationSuccess()", new Object[]{}));
         }
         if (getHelper().checkAjaxRequest(request, response, authentication)) {
             if (log.isDebugEnabled()) {
                 log.debug(" =@ Ajax Request");
             }
-			getHelper().writeAjaxResponse(request, response, HttpServletResponse.SC_OK,
-                    new ComkerExceptionResponse(0, "Ok"));
+            getHelper().writeAjaxResponse(request, response, HttpServletResponse.SC_OK,
+                    new ComkerExceptionResponse("Ok"));
             return;
-		}else {
+        } else {
             if (log.isDebugEnabled()) {
                 log.debug(" =@ Default Request");
             }
-			super.onAuthenticationSuccess(request, response, authentication);
-		}
-	}
+            super.onAuthenticationSuccess(request, response, authentication);
+        }
+    }
 }

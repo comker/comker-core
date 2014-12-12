@@ -3,8 +3,8 @@ package net.cokkee.comker.dao;
 import java.util.List;
 import java.util.Map;
 
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerPermissionDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 /**
@@ -13,17 +13,13 @@ import net.cokkee.comker.model.po.ComkerPermission;
  */
 public interface ComkerPermissionDao {
 
-    ComkerPermission find(String query, Map<String,Object> params);
-    
     ComkerPermission findWhere(Map<String,Object> params);
 
-    Integer count(ComkerPermissionDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    Integer countWhere(Map<String,Object> params);
+    List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager);
 
-    List findAll(ComkerPermissionDTO.Filter filter,ComkerPager pager);
-
-    List findAllWhere(Map<String,Object> params, ComkerPager filter);
+    List findAllWhere(Map<String,Object> params, ComkerQueryPager filter);
 
     Boolean exists(String id);
 

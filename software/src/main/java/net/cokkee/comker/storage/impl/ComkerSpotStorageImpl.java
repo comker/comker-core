@@ -9,7 +9,7 @@ import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerSpotStorage;
 import net.cokkee.comker.model.ComkerExceptionExtension;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerModule;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -67,7 +67,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerSpotDTO> findAll(ComkerPager pager) {
+    public List<ComkerSpotDTO> findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
@@ -79,7 +79,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerSpotDTO> findAll(ComkerSpotDTO.Filter filter, ComkerPager pager) {
+    public List<ComkerSpotDTO> findAll(ComkerSpotDTO.Filter filter, ComkerQueryPager pager) {
         List<ComkerSpotDTO> poList = new ArrayList<ComkerSpotDTO>();
         List dbList = spotDao.findAll(filter, pager);
         for(Object dbItem:dbList) {
@@ -211,8 +211,11 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         ComkerSpot dbItem = spotDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
-                    MessageFormat.format("Spot object with id:{0} not found", new Object[] {id}),
-                    new ComkerExceptionExtension("spot_with_id_not_found", new Object[] {id}, null));
+                    "spot_with__id__not_found",
+                    new ComkerExceptionExtension("error.spot_with__id__not_found", 
+                            new Object[] {id}, 
+                            MessageFormat.format("Spot object with id:{0} not found", 
+                                    new Object[] {id})));
         }
         return dbItem;
     }
@@ -222,8 +225,11 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         ComkerSpot dbItem = spotDao.getByCode(code);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
-                    MessageFormat.format("Spot object with code:{0} not found", new Object[] {code}),
-                    new ComkerExceptionExtension("spot_with_code_not_found", new Object[] {code}, null));
+                    "spot_with__code__not_found",
+                    new ComkerExceptionExtension("error.spot_with__code__not_found", 
+                            new Object[] {code}, 
+                            MessageFormat.format("Spot object with code:{0} not found", 
+                                    new Object[] {code})));
         }
         return dbItem;
     }

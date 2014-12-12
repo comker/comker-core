@@ -3,13 +3,11 @@ package net.cokkee.comker.dao.impl;
 import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerRoleDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import net.cokkee.comker.model.po.ComkerRole;
@@ -20,7 +18,6 @@ import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
@@ -36,7 +33,7 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerRoleDTO.Filter filter) {
+    public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRole.class);
         c.setProjection(Projections.rowCount());
@@ -45,10 +42,10 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerRoleDTO.Filter filter, ComkerPager pager) {
+    public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRole.class);
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
@@ -67,36 +64,16 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRole.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         List list = c.list();
 
         return list;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Set<String> getAuthorities(String id) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        return getAuthorities((ComkerRole) session.load(ComkerRole.class, id));
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Set<String> getAuthorities(ComkerRole role) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        Set<String> authorities = new HashSet<String>();
-        for(ComkerRoleJoinPermission item:role.getRoleJoinPermissionList()) {
-            authorities.add(item.getPermission().getAuthority());
-        }
-        return authorities;
     }
 
     @Override
@@ -129,13 +106,7 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerRole create(ComkerRole item) {
         Session session = this.getSessionFactory().getCurrentSession();
-
-        if (getByCode(item.getCode()) != null) {
-            throw new ComkerFieldDuplicatedException(400, "Role has already existed");
-        }
-
         session.save(item);
-
         return item;
     }
 

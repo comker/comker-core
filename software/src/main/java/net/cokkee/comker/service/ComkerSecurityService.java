@@ -14,6 +14,9 @@ public interface ComkerSecurityService {
     
     ComkerUserDetails getUserDetails();
 
+    ComkerUserDetails loadUserDetails(String username)
+            throws UsernameNotFoundException, DataAccessException;
+    
     ComkerUserDetails loadUserDetails(String username, String spotCode)
             throws UsernameNotFoundException, DataAccessException;
 

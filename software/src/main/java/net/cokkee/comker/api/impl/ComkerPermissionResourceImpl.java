@@ -4,7 +4,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerPermissionResource;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerPermissionStorage;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.service.ComkerSessionService;
@@ -57,12 +56,7 @@ public class ComkerPermissionResourceImpl implements ComkerPermissionResource {
     }
 
     @Override
-    public Response getPermissionItem(String id)
-                    throws ComkerObjectNotFoundException {
-        ComkerPermissionDTO item = permissionStorage.get(id);
-        if (item == null) {
-            throw new ComkerObjectNotFoundException("Permission not found");
-        }
-        return Response.ok().entity(item).build();
+    public Response getPermissionItem(String id) {
+        return Response.ok().entity(permissionStorage.get(id)).build();
     }
 }

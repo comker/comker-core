@@ -3,7 +3,6 @@ package net.cokkee.comker.api.impl;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerMemberResource;
-import net.cokkee.comker.exception.ComkerForbiddenAccessException;
 import net.cokkee.comker.storage.ComkerUserStorage;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityService;

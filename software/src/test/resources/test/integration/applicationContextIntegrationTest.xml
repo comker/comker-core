@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/interceptor-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/manager-context.xml" />
+    
+    <bean id="characterEncodingFilter"
+            class="org.springframework.web.filter.CharacterEncodingFilter">
+        <property name="encoding" value="UTF-8" />
+    </bean>
+    
+    <bean id="propertyConfigurer"
+            class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/test/integration/test.properties" />
+    </bean>
+
+    <util:list id="comkerInitializationServiceList"
+            value-type="net.cokkee.comker.service.ComkerInitializationService">
+    </util:list>
+    
+    <tx:annotation-driven transaction-manager="comkerTransactionManager" />
+
+    <bean id="comkerTransactionManager"
+            class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="comkerDataSource"/>
+    </bean>
+
+    <bean id="comkerDataSource"
+            class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <util:properties id="comkerHibernateProperties">
+        <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+        <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+        <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+    </util:properties>
+</beans>

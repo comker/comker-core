@@ -1,8 +1,9 @@
 package net.cokkee.comker.dao.impl;
 
+import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 
 import net.cokkee.comker.model.po.ComkerSettingEntry;
 import net.cokkee.comker.model.po.ComkerSettingEntryPk;
@@ -79,9 +80,6 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerSettingKey create(ComkerSettingKey item) {
         Session session = this.getSessionFactory().getCurrentSession();
-        if (getByCode(item.getCode()) != null) {
-            throw new ComkerFieldDuplicatedException(400, "SettingKey has already existed");
-        }
         session.save(item);
         return item;
     }
@@ -132,7 +130,14 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
-                throw new ComkerObjectNotFoundException("setting_not_found");
+                throw new ComkerObjectNotFoundException(
+                    "settingentry_with__key__and__spot__and__user__not_found",
+                    new ComkerExceptionExtension(
+                            "error.settingentry_with__key__and__spot__and__user__not_found", 
+                            new Object[] {key.getCode(), spot.getCode(), user.getUsername()}, 
+                            MessageFormat.format(
+                                    "Setting entry object identified by:{0}-{1}-{2} not found", 
+                                    new Object[] {key.getCode(), spot.getCode(), user.getUsername()})));
             } else {
                 return null;
             }
@@ -148,7 +153,14 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
-                throw new ComkerObjectNotFoundException("setting_not_found");
+                throw new ComkerObjectNotFoundException(
+                    "settingentry_with__key__and__spot__and__user__not_found",
+                    new ComkerExceptionExtension(
+                            "error.settingentry_with__key__and__spot__and__user__not_found", 
+                            new Object[] {key.getCode(), spot.getCode(), user.getUsername()}, 
+                            MessageFormat.format(
+                                    "Setting entry object identified by:{0}-{1}-{2} not found", 
+                                    new Object[] {key.getCode(), spot.getCode(), user.getUsername()})));
             } else {
                 return;
             }
@@ -187,7 +199,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
-                throw new ComkerObjectNotFoundException(401, "Setting not found");
+                throw new ComkerObjectNotFoundException("Setting not found");
             } else {
                 return null;
             }
@@ -203,7 +215,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
-                throw new ComkerObjectNotFoundException(401, "Setting not found");
+                throw new ComkerObjectNotFoundException("Setting not found");
             } else {
                 return;
             }

@@ -14,7 +14,8 @@ import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.impl.ComkerUserStorageImpl;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
@@ -292,14 +293,14 @@ public class ComkerUserStorageUnitTest {
             }
         }).when(userDao).collectCrew(anySet(), any(ComkerUser.class));
 
-        when(userDao.count(any(ComkerUserDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
+        when(userDao.count(any(ComkerQuerySieve.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return userMap.size();
             }
         });
 
-        when(userDao.findAll(any(ComkerUserDTO.Filter.class), any(ComkerPager.class)))
+        when(userDao.findAll(any(ComkerQuerySieve.class), any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerUser>>() {
             @Override
             public List<ComkerUser> answer(InvocationOnMock invocation) throws Throwable {

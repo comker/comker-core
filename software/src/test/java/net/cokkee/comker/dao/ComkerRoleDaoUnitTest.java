@@ -3,7 +3,7 @@ package net.cokkee.comker.dao;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
@@ -104,7 +104,7 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerPager(1, 3));
+        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerQueryPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_02");
         Assert.assertEquals(list.get(2).getCode(), "ROLE_04");
@@ -112,7 +112,7 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerPager(4, 10));
+        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerQueryPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_05");
     }

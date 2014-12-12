@@ -9,7 +9,8 @@ import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
 import net.cokkee.comker.storage.impl.ComkerRoleStorageImpl;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
@@ -108,14 +109,14 @@ public class ComkerRoleStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(roleDao.count(any(ComkerRoleDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
+        when(roleDao.count(any(ComkerQuerySieve.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return roleIdx.size();
             }
         });
 
-        when(roleDao.findAll(any(ComkerRoleDTO.Filter.class), any(ComkerPager.class)))
+        when(roleDao.findAll(any(ComkerQuerySieve.class), any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerRole>>() {
             @Override
             public List<ComkerRole> answer(InvocationOnMock invocation) throws Throwable {

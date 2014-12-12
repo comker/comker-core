@@ -5,9 +5,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerSpotResource;
 import net.cokkee.comker.storage.ComkerSpotStorage;
-import net.cokkee.comker.exception.ComkerAccessDatabaseException;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
@@ -59,10 +57,8 @@ public class ComkerSpotResourceImpl implements ComkerSpotResource {
     }
 
     @Override
-    public Response getSpotItem(String id)
-                    throws ComkerObjectNotFoundException {
-        ComkerSpotDTO item = spotStorage.get(id);
-        return Response.ok().entity(item).build();
+    public Response getSpotItem(String id) {
+        return Response.ok().entity(spotStorage.get(id)).build();
     }
 
     @Override
@@ -92,10 +88,7 @@ public class ComkerSpotResourceImpl implements ComkerSpotResource {
         spotStorage.update(item);
 
         ComkerSpotDTO current = spotStorage.get(item.getId());
-        if (current == null) {
-            throw new ComkerObjectNotFoundException("Spot not found");
-        }
-
+        
         return Response.ok().entity(current).build();
     }
 
@@ -107,22 +100,13 @@ public class ComkerSpotResourceImpl implements ComkerSpotResource {
         }
 
         ComkerSpotDTO item = spotStorage.get(id);
-        if (item == null) {
-            throw new ComkerObjectNotFoundException("Spot not found");
+        
+        spotStorage.delete(id);
+        
+        if (log.isDebugEnabled()) {
+            log.debug(MessageFormat.format("Spot#{0} deleted", new Object[] {id}));
         }
-
-        try {
-            spotStorage.delete(id);
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format("Spot#{0} deleted", new Object[] {id}));
-            }
-            return Response.ok().entity(item).build();
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error(MessageFormat.format("Exception {0} - message:{1}",
-                        new Object[] {e.getClass().getName(), e.getMessage()}));
-            }
-            throw new ComkerAccessDatabaseException("Access database failure");
-        }
+        
+        return Response.ok().entity(item).build();
     }
 }

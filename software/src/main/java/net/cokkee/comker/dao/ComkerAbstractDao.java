@@ -2,7 +2,7 @@ package net.cokkee.comker.dao;
 
 import java.util.List;
 import java.util.Map;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 
 /**
  *
@@ -21,5 +21,5 @@ public interface ComkerAbstractDao {
 
     Integer count(String query, Map<String,Object> params);
     
-    List findAll(String query, Map<String,Object> params, ComkerPager filter);
+    List findAll(String query, Map<String,Object> params, ComkerQueryPager filter);
 }

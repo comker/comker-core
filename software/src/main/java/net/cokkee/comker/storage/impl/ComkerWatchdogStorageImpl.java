@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.cokkee.comker.dao.ComkerWatchdogDao;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.model.po.ComkerWatchdog;
 import net.cokkee.comker.service.ComkerToolboxService;
@@ -50,21 +51,21 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerWatchdogDTO> findAll(ComkerPager pager) {
+    public List<ComkerWatchdogDTO> findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerWatchdogDTO.Filter filter) {
-        return getWatchdogDao().count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return getWatchdogDao().count(sieve);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerWatchdogDTO> findAll(ComkerWatchdogDTO.Filter filter, ComkerPager pager) {
+    public List<ComkerWatchdogDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerWatchdogDTO> poList = new ArrayList<ComkerWatchdogDTO>();
-        List dbList = getWatchdogDao().findAll(filter, pager);
+        List dbList = getWatchdogDao().findAll(sieve, pager);
         for(Object dbItem:dbList) {
             ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);

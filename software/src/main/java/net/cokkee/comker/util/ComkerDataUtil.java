@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.lang.reflect.InvocationTargetException;
-import net.cokkee.comker.exception.ComkerIllegalAccessException;
+import net.cokkee.comker.exception.ComkerCopyPropertiesException;
 import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -166,11 +166,11 @@ public class ComkerDataUtil {
                 BeanUtils.copyProperties(dest, src);
             }
         } catch (IllegalAccessException e) {
-            throw new ComkerIllegalAccessException("IllegalAccessException");
+            throw new ComkerCopyPropertiesException("IllegalAccessException", e);
         } catch (InvocationTargetException e) {
-            throw new ComkerIllegalAccessException("InvocationTargetException");
+            throw new ComkerCopyPropertiesException("InvocationTargetException", e);
         } catch (NoSuchMethodException e) {
-            throw new ComkerIllegalAccessException("NoSuchMethodException");
+            throw new ComkerCopyPropertiesException("NoSuchMethodException", e);
         }
     }
 

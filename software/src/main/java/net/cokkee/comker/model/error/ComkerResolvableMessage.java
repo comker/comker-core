@@ -6,12 +6,12 @@ import java.io.Serializable;
  *
  * @author drupalex
  */
-public class ComkerMessageResolvable implements Serializable {
+public class ComkerResolvableMessage implements Serializable {
 
-    public ComkerMessageResolvable() {
+    public ComkerResolvableMessage() {
     }
 
-    public ComkerMessageResolvable(String code, Object[] arguments, String defaultMessage) {
+    public ComkerResolvableMessage(String code, Object[] arguments, String defaultMessage) {
         this.code = code;
         this.arguments = arguments;
         this.defaultMessage = defaultMessage;

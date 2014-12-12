@@ -1,5 +1,7 @@
 package net.cokkee.comker.service.impl;
 
+import java.util.List;
+
 import net.cokkee.comker.service.*;
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerNavbarDao;
@@ -156,6 +158,8 @@ public abstract class ComkerInitializationCommonImpl
         userDao.addCrew(user, crew);
     }
 
+    //==========================================================================
+    
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerSpot getOrCreateSpot(String code, String name, String description) {
         ComkerSpot item = spotDao.getByCode(code);
@@ -176,7 +180,8 @@ public abstract class ComkerInitializationCommonImpl
         return getOrCreateSpot(ComkerSpot.DEFAULT, "DEFAULT SPOT", "");
     }
 
-
+    //==========================================================================
+    
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerUser getOrCreateUser(String email, String username, String password, String fullname){
         ComkerUser item = userDao.getByUsername(username);
@@ -197,6 +202,7 @@ public abstract class ComkerInitializationCommonImpl
         return getOrCreateUser("default@cokkee.net", ComkerUser.DEFAULT, "ff808181442e048701442e04aa610006", "DEFAULT USER");
     }
 
+    //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerSettingKey getOrCreateSettingKey(String code, String type, String range) {
@@ -208,13 +214,25 @@ public abstract class ComkerInitializationCommonImpl
         return item;
     }
 
+    //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerCrew getOrCreateCrew(ComkerSpot spot, ComkerRole role, String name, String description) {
-        ComkerCrew item = crewDao.getBySpotWithRole(spot, role);
+    protected ComkerCrew getOrCreateCrew(ComkerRole globalRole, String name, String description) {
+        ComkerCrew item = crewDao.getByName(name);
         if (item == null) {
             item = new ComkerCrew(name, description);
-            crewDao.save(item);
+            crewDao.create(item);
+            crewDao.addGlobalRole(item, globalRole);
+        } 
+        return item;
+    }
+    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    protected ComkerCrew getOrCreateCrew(ComkerSpot spot, ComkerRole role, String name, String description) {
+        ComkerCrew item = crewDao.getByName(name);
+        if (item == null) {
+            item = new ComkerCrew(name, description);
+            crewDao.update(item);
             crewDao.addRoleWithSpot(item, role, spot);
         }
         return item;
@@ -225,15 +243,10 @@ public abstract class ComkerInitializationCommonImpl
         Assert.notNull(spot, "Spot should be not null");
         Assert.notNull(role, "Role should be not null");
 
-        ComkerCrew item = crewDao.getBySpotWithRole(spot, role);
-        if (item == null) {
-            item = new ComkerCrew(role.getCode() + " group of [" + spot.getName() + "]", "");
-            crewDao.save(item);
-            crewDao.addRoleWithSpot(item, role, spot);
-        }
-        return item;
+        return getOrCreateCrew(spot, role, role.getCode() + " group of [" + spot.getName() + "]", "");
     }
 
+    //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerRole getOrCreateRole(String code, String name, String description) {
@@ -265,6 +278,7 @@ public abstract class ComkerInitializationCommonImpl
         return getOrCreateRole("Guest", "Thành viên tự do", "Thành viên không thuộc vùng hoạt động");
     }
 
+    //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerPermission getOrCreatePermission(String authority) {
@@ -276,6 +290,8 @@ public abstract class ComkerInitializationCommonImpl
         return item;
     }
 
+    //==========================================================================
+    
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected void initComkerNavbars() {
         ComkerNavbarNode nodeRoot = new ComkerNavbarNode("__NAVBAR_ROOT__", null, 

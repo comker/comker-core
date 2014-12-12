@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerModule;
 
 import org.hibernate.Criteria;
@@ -39,7 +39,7 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerModule findWhere(Map<String,Object> params) {
-        List result = findAllWhere(params, ComkerPager.ONE);
+        List result = findAllWhere(params, ComkerQueryPager.ONE);
         if (result.isEmpty()) return null;
         return (ComkerModule)result.get(0);
     }
@@ -55,10 +55,10 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerPager filter) {
+    public List findAll(ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerModule.class);
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         return c.list();
     }
 
@@ -76,13 +76,13 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerModule.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         return c.list();
     }
 

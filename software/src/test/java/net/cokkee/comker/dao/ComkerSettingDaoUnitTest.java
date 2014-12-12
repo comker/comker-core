@@ -3,7 +3,7 @@ package net.cokkee.comker.dao;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerSettingEntry;
 import net.cokkee.comker.model.po.ComkerSettingEntryPk;
 import net.cokkee.comker.model.po.ComkerSettingKey;

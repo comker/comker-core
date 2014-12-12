@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.cokkee.comker.dao.ComkerSpotDao;
-import net.cokkee.comker.exception.ComkerFieldDuplicatedException;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerSpot;
 
@@ -38,10 +37,10 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerSpotDTO.Filter filter,ComkerPager pager) {
+    public List findAll(ComkerSpotDTO.Filter filter,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
@@ -60,13 +59,13 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         return c.list();
     }
 
@@ -102,13 +101,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerSpot create(ComkerSpot item) {
         Session session = this.getSessionFactory().getCurrentSession();
-
-        if (getByCode(item.getCode()) != null) {
-            throw new ComkerFieldDuplicatedException("Spot has already existed");
-        }
-
         session.save(item);
-
         return item;
     }
 
@@ -126,33 +119,4 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
         Session session = this.getSessionFactory().getCurrentSession();
         session.delete(item);
     }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(String id) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSpot item = (ComkerSpot) session.get(ComkerSpot.class, id);
-        session.delete(item);
-    }
-
-    /*
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public Map<String,Set<String>> getCodeOfCrewWithRole(ComkerSpot spot) {
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
-
-        List<ComkerCrewJoinRoleWithSpot> joinRoleWithSpots = spot.getCrewJoinRoleWithSpotList();
-        for(ComkerCrewJoinRoleWithSpot item:joinRoleWithSpots) {
-            ComkerCrew crew = item.getCrew();
-            Set<String> roleSet = result.get(crew.getName());
-            if (roleSet == null) {
-                roleSet = new HashSet<String>();
-                result.put(crew.getName(), roleSet);
-            }
-            roleSet.add(item.getRole().getCode());
-        }
-
-        return result;
-    }
-    */
 }

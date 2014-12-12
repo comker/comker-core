@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerWatchdogResource;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class ComkerWatchdogResourceImpl implements ComkerWatchdogResource {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerWatchdogResourceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerWatchdogResourceImpl.class);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -65,12 +64,7 @@ public class ComkerWatchdogResourceImpl implements ComkerWatchdogResource {
     }
 
     @Override
-    public Response getWatchItem(String id)
-                    throws ComkerObjectNotFoundException {
-        ComkerWatchdogDTO item = getWatchdogStorage().get(id);
-        if (item == null) {
-            throw new ComkerObjectNotFoundException("Watchdog not found");
-        }
-        return Response.ok().entity(item).build();
+    public Response getWatchItem(String id) {
+        return Response.ok().entity(getWatchdogStorage().get(id)).build();
     }
 }

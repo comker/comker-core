@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.impl.ComkerCrewResourceImpl;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerCrewStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.structure.ComkerKeyAndValueSet;
@@ -116,11 +116,11 @@ public class ComkerCrewResourceUnitTest {
             }
         });
 
-        Mockito.when(crewStorage.findAll(Mockito.any(ComkerPager.class)))
+        Mockito.when(crewStorage.findAll(Mockito.any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerCrewDTO>>() {
             @Override
             public List<ComkerCrewDTO> answer(InvocationOnMock invocation) throws Throwable {
-                ComkerPager p = (ComkerPager) invocation.getArguments()[0];
+                ComkerQueryPager p = (ComkerQueryPager) invocation.getArguments()[0];
                 List<ComkerCrewDTO> result = new ArrayList<ComkerCrewDTO>(crewMap.values());
 
                 if (p != null) {
@@ -185,12 +185,12 @@ public class ComkerCrewResourceUnitTest {
 
         Mockito.when(sessionService.getPager(Mockito.any(Class.class),
                     Mockito.any(Integer.class), Mockito.any(Integer.class)))
-                .thenAnswer(new Answer<ComkerPager>() {
+                .thenAnswer(new Answer<ComkerQueryPager>() {
             @Override
-            public ComkerPager answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerQueryPager answer(InvocationOnMock invocation) throws Throwable {
                 Integer start = (Integer) invocation.getArguments()[1];
                 Integer limit = (Integer) invocation.getArguments()[2];
-                ComkerPager pager = new ComkerPager();
+                ComkerQueryPager pager = new ComkerQueryPager();
                 if (start != null) pager.setStart(start);
                 if (limit != null) pager.setLimit(limit);
                 return pager;
@@ -208,7 +208,7 @@ public class ComkerCrewResourceUnitTest {
         ComkerCrewDTO.Pack pack = resp.readEntity(ComkerCrewDTO.Pack.class);
         Assert.assertTrue(pack.getTotal() == crewMap.size());
         Assert.assertTrue(pack.getCollection().size() <= crewMap.size());
-        Assert.assertTrue(pack.getCollection().size() <= ComkerPager.DEFAULT_LIMIT);
+        Assert.assertTrue(pack.getCollection().size() <= ComkerQueryPager.DEFAULT_LIMIT);
 
         List<String> resultIds = new ArrayList<String>();
         List<ComkerCrewDTO> collection = pack.getCollection();

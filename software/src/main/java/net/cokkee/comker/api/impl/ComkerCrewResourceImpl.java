@@ -6,7 +6,6 @@ import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.ComkerCrewResource;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.storage.ComkerCrewStorage;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.slf4j.Logger;
@@ -60,9 +59,6 @@ public class ComkerCrewResourceImpl implements ComkerCrewResource {
     @Override
     public Response getCrewItem(String id) {
         ComkerCrewDTO item = crewStorage.get(id);
-        if (item == null) {
-            throw new ComkerObjectNotFoundException("Crew not found");
-        }
         return Response.ok().entity(item).build();
     }
 

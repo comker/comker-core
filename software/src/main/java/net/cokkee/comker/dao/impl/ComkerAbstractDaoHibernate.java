@@ -3,7 +3,7 @@ package net.cokkee.comker.dao.impl;
 import java.util.List;
 import java.util.Map;
 
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.dao.ComkerAbstractDao;
 
 import org.hibernate.Query;
@@ -41,12 +41,12 @@ public abstract class ComkerAbstractDaoHibernate implements ComkerAbstractDao {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(String query, Map<String,Object> params, ComkerPager filter) {
+    public List findAll(String query, Map<String,Object> params, ComkerQueryPager filter) {
         Query q = getSessionFactory().getCurrentSession().createQuery(query);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             q.setParameter(param.getKey(), param.getValue());
         }
-        ComkerPager.apply(q, filter);
+        ComkerQueryPager.apply(q, filter);
         return q.list();
     }
 }

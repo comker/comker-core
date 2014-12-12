@@ -3,8 +3,8 @@ package net.cokkee.comker.dao;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerRoleDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerPermission;
 
 import net.cokkee.comker.model.po.ComkerRole;
@@ -15,19 +15,13 @@ import net.cokkee.comker.model.po.ComkerRole;
  */
 public interface ComkerRoleDao extends ComkerAbstractDao {
 
-    Integer count(ComkerRoleDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    List findAll(ComkerRoleDTO.Filter filter, ComkerPager pager);
+    List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager);
 
     ComkerRole findWhere(Map<String,Object> params);
 
-    List findAllWhere(Map<String,Object> params, ComkerPager pager);
-
-    @Deprecated
-    Set<String> getAuthorities(String id);
-
-    @Deprecated
-    Set<String> getAuthorities(ComkerRole role);
+    List findAllWhere(Map<String,Object> params, ComkerQueryPager pager);
 
     Boolean exists(String id);
 

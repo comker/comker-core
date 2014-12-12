@@ -1,5 +1,6 @@
 package net.cokkee.comker.storage.impl;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 import net.cokkee.comker.dao.ComkerNavbarDao;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerNavbarStorage;
 import net.cokkee.comker.model.dto.ComkerNavNodeFormDTO;
 import net.cokkee.comker.model.dto.ComkerNavNodeViewDTO;
@@ -115,7 +117,12 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     private ComkerNavbarNode getNotNull(String id) {
         ComkerNavbarNode dbItem = navbarDao.get(id);
         if (dbItem == null) {
-            throw new ComkerObjectNotFoundException("navbar_node_not_found");
+            throw new ComkerObjectNotFoundException(
+                    "navbarnode_with__id__not_found",
+                    new ComkerExceptionExtension("error.navbarnode_with__id__not_found", 
+                            new Object[] {id}, 
+                            MessageFormat.format("NavbarNode object with id:{0} not found", 
+                                    new Object[] {id})));
         }
         return dbItem;
     }

@@ -10,41 +10,56 @@ import org.hibernate.Query;
  * @author drupalex
  */
 @XmlRootElement
-public class ComkerPager implements Serializable {
+public class ComkerQueryPager implements Serializable {
 
     public static final Integer DEFAULT_START = new Integer(0);
     public static final Integer DEFAULT_LIMIT = new Integer(10);
 
-    public static final ComkerPager ONE = new ComkerPager(DEFAULT_START, new Integer(1));
+    public static final ComkerQueryPager ONE = new ComkerQueryPager(DEFAULT_START, new Integer(1));
 
-    public ComkerPager() {
+    public ComkerQueryPager() {
          this.start = DEFAULT_START;
          this.limit = DEFAULT_LIMIT;
     }
 
-    public ComkerPager(Integer start, Integer limit) {
+    public ComkerQueryPager(Integer start, Integer limit) {
         this.start = start;
         this.limit = limit;
     }
 
     private Integer start;
+    private Integer limit;
 
     public Integer getStart() {
         return start;
     }
 
-    public void setStart(Integer start) {
-        this.start = start;
+    public ComkerQueryPager setStart(Integer start) {
+        this.start = (start == null || start > 0) ? start : 0;
+        return this;
     }
-
-    private Integer limit;
+    
+    public ComkerQueryPager updateStart(Integer start) {
+        if (start != null) {
+            this.start = (start > 0) ? start : 0;
+        }
+        return this;
+    }
 
     public Integer getLimit() {
         return limit;
     }
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
+    public ComkerQueryPager setLimit(Integer limit) {
+        this.limit = (limit == null || limit > 0) ? limit : 0;
+        return this;
+    }
+    
+    public ComkerQueryPager updateLimit(Integer limit) {
+        if (limit != null) {
+            this.limit = (limit > 0) ? limit : 0;
+        }
+        return this;
     }
 
     private String sortedCol = null;
@@ -67,7 +82,7 @@ public class ComkerPager implements Serializable {
         this.sortedDir = sortedDir;
     }
 
-    public void updateTo(ComkerPager target) {
+    public void updateTo(ComkerQueryPager target) {
         if (target == null) {
             return;
         }
@@ -105,14 +120,14 @@ public class ComkerPager implements Serializable {
         return c;
     }
 
-    public static Query apply(Query query, ComkerPager pager) {
+    public static Query apply(Query query, ComkerQueryPager pager) {
         if (pager != null) {
             pager.applyTo(query);
         }
         return query;
     }
 
-    public static Criteria apply(Criteria c, ComkerPager pager) {
+    public static Criteria apply(Criteria c, ComkerQueryPager pager) {
         if (pager != null) {
             pager.applyTo(c);
         }

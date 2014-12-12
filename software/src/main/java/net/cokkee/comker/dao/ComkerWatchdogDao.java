@@ -2,8 +2,8 @@ package net.cokkee.comker.dao;
 
 import java.util.List;
 import java.util.Map;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerWatchdog;
 
 /**
@@ -12,13 +12,13 @@ import net.cokkee.comker.model.po.ComkerWatchdog;
  */
 public interface ComkerWatchdogDao extends ComkerAbstractDao {
 
-    Integer count(ComkerWatchdogDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    List findAll(ComkerWatchdogDTO.Filter filter,ComkerPager pager);
+    List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager);
     
     ComkerWatchdog findWhere(Map<String,Object> params);
 
-    List findAllWhere(Map<String,Object> params, ComkerPager pager);
+    List findAllWhere(Map<String,Object> params, ComkerQueryPager pager);
 
     ComkerWatchdog get(String id);
 

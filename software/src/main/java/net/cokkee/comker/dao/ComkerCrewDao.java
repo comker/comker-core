@@ -3,8 +3,8 @@ package net.cokkee.comker.dao;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerCrewDTO;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -18,13 +18,15 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     public static final String FIELD_SPOT = "pk.spot";
     public static final String FIELD_ROLE = "pk.role";
 
-    Integer count(ComkerCrewDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    List findAll(ComkerCrewDTO.Filter filter,ComkerPager pager);
+    List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager);
     
     ComkerCrew findWhere(Map<String,Object> params);
 
-    List findAllWhere(Map<String,Object> params, ComkerPager filter);
+    List findAllWhere(Map<String,Object> params, ComkerQueryPager filter);
+    
+    List findAllWhere(ComkerRole globalRole);
 
     Boolean exists(String id);
 
@@ -33,9 +35,6 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     ComkerCrew getByName(String name);
 
     ComkerCrew getBySpotWithRole(ComkerSpot spot, ComkerRole role);
-
-    @Deprecated
-    ComkerCrew save(ComkerCrew item);
 
     ComkerCrew create(ComkerCrew item);
 
@@ -54,28 +53,4 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
     void removeRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
 
     void collectSpotWithRole(Map<ComkerSpot,Set<ComkerRole>> bag, ComkerCrew crew);
-
-    @Deprecated
-    Set<String> getCodeOfGlobalRole(ComkerCrew crew);
-
-    @Deprecated
-    void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew);
-
-    @Deprecated
-    Set<String> getCodeOfGlobalPermission(ComkerCrew crew);
-
-    @Deprecated
-    void collectCodeOfGlobalPermission(Set<String> bag, ComkerCrew crew);
-
-    @Deprecated
-    Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew);
-
-    @Deprecated
-    void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew);
-
-    @Deprecated
-    Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerCrew crew);
-
-    @Deprecated
-    void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew);
 }

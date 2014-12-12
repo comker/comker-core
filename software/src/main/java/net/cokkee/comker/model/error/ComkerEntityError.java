@@ -4,7 +4,7 @@ package net.cokkee.comker.model.error;
  *
  * @author drupalex
  */
-public class ComkerEntityError extends ComkerMessageResolvable {
+public class ComkerEntityError extends ComkerResolvableMessage {
 
     public ComkerEntityError() {
     }

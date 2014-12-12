@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerWatchdog;
 import org.hamcrest.CoreMatchers;
 
@@ -76,8 +76,8 @@ public class ComkerWatchdogDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List list = testWatchdogDao.findAll(null,new ComkerPager());
-        Assert.assertTrue(list.size() == ComkerPager.DEFAULT_LIMIT);
+        List list = testWatchdogDao.findAll(null,new ComkerQueryPager());
+        Assert.assertTrue(list.size() == ComkerQueryPager.DEFAULT_LIMIT);
     }
 
     @Test

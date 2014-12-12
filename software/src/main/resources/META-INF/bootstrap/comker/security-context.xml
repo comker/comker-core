@@ -35,6 +35,39 @@
         <security:intercept-url pattern="/ws/comker/api/auth/**" access="permitAll"/>
         <security:intercept-url pattern="/ws/comker/api/**" access="hasRole('PERM_COMKER_USER')"/>
         
+        <security:intercept-url pattern="/adm/module" method="GET" access="hasRole('PERM_COMKER_MODULE_L')"/>
+        <security:intercept-url pattern="/adm/module/**" method="GET" access="hasRole('PERM_COMKER_MODULE_R')"/>
+        
+        <security:intercept-url pattern="/adm/spot" method="GET" access="hasRole('PERM_COMKER_SPOT_L')"/>
+        <security:intercept-url pattern="/adm/spot/**" method="GET" access="hasRole('PERM_COMKER_SPOT_R')"/>
+        <security:intercept-url pattern="/adm/spot/**" method="POST" access="hasRole('PERM_COMKER_SPOT_W')"/>
+        <security:intercept-url pattern="/adm/spot/**" method="PUT" access="hasRole('PERM_COMKER_SPOT_W')"/>
+        <security:intercept-url pattern="/adm/spot/**" method="DELETE" access="hasRole('PERM_COMKER_SPOT_D')"/>
+        
+        <security:intercept-url pattern="/adm/permission" method="GET" access="hasRole('PERM_COMKER_PERMISSION_L')"/>
+        <security:intercept-url pattern="/adm/permission/**" method="GET" access="hasRole('PERM_COMKER_PERMISSION_R')"/>
+        
+        <security:intercept-url pattern="/adm/role" method="GET" access="hasRole('PERM_COMKER_ROLE_L')"/>
+        <security:intercept-url pattern="/adm/role/**" method="GET" access="hasRole('PERM_COMKER_ROLE_R')"/>
+        <security:intercept-url pattern="/adm/role/**" method="POST" access="hasRole('PERM_COMKER_ROLE_W')"/>
+        <security:intercept-url pattern="/adm/role/**" method="PUT" access="hasRole('PERM_COMKER_ROLE_W')"/>
+        <security:intercept-url pattern="/adm/role/**" method="DELETE" access="hasRole('PERM_COMKER_ROLE_D')"/>
+        
+        <security:intercept-url pattern="/adm/crew" method="GET" access="hasRole('PERM_COMKER_CREW_L')"/>
+        <security:intercept-url pattern="/adm/crew/**" method="GET" access="hasRole('PERM_COMKER_CREW_R')"/>
+        <security:intercept-url pattern="/adm/crew/**" method="POST" access="hasRole('PERM_COMKER_CREW_W')"/>
+        <security:intercept-url pattern="/adm/crew/**" method="PUT" access="hasRole('PERM_COMKER_CREW_W')"/>
+        <security:intercept-url pattern="/adm/crew/**" method="DELETE" access="hasRole('PERM_COMKER_CREW_D')"/>
+        
+        <security:intercept-url pattern="/adm/user" method="GET" access="hasRole('PERM_COMKER_USER_L')"/>
+        <security:intercept-url pattern="/adm/user/**" method="GET" access="hasRole('PERM_COMKER_USER_R')"/>
+        <security:intercept-url pattern="/adm/user/**" method="POST" access="hasRole('PERM_COMKER_USER_W')"/>
+        <security:intercept-url pattern="/adm/user/**" method="PUT" access="hasRole('PERM_COMKER_USER_W')"/>
+        <security:intercept-url pattern="/adm/user/**" method="DELETE" access="hasRole('PERM_COMKER_USER_D')"/>
+        
+        <security:intercept-url pattern="/adm/watchdog" method="GET" access="hasRole('PERM_COMKER_WATCHDOG_L')"/>
+        <security:intercept-url pattern="/adm/watchdog/**" method="GET" access="hasRole('PERM_COMKER_WATCHDOG_R')"/>
+        
         <!-- Form login support -->
         <security:custom-filter before="FORM_LOGIN_FILTER" ref="comkerAjaxFormLoginFilter"/>
 
@@ -61,21 +94,21 @@
                 logout-success-url="/comker/#auth/logoutSuccess"/>
     </security:http>
 
-    <!-- <security:debug/> -->
+    <security:debug/>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
     <!-- Delegating Entry Point (ajax and default) -->
-	<bean id="comkerAuthenticationEntryPoint"
-            class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
-	     <constructor-arg>
-	         <map>
-	             <entry key="hasHeader('X-Requested-With','ComkerAjaxRequest')"
-                        value-ref="comkerAjaxAuthenticationEntryPoint"/>
-	         </map>
-	     </constructor-arg>
-	     <property name="defaultEntryPoint" ref="comkerDefaultAuthenticationEntryPoint"/>
-	</bean>
+    <bean id="comkerAuthenticationEntryPoint"
+        class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+         <constructor-arg>
+             <map>
+                 <entry key="hasHeader('X-Requested-With','ComkerAjaxRequest')"
+                    value-ref="comkerAjaxAuthenticationEntryPoint"/>
+             </map>
+         </constructor-arg>
+         <property name="defaultEntryPoint" ref="comkerDefaultAuthenticationEntryPoint"/>
+    </bean>
 
     <bean id="comkerAjaxAuthenticationEntryPoint"
             class="net.cokkee.comker.security.web.authentication.ComkerAjaxAuthenticationEntryPoint">
@@ -84,8 +117,8 @@
 
     <bean id="comkerDefaultAuthenticationEntryPoint"
             class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<property name="loginFormUrl" value="/comker/#auth/login"/>
-	</bean>
+        <property name="loginFormUrl" value="/comker/#auth/login"/>
+    </bean>
 
 
     <bean id="comkerAjaxFormLoginFilter"
@@ -117,6 +150,7 @@
         </property>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:custom-filter position="BASIC_AUTH_FILTER" ref="comkerBasicAuthenticationFilter"/>
 
@@ -137,6 +171,7 @@
     </bean>
     -->
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:custom-filter position="FORM_LOGIN_FILTER" ref="comkerFormLoginFilter"/>
 
@@ -170,7 +205,8 @@
         </property>
     </bean>
     -->
-    
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:custom-filter position="LOGOUT_FILTER" ref="comkerLogoutFilter"/>
 
@@ -205,6 +241,7 @@
     </bean>
     -->
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:custom-filter position="REMEMBER_ME_FILTER" ref="comkerRememberMeFilter"/>
 
@@ -237,6 +274,7 @@
     </bean>
     -->
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:custom-filter position="ANONYMOUS_FILTER" ref="comkerAnonymousFilter"/>
 
@@ -246,6 +284,7 @@
     </bean>
     -->
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     There are 3 built-in decision managers:
     - AffirmativeBased: At least one voter must vote to grant access
@@ -285,6 +324,7 @@
     <bean id="comkerExpressionHandler"
             class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!--
     <security:authentication-manager alias="comkerAuthenticationManager">
         <security:authentication-provider>

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.storage.ComkerPermissionStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.service.ComkerToolboxService;
@@ -44,19 +45,19 @@ public class ComkerPermissionStorageImpl extends ComkerAbstractStorageImpl
     }
 
     @Override
-    public List findAll(ComkerPager pager) {
+    public List findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
     @Override
-    public Integer count(ComkerPermissionDTO.Filter filter) {
-        return permissionDao.count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return permissionDao.count(sieve);
     }
 
     @Override
-    public List findAll(ComkerPermissionDTO.Filter filter, ComkerPager pager) {
+    public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerPermissionDTO> polist = new ArrayList<ComkerPermissionDTO>();
-        List dblist = permissionDao.findAll(filter, pager);
+        List dblist = permissionDao.findAll(sieve, pager);
         for(Object dbitem:dblist) {
             ComkerPermissionDTO poitem = new ComkerPermissionDTO();
             ComkerDataUtil.copyProperties(dbitem, poitem);

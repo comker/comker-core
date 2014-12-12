@@ -28,23 +28,26 @@ public class ComkerExceptionExtension implements Serializable {
         return code;
     }
 
-    public void setCode(String pattern) {
+    public ComkerExceptionExtension setCode(String pattern) {
         this.code = pattern;
+        return this;
     }
 
     public Object[] getArguments() {
         return arguments;
     }
 
-    public void setArguments(Object[] arguments) {
+    public ComkerExceptionExtension setArguments(Object[] arguments) {
         this.arguments = arguments;
+        return this;
     }
 
     public String getDefaultMessage() {
         return defaultMessage;
     }
 
-    public void setDefaultMessage(String defaultMessage) {
+    public ComkerExceptionExtension setDefaultMessage(String defaultMessage) {
         this.defaultMessage = defaultMessage;
+        return this;
     }
 }

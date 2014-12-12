@@ -4,12 +4,14 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.exception.ComkerForbiddenAccessException;
+import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 import net.cokkee.comker.model.ComkerUserDetails;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
 import net.cokkee.comker.service.ComkerSecurityService;
+import net.cokkee.comker.storage.ComkerUserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -31,16 +33,12 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     private final Logger log = LoggerFactory.getLogger(ComkerSecurityServiceImpl.class);
 
 
-    private ComkerUserDao userDao = null;
+    private ComkerUserStorage userStorage = null;
 
-    public ComkerUserDao getUserDao() {
-        return userDao;
+    public void setUserStorage(ComkerUserStorage userStorage) {
+        this.userStorage = userStorage;
     }
-
-    public void setUserDao(ComkerUserDao userDao) {
-        this.userDao = userDao;
-    }
-
+    
     private ComkerSecurityContextHolder securityContextHolder = null;
 
     public void setsecurityContextHolder(ComkerSecurityContextHolder securityContextHolder) {
@@ -48,10 +46,6 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     }
 
     private UserCache userCache = null;
-
-    public UserCache getUserCache() {
-        return userCache;
-    }
 
     public void setUserCache(UserCache userCache) {
         this.userCache = userCache;
@@ -85,6 +79,13 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
     
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public ComkerUserDetails loadUserDetails(String username)
+            throws UsernameNotFoundException, DataAccessException {
+        return loadUserDetails(username, null);
+    }
+    
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerUserDetails loadUserDetails(String username, String spotCode)
             throws UsernameNotFoundException, DataAccessException {
 
@@ -92,9 +93,9 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
             log.debug("loadUserByUsername(" + username + ")");
         }
 
-        ComkerUser user = null;
+        ComkerUserDTO user = null;
         if (username != null) {
-            user = getUserDao().getByUsername(username);
+            user = userStorage.getByUsername(username);
         }
 
         if (user == null) {
@@ -106,10 +107,10 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
         Set<String> authoritySet = new HashSet<String>();
 
-        authoritySet.addAll(getUserDao().getCodeOfGlobalPermission(user));
+        authoritySet.addAll(userStorage.getGlobalAuthorities(user.getId()));
 
         if (spotCode != null) {
-            Map<String,Set<String>> tree = getUserDao().getCodeOfSpotWithPermission(user);
+            Map<String,Set<String>> tree = userStorage.getSpotCodeWithAuthorities(user.getId());
             if (tree.containsKey(spotCode)) {
                 authoritySet.addAll(tree.get(spotCode));
             }
@@ -143,8 +144,8 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         }
 
         // refresh oldUserDetails details (remove from userCache)
-        if (getUserCache() != null) {
-            getUserCache().removeUserFromCache(oldUserDetails.getUsername());
+        if (userCache != null) {
+            userCache.removeUserFromCache(oldUserDetails.getUsername());
         }
     }
 
@@ -156,7 +157,10 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         String oldEncodedPassword = passwordEncoder.encodePassword(oldPassword, null);
 
         if (!oldEncodedPassword.equals(oldUserDetails.getPassword())) {
-            throw new ComkerForbiddenAccessException("invalid_password");
+            throw new ComkerForbiddenAccessException(
+                    "new_password_does_not_match_old_password",
+                    new ComkerExceptionExtension("error.new_password_does_not_match_old_password", 
+                            null, "The new password does not match the old password."));
         }
 
         String newEncodedPassword = passwordEncoder.encodePassword(newPassword, null);

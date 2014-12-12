@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public class ComkerUserDetailsService implements UserDetailsService {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerUserDetailsService.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerUserDetailsService.class);
     
     private ComkerSecurityService securityService = null;
 
@@ -28,6 +28,6 @@ public class ComkerUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException, DataAccessException {
-        return getSecurityService().loadUserDetails(username, null);
+        return getSecurityService().loadUserDetails(username);
     }
 }

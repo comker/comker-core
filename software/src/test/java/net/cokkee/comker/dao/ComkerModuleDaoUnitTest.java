@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.po.ComkerModule;
 import org.hamcrest.CoreMatchers;
 
@@ -73,8 +73,8 @@ public class ComkerModuleDaoUnitTest {
 
     @Test
     public void test_find_all_modules_with_pager() {
-        List list = testModuleDao.findAll(new ComkerPager());
-        Assert.assertTrue(list.size() == ComkerPager.DEFAULT_LIMIT);
+        List list = testModuleDao.findAll(new ComkerQueryPager());
+        Assert.assertTrue(list.size() == ComkerQueryPager.DEFAULT_LIMIT);
     }
 
     @Test

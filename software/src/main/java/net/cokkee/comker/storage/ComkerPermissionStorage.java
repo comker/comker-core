@@ -1,7 +1,8 @@
 package net.cokkee.comker.storage;
 
 import java.util.List;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 
 /**
@@ -12,11 +13,11 @@ public interface ComkerPermissionStorage {
 
     Integer count();
 
-    List findAll(ComkerPager pager);
+    List findAll(ComkerQueryPager pager);
 
-    Integer count(ComkerPermissionDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    List findAll(ComkerPermissionDTO.Filter filter, ComkerPager pager);
+    List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager);
 
     ComkerPermissionDTO get(String id);
 

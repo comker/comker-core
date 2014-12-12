@@ -13,7 +13,8 @@ import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.impl.ComkerCrewStorageImpl;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 
 import net.cokkee.comker.model.po.ComkerCrew;
@@ -239,7 +240,7 @@ public class ComkerCrewStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(crewDao.count(any(ComkerCrewDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
+        when(crewDao.count(any(ComkerQuerySieve.class))).thenAnswer(new Answer<Integer>() {
 
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
@@ -250,7 +251,7 @@ public class ComkerCrewStorageUnitTest {
         /*
          * mocks for findAll() method
          */
-        when(crewDao.findAll(any(ComkerCrewDTO.Filter.class),any(ComkerPager.class)))
+        when(crewDao.findAll(any(ComkerQuerySieve.class),any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerCrew>>() {
 
             @Override

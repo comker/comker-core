@@ -5,6 +5,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 
 /**
  *
@@ -18,7 +19,11 @@ public class ComkerRoleJoinPermissionPk implements Serializable {
 
     public ComkerRoleJoinPermissionPk(ComkerRole role, ComkerPermission permission) {
         if (role == null || permission == null) {
-            throw new ComkerInvalidParameterException("role_or_permission_should_not_be_null");
+            throw new ComkerInvalidParameterException(
+                    "ComkerRoleJoinPermissionPk_role_or_permission_is_null",
+            new ComkerExceptionExtension(
+                    "error.ComkerRoleJoinPermissionPk_role_or_permission_is_null", null, 
+                    "Error on creating ComkerRoleJoinPermissionPk: Role or Permission is NULL."));
         }
         this.role = role;
         this.permission = permission;

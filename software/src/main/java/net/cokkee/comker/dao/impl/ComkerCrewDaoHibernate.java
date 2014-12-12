@@ -1,14 +1,15 @@
 package net.cokkee.comker.dao.impl;
 
 import java.text.MessageFormat;
-import net.cokkee.comker.dao.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
-import net.cokkee.comker.model.dto.ComkerCrewDTO;
+import net.cokkee.comker.dao.*;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk;
@@ -44,7 +45,7 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerCrewDTO.Filter filter) {
+    public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerCrew.class);
         c.setProjection(Projections.rowCount());
@@ -53,10 +54,10 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerCrewDTO.Filter filter,ComkerPager pager) {
+    public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerCrew.class);
-        ComkerPager.apply(c, pager);
+        ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
@@ -75,14 +76,32 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAllWhere(Map<String,Object> params, ComkerPager filter) {
+    public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerCrew.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerPager.apply(c, filter);
+        ComkerQueryPager.apply(c, filter);
         List list = c.list();
+        return list;
+    }
+    
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List findAllWhere(ComkerRole globalRole) {
+        Session session = this.getSessionFactory().getCurrentSession();
+        Criteria c = session.createCriteria(ComkerCrewJoinGlobalRole.class);
+
+        session.buildLockRequest(LockOptions.NONE).lock(globalRole);
+
+        c.add(Restrictions.eq(FIELD_ROLE, globalRole));
+        List<ComkerCrewJoinGlobalRole> result = c.list();
+        
+        List<ComkerCrew> list = new ArrayList<ComkerCrew>();
+        for(ComkerCrewJoinGlobalRole item:result) {
+            list.add(item.getCrew());
+        }
         return list;
     }
 
@@ -112,7 +131,7 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
         params.put(FIELD_NAME, name);
         return findWhere(params);
     }
-
+    
     /* // Examples: ctx, log
         def cd = ctx.getBean('comkerCrewDao');
         def sd = ctx.getBean('comkerSpotDao');
@@ -138,15 +157,6 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
         ComkerCrewJoinRoleWithSpot result = (ComkerCrewJoinRoleWithSpot) c.uniqueResult();
         if (result == null) return null;
         return result.getCrew();
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerCrew save(ComkerCrew item) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.saveOrUpdate(item);
-        return item;
     }
 
     @Override
@@ -211,104 +221,6 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
         List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
         for(ComkerCrewJoinGlobalRole item:list) {
             bag.add(item.getRole());
-        }
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public Set<String> getCodeOfGlobalRole(ComkerCrew crew) {
-        Set<String> result = new HashSet<String>();
-        collectCodeOfGlobalRole(result, crew);
-        return result;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void collectCodeOfGlobalRole(Set<String> bag, ComkerCrew crew) {
-        if (bag == null) return;
-        List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
-        for(ComkerCrewJoinGlobalRole item:list) {
-            bag.add(item.getRole().getCode());
-        }
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public Set<String> getCodeOfGlobalPermission(ComkerCrew crew) {
-        Set<String> result = new HashSet<String>();
-        collectCodeOfGlobalPermission(result, crew);
-        return result;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void collectCodeOfGlobalPermission(Set<String> bag, ComkerCrew crew) {
-        if (bag == null) return;
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.buildLockRequest(LockOptions.NONE).lock(crew);
-        List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
-        for(ComkerCrewJoinGlobalRole item:list) {
-            bag.addAll(getRoleDao().getAuthorities(item.getRole()));
-        }
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public Map<String,Set<String>> getCodeOfSpotWithRole(ComkerCrew crew) {
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
-        collectCodeOfSpotWithRole(result, crew);
-        return result;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void collectCodeOfSpotWithRole(Map<String,Set<String>> bag, ComkerCrew crew) {
-        if (bag == null) return;
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.buildLockRequest(LockOptions.NONE).lock(crew);
-        List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
-        for(ComkerCrewJoinRoleWithSpot item:list) {
-            ComkerSpot spot = item.getSpot();
-            Set<String> roleSet = bag.get(spot.getCode());
-            if (roleSet == null) {
-                roleSet = new HashSet<String>();
-                bag.put(spot.getCode(), roleSet);
-            }
-            roleSet.add(item.getRole().getCode());
-        }
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public Map<String,Set<String>> getCodeOfSpotWithPermission(ComkerCrew crew) {
-        Map<String,Set<String>> result = new HashMap<String,Set<String>>();
-        collectCodeOfSpotWithPermission(result, crew);
-        return result;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void collectCodeOfSpotWithPermission(Map<String,Set<String>> bag, ComkerCrew crew) {
-        if (bag == null) return;
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.buildLockRequest(LockOptions.NONE).lock(crew);
-        List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
-        for(ComkerCrewJoinRoleWithSpot item:list) {
-            ComkerSpot spot = item.getSpot();
-            Set<String> roleSet = bag.get(spot.getCode());
-            if (roleSet == null) {
-                roleSet = new HashSet<String>();
-                bag.put(spot.getCode(), roleSet);
-            }
-            roleSet.addAll(getRoleDao().getAuthorities(item.getRole()));
         }
     }
 

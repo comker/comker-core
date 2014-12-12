@@ -3,7 +3,8 @@ package net.cokkee.comker.storage;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 
 /**
@@ -14,11 +15,11 @@ public interface ComkerUserStorage {
 
     Integer count();
 
-    List<ComkerUserDTO> findAll(ComkerPager pager);
+    List<ComkerUserDTO> findAll(ComkerQueryPager pager);
 
-    Integer count(ComkerUserDTO.Filter filter);
+    Integer count(ComkerQuerySieve sieve);
 
-    List<ComkerUserDTO> findAll(ComkerUserDTO.Filter filter, ComkerPager pager);
+    List<ComkerUserDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager);
 
     ComkerUserDTO get(String id);
 

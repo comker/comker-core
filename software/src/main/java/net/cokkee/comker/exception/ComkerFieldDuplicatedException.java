@@ -6,6 +6,7 @@ import net.cokkee.comker.model.ComkerExceptionExtension;
  *
  * @author drupalex
  */
+@Deprecated
 public class ComkerFieldDuplicatedException extends ComkerEntityProcessingException {
 
     public static final int CODE = 402;
@@ -24,10 +25,5 @@ public class ComkerFieldDuplicatedException extends ComkerEntityProcessingExcept
 
     public ComkerFieldDuplicatedException (String msg, Throwable cause, ComkerExceptionExtension extension) {
         super(CODE, msg, cause, extension);
-    }
-    
-    @Deprecated
-    public ComkerFieldDuplicatedException (int code, String msg) {
-        super(code, msg);
     }
 }

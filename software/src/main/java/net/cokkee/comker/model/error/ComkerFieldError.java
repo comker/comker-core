@@ -4,7 +4,7 @@ package net.cokkee.comker.model.error;
  *
  * @author drupalex
  */
-public class ComkerFieldError extends ComkerMessageResolvable {
+public class ComkerFieldError extends ComkerResolvableMessage {
 
     private String field;
     private Object rejectedValue;

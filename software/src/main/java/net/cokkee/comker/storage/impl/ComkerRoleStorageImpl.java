@@ -9,8 +9,10 @@ import java.util.Set;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerRoleStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
@@ -64,21 +66,21 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerRoleDTO> findAll(ComkerPager pager) {
+    public List<ComkerRoleDTO> findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerRoleDTO.Filter filter) {
-        return roleDao.count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return roleDao.count(sieve);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerRoleDTO> findAll(ComkerRoleDTO.Filter filter, ComkerPager pager) {
+    public List<ComkerRoleDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerRoleDTO> dtoList = new ArrayList<ComkerRoleDTO>();
-        List dpoList = roleDao.findAll(filter, pager);
+        List dpoList = roleDao.findAll(sieve, pager);
         for(Object dpoItem:dpoList) {
             ComkerRoleDTO dtoItem = new ComkerRoleDTO();
             ComkerDataUtil.copyProperties(dpoItem, dtoItem);
@@ -91,11 +93,11 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerRoleDTO get(String id) {
-        ComkerRole dbItem = getNotNull(id);
-        ComkerRoleDTO poItem = new ComkerRoleDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
-        return poItem;
+        ComkerRole dpoItem = getNotNull(id);
+        ComkerRoleDTO dtoItem = new ComkerRoleDTO();
+        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
+        loadAggregationRefs(dpoItem, dtoItem);
+        return dtoItem;
     }
 
     @Override
@@ -128,15 +130,15 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     public ComkerRoleDTO create(ComkerRoleDTO item) {
         invokeValidator(roleValidator, item);
         
-        ComkerRole dbItem = new ComkerRole();
-        ComkerDataUtil.copyProperties(item, dbItem);
-        saveAggregationRefs(item, dbItem);
-        dbItem = roleDao.create(dbItem);
+        ComkerRole dpoItem = new ComkerRole();
+        ComkerDataUtil.copyProperties(item, dpoItem);
+        saveAggregationRefs(item, dpoItem);
+        dpoItem = roleDao.create(dpoItem);
         
-        ComkerRoleDTO poItem = new ComkerRoleDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
-        return poItem;
+        ComkerRoleDTO dtoItem = new ComkerRoleDTO();
+        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
+        loadAggregationRefs(dpoItem, dtoItem);
+        return dtoItem;
     }
 
     @Override
@@ -218,7 +220,12 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     public ComkerRole getNotNull(String id) {
         ComkerRole dbItem = roleDao.get(id);
         if (dbItem == null) {
-            throw new ComkerObjectNotFoundException("role_not_found");
+            throw new ComkerObjectNotFoundException(
+                    "role_with__id__not_found",
+                    new ComkerExceptionExtension("error.role_with__id__not_found", 
+                            new Object[] {id}, 
+                            MessageFormat.format("Role object with id:{0} not found", 
+                                    new Object[] {id})));
         }
         return dbItem;
     }
@@ -227,7 +234,12 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     public ComkerRole getNotNullByCode(String code) {
         ComkerRole dbItem = roleDao.getByCode(code);
         if (dbItem == null) {
-            throw new ComkerObjectNotFoundException("role_not_found");
+            throw new ComkerObjectNotFoundException(
+                    "role_with__code__not_found",
+                    new ComkerExceptionExtension("error.role_with__code__not_found", 
+                            new Object[] {code}, 
+                            MessageFormat.format("Role object with code:{0} not found", 
+                                    new Object[] {code})));
         }
         return dbItem;
     }

@@ -14,7 +14,8 @@ import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerUserStorage;
 import net.cokkee.comker.model.ComkerExceptionExtension;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerPermission;
@@ -77,21 +78,21 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerUserDTO> findAll(ComkerPager pager) {
+    public List<ComkerUserDTO> findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerUserDTO.Filter filter) {
-        return userDao.count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return userDao.count(sieve);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerUserDTO> findAll(ComkerUserDTO.Filter filter, ComkerPager pager) {
+    public List<ComkerUserDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerUserDTO> poList = new ArrayList<ComkerUserDTO>();
-        List dbList = userDao.findAll(filter, pager);
+        List dbList = userDao.findAll(sieve, pager);
         for(Object dbItem:dbList) {
             ComkerUserDTO poItem = new ComkerUserDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -301,8 +302,11 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         ComkerUser dbItem = userDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
-                    MessageFormat.format("User object with id:{0} not found", new Object[] {id}),
-                    new ComkerExceptionExtension("user_with_id_not_found", new Object[] {id}, null));
+                    "user_with__id__not_found",
+                    new ComkerExceptionExtension("error.user_with__id__not_found", 
+                            new Object[] {id}, 
+                            MessageFormat.format("User object with id:{0} not found", 
+                                    new Object[] {id})));
         }
         return dbItem;
     }
@@ -312,8 +316,11 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         ComkerUser dbItem = userDao.getByUsername(username);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
-                    MessageFormat.format("User object with username:{0} not found", new Object[] {username}),
-                    new ComkerExceptionExtension("user_with_username_not_found", new Object[] {username}, null));
+                    "user_with__username__not_found",
+                    new ComkerExceptionExtension("error.user_with__username__not_found", 
+                            new Object[] {username}, 
+                            MessageFormat.format("User object with username:{0} not found", 
+                                    new Object[] {username})));
         }
         return dbItem;
     }
@@ -323,8 +330,11 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         ComkerUser dbItem = userDao.getByEmail(email);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
-                    MessageFormat.format("User object with email:{0} not found", new Object[] {email}),
-                    new ComkerExceptionExtension("user_with_email_not_found", new Object[] {email}, null));
+                    "user_with__email__not_found",
+                    new ComkerExceptionExtension("error.user_with__email__not_found", 
+                            new Object[] {email}, 
+                            MessageFormat.format("User object with email:{0} not found", 
+                                    new Object[] {email})));
         }
         return dbItem;
     }

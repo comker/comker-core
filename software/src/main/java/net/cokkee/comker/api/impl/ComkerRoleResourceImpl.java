@@ -58,13 +58,8 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
     }
 
     @Override
-    public Response getRoleItem(String id)
-                    throws ComkerObjectNotFoundException {
-        ComkerRoleDTO item = roleStorage.get(id);
-        if (item == null) {
-            throw new ComkerObjectNotFoundException("Role not found");
-        }
-        return Response.ok().entity(item).build();
+    public Response getRoleItem(String id) {
+        return Response.ok().entity(roleStorage.get(id)).build();
     }
 
     @Override
@@ -93,12 +88,7 @@ public class ComkerRoleResourceImpl implements ComkerRoleResource {
 
         roleStorage.update(item);
 
-        ComkerRoleDTO current = roleStorage.get(id);
-        if (current == null) {
-            throw new ComkerObjectNotFoundException("Role not found");
-        }
-
-        return Response.ok().entity(current).build();
+        return Response.ok().entity(roleStorage.get(id)).build();
     }
 
     @Override

@@ -12,8 +12,10 @@ import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
+import net.cokkee.comker.model.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerCrewStorage;
-import net.cokkee.comker.model.ComkerPager;
+import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.model.po.ComkerCrew;
 import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
@@ -37,7 +39,7 @@ import org.slf4j.LoggerFactory;
 public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
         implements ComkerCrewStorage {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerCrewStorageImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerCrewStorageImpl.class);
 
     private ComkerCrewValidator crewValidator = null;
 
@@ -77,21 +79,21 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerCrewDTO> findAll(ComkerPager pager) {
+    public List<ComkerCrewDTO> findAll(ComkerQueryPager pager) {
         return findAll(null, pager);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerCrewDTO.Filter filter) {
-        return crewDao.count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return crewDao.count(sieve);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerCrewDTO> findAll(ComkerCrewDTO.Filter filter, ComkerPager pager) {
+    public List<ComkerCrewDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerCrewDTO> poList = new ArrayList<ComkerCrewDTO>();
-        List dbList = crewDao.findAll(filter, pager);
+        List dbList = crewDao.findAll(sieve, pager);
         for(Object dbItem:dbList) {
             ComkerCrewDTO poItem = new ComkerCrewDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -369,7 +371,12 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     public ComkerCrew getNotNull(String id) {
         ComkerCrew dbItem = crewDao.get(id);
         if (dbItem == null) {
-            throw new ComkerObjectNotFoundException("crew_not_found");
+            throw new ComkerObjectNotFoundException(
+                    "crew_with__id__not_found",
+                    new ComkerExceptionExtension("error.crew_with__id__not_found", 
+                            new Object[] {id}, 
+                            MessageFormat.format("Crew object with id:{0} not found", 
+                                    new Object[] {id})));
         }
         return dbItem;
     }

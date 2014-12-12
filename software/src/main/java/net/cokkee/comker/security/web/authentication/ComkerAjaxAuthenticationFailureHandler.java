@@ -47,7 +47,7 @@ public class ComkerAjaxAuthenticationFailureHandler extends SimpleUrlAuthenticat
 
         if (getHelper().checkAjaxRequest(request, response, null)) {
             getHelper().writeAjaxResponse(request, response, HttpServletResponse.SC_UNAUTHORIZED,
-                    new ComkerExceptionResponse(2, "Authentication failed"));
+                    new ComkerExceptionResponse("Authentication failed"));
             return;
         }
     }

@@ -53,7 +53,7 @@
     <bean id="comkerSecurityService"
             class="net.cokkee.comker.service.impl.ComkerSecurityServiceImpl">
         <property name="securityContextHolder" ref="comkerSecurityContextHolder"/>
-        <property name="userDao" ref="comkerUserDao"/>
+        <property name="userStorage" ref="comkerUserStorage"/>
     </bean>
 
     <bean id="comkerSessionService"
@@ -65,6 +65,11 @@
             class="net.cokkee.comker.service.impl.ComkerToolboxServiceImpl">
     </bean>
 
+    <bean id="comkerExceptionTransformer"
+            class="net.cokkee.comker.service.impl.ComkerExceptionTransformerImpl">
+        <property name="localeMessageService" ref="comkerLocaleMessageService"/>
+    </bean>
+    
     <bean id="comkerLocaleMessageService"
             class="net.cokkee.comker.service.impl.ComkerLocaleMessageServiceImpl">
         <property name="messageSource" ref="comkerMessageSource"/>
