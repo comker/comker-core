@@ -5,7 +5,7 @@ import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
+import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 

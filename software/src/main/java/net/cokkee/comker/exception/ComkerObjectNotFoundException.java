@@ -1,6 +1,6 @@
 package net.cokkee.comker.exception;
 
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 
 /**
  * 

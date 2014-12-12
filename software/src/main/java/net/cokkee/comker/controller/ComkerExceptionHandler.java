@@ -5,7 +5,7 @@ import net.cokkee.comker.exception.ComkerAbstractException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
 
-import net.cokkee.comker.model.ComkerExceptionResponse;
+import net.cokkee.comker.model.error.ComkerExceptionResponse;
 import net.cokkee.comker.service.ComkerExceptionTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package net.cokkee.comker.model;
+package net.cokkee.comker.model.error;
 
 import java.util.List;
 import net.cokkee.comker.model.error.ComkerEntityError;

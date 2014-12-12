@@ -24,7 +24,7 @@ import net.cokkee.comker.model.po.ComkerPermission;
 import net.cokkee.comker.model.po.ComkerRole;
 import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
 import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
+import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerCrewValidator;
 import org.hamcrest.CoreMatchers;

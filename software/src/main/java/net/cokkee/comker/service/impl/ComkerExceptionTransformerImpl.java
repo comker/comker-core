@@ -6,8 +6,8 @@ import java.util.List;
 
 import net.cokkee.comker.exception.ComkerEntityProcessingException;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
-import net.cokkee.comker.model.ComkerExceptionResponse;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionResponse;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.error.ComkerFieldError;
 import net.cokkee.comker.service.ComkerExceptionTransformer;
 import net.cokkee.comker.service.ComkerLocaleMessageService;
@@ -42,8 +42,10 @@ public class ComkerExceptionTransformerImpl implements ComkerExceptionTransforme
             ComkerEntityProcessingException exception = (ComkerEntityProcessingException) e;
             ComkerExceptionExtension ext = exception.getExtension();
             
-            resp.setMessage(localeMessageService.getMessage(
-                    ext.getCode(), ext.getArguments(), ext.getDefaultMessage()));
+            if (ext != null) {
+                resp.setMessage(localeMessageService.getMessage(
+                        ext.getCode(), ext.getArguments(), ext.getDefaultMessage()));
+            }
             
             return resp;
         } 

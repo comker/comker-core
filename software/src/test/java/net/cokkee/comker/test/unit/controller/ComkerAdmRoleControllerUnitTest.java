@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.UUID;
 import net.cokkee.comker.controller.ComkerAdmRoleController;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.storage.ComkerRoleStorage;

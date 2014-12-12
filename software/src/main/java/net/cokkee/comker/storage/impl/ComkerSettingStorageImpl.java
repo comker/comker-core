@@ -6,7 +6,7 @@ import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerSettingStorage;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.po.ComkerSettingKey;
 import net.cokkee.comker.model.po.ComkerSpot;
 import net.cokkee.comker.model.po.ComkerUser;

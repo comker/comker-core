@@ -1,4 +1,4 @@
-package net.cokkee.comker.model;
+package net.cokkee.comker.model.struct;
 
 import java.util.HashMap;
 

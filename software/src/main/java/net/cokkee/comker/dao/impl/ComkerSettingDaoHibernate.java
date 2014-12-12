@@ -3,7 +3,7 @@ package net.cokkee.comker.dao.impl;
 import java.text.MessageFormat;
 import net.cokkee.comker.dao.*;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 
 import net.cokkee.comker.model.po.ComkerSettingEntry;
 import net.cokkee.comker.model.po.ComkerSettingEntryPk;

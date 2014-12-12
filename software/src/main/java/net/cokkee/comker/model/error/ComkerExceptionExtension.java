@@ -1,4 +1,4 @@
-package net.cokkee.comker.model;
+package net.cokkee.comker.model.error;
 
 import java.io.Serializable;
 

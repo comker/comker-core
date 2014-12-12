@@ -198,7 +198,7 @@ public class ComkerSpotResourceUnitTest {
     @Test
     public void test_get_spot_item_with_invalid_id() {
         Response resp = spotClient.getSpotItem("ID_INVALID");
-        Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
+        Assert.assertTrue(resp.getStatus() == 400);
     }
 
     @Test

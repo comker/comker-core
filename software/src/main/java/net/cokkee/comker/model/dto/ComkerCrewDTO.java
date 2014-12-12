@@ -2,7 +2,7 @@ package net.cokkee.comker.model.dto;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
+import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 
 /**
  *

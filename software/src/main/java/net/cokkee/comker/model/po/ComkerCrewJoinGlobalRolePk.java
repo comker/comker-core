@@ -5,7 +5,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 
 /**
  *

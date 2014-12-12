@@ -7,7 +7,7 @@ import java.util.Map;
 
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.dto.ComkerSpotDTO;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.po.ComkerSpot;
 
 import org.hibernate.Criteria;
@@ -28,7 +28,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerSpotDTO.Filter filter) {
+    public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
         c.setProjection(Projections.rowCount());
@@ -37,7 +37,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List findAll(ComkerSpotDTO.Filter filter,ComkerQueryPager pager) {
+    public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerSpot.class);
         ComkerQueryPager.apply(c, pager);

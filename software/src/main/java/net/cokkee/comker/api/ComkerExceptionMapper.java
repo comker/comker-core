@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.WebApplicationException;
 
 import net.cokkee.comker.exception.ComkerAbstractException;
-import net.cokkee.comker.model.ComkerExceptionResponse;
+import net.cokkee.comker.model.error.ComkerExceptionResponse;
 import net.cokkee.comker.service.ComkerExceptionTransformer;
 
 @Provider

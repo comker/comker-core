@@ -1,4 +1,4 @@
-package net.cokkee.comker.structure;
+package net.cokkee.comker.model.struct;
 
 import java.util.Collection;
 import javax.xml.bind.annotation.XmlRootElement;

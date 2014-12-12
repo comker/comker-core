@@ -9,7 +9,7 @@ import java.util.Set;
 import net.cokkee.comker.dao.ComkerNavbarDao;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerNavbarStorage;
 import net.cokkee.comker.model.dto.ComkerNavNodeFormDTO;
 import net.cokkee.comker.model.dto.ComkerNavNodeViewDTO;

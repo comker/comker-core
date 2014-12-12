@@ -8,8 +8,9 @@ import net.cokkee.comker.dao.ComkerModuleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerSpotStorage;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerModule;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         implements ComkerSpotStorage {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerSpotStorageImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerSpotStorageImpl.class);
 
     private ComkerSpotValidator spotValidator = null;
 
@@ -73,15 +74,15 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Integer count(ComkerSpotDTO.Filter filter) {
-        return spotDao.count(filter);
+    public Integer count(ComkerQuerySieve sieve) {
+        return spotDao.count(sieve);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<ComkerSpotDTO> findAll(ComkerSpotDTO.Filter filter, ComkerQueryPager pager) {
+    public List<ComkerSpotDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerSpotDTO> poList = new ArrayList<ComkerSpotDTO>();
-        List dbList = spotDao.findAll(filter, pager);
+        List dbList = spotDao.findAll(sieve, pager);
         for(Object dbItem:dbList) {
             ComkerSpotDTO poItem = new ComkerSpotDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);

@@ -202,7 +202,7 @@ public class ComkerUserResourceUnitTest {
     @Test
     public void test_get_user_item_with_invalid_id() {
         Response resp = userClient.getUserItem("ID_INVALID");
-        Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
+        Assert.assertTrue(resp.getStatus() == 400);
     }
 
     @Test

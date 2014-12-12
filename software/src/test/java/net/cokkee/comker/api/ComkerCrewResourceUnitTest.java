@@ -14,7 +14,7 @@ import net.cokkee.comker.storage.ComkerCrewStorage;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import net.cokkee.comker.structure.ComkerKeyAndValueSet;
+import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -248,7 +248,7 @@ public class ComkerCrewResourceUnitTest {
     @Test
     public void test_get_crew_item_with_invalid_id() {
         Response resp = crewClient.getCrewItem("ID_INVALID");
-        Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
+        Assert.assertTrue(resp.getStatus() == 400);
     }
 
     @Test

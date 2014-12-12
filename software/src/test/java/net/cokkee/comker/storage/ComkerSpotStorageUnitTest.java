@@ -9,6 +9,7 @@ import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
 import net.cokkee.comker.storage.impl.ComkerSpotStorageImpl;
 import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.model.po.ComkerModule;
 import net.cokkee.comker.model.po.ComkerSpot;
@@ -110,14 +111,14 @@ public class ComkerSpotStorageUnitTest {
         /*
          * mocks for count() method
          */
-        when(spotDao.count(any(ComkerSpotDTO.Filter.class))).thenAnswer(new Answer<Integer>() {
+        when(spotDao.count(any(ComkerQuerySieve.class))).thenAnswer(new Answer<Integer>() {
             @Override
             public Integer answer(InvocationOnMock invocation) throws Throwable {
                 return spotIdx.size();
             }
         });
 
-        when(spotDao.findAll(any(ComkerSpotDTO.Filter.class),any(ComkerQueryPager.class)))
+        when(spotDao.findAll(any(ComkerQuerySieve.class),any(ComkerQueryPager.class)))
                 .thenAnswer(new Answer<List<ComkerSpot>>() {
             @Override
             public List<ComkerSpot> answer(InvocationOnMock invocation) throws Throwable {

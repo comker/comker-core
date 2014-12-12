@@ -4,7 +4,7 @@ import javax.ws.rs.core.Response;
 import net.cokkee.comker.api.impl.ComkerMemberResourceImpl;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.storage.ComkerUserStorage;
-import net.cokkee.comker.model.ComkerExceptionResponse;
+import net.cokkee.comker.model.error.ComkerExceptionResponse;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityService;
 import org.junit.Assert;

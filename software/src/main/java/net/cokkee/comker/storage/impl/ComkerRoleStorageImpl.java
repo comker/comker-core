@@ -9,7 +9,7 @@ import java.util.Set;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerRoleStorage;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;

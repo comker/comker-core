@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import net.cokkee.comker.model.ComkerExceptionResponse;
+import net.cokkee.comker.model.error.ComkerExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

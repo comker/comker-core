@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.exception.ComkerForbiddenAccessException;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
-import net.cokkee.comker.model.ComkerExceptionExtension;
+import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;

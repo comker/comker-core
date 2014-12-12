@@ -198,7 +198,7 @@ public class ComkerRoleResourceUnitTest {
     @Test
     public void test_get_role_item_with_invalid_id() {
         Response resp = roleClient.getRoleItem("ID_INVALID");
-        Assert.assertTrue(resp.getStatus() == ComkerObjectNotFoundException.CODE);
+        Assert.assertTrue(resp.getStatus() == 400);
     }
 
     @Test

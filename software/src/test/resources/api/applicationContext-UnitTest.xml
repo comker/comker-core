@@ -27,9 +27,14 @@
 
     <bean id="comkerExceptionMapper"
             class="net.cokkee.comker.api.ComkerExceptionMapper">
-        <property name="localeMessageService" ref="comkerLocaleMessageService" />
+        <property name="exceptionTransformer" ref="comkerExceptionTransformer" />
     </bean>
 
+    <bean id="comkerExceptionTransformer"
+            class="net.cokkee.comker.service.impl.ComkerExceptionTransformerImpl">
+        <property name="localeMessageService" ref="comkerLocaleMessageService"/>
+    </bean>
+    
     <bean id="comkerJaxbProvider"
             class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
     </bean>
