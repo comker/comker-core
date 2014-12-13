@@ -1,5 +1,8 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.Column;
@@ -20,19 +23,19 @@ import javax.persistence.Transient;
     @AssociationOverride(name = "pk.spot", joinColumns = @JoinColumn(name = "f_spot_id", nullable=true)),
     @AssociationOverride(name = "pk.user", joinColumns = @JoinColumn(name = "f_user_id", nullable=true))
 })
-public class ComkerSettingEntry extends ComkerAbstractItem {
+public class ComkerSettingEntryDPO extends ComkerAbstractDPO {
 
-    public ComkerSettingEntry() {
+    public ComkerSettingEntryDPO() {
         super();
-        this.pk = new ComkerSettingEntryPk();
+        this.pk = new ComkerSettingEntryPK();
     }
 
-    public ComkerSettingEntry(ComkerSettingKey settingKey, ComkerSpot spot, ComkerUser user) {
+    public ComkerSettingEntryDPO(ComkerSettingKeyDPO settingKey, ComkerSpotDPO spot, ComkerUserDPO user) {
         super();
-        this.pk = new ComkerSettingEntryPk(settingKey, spot, user);
+        this.pk = new ComkerSettingEntryPK(settingKey, spot, user);
     }
 
-    private ComkerSettingEntryPk pk;
+    private ComkerSettingEntryPK pk;
     private String value;
 
     private String valueString;
@@ -42,38 +45,38 @@ public class ComkerSettingEntry extends ComkerAbstractItem {
     private String valueXStream;
     
     @EmbeddedId
-    public ComkerSettingEntryPk getPk() {
+    public ComkerSettingEntryPK getPk() {
         return pk;
     }
 
-    public void setPk(ComkerSettingEntryPk pk) {
+    public void setPk(ComkerSettingEntryPK pk) {
         this.pk = pk;
     }
 
     @Transient
-    public ComkerSettingKey getSettingKey() {
+    public ComkerSettingKeyDPO getSettingKey() {
         return getPk().getSettingKey();
     }
 
-    public void setSettingKey(ComkerSettingKey item) {
+    public void setSettingKey(ComkerSettingKeyDPO item) {
         getPk().setSettingKey(item);
     }
     
     @Transient
-    public ComkerSpot getSpot() {
+    public ComkerSpotDPO getSpot() {
         return getPk().getSpot();
     }
 
-    public void setSpot(ComkerSpot item) {
+    public void setSpot(ComkerSpotDPO item) {
         getPk().setSpot(item);
     }
 
     @Transient
-    public ComkerUser getUser() {
+    public ComkerUserDPO getUser() {
         return getPk().getUser();
     }
 
-    public void setUser(ComkerUser product) {
+    public void setUser(ComkerUserDPO product) {
         getPk().setUser(product);
     }
 
@@ -136,7 +139,7 @@ public class ComkerSettingEntry extends ComkerAbstractItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerSettingEntry that = (ComkerSettingEntry) o;
+        ComkerSettingEntryDPO that = (ComkerSettingEntryDPO) o;
 
         if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
 

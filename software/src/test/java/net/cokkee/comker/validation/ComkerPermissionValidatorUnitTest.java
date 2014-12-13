@@ -6,7 +6,7 @@ import java.util.UUID;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import org.springframework.validation.ValidationUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerPermissionValidatorUnitTest {
 
-    private List<ComkerPermission> permissionList = new ArrayList<ComkerPermission>();
+    private List<ComkerPermissionDPO> permissionList = new ArrayList<ComkerPermissionDPO>();
 
     private List<String> permissionIds = new ArrayList<String>();
     
@@ -45,7 +45,7 @@ public class ComkerPermissionValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerPermission permission = new ComkerPermission("ROLE_" + i);
+            ComkerPermissionDPO permission = new ComkerPermissionDPO("ROLE_" + i);
             permission.setId(UUID.randomUUID().toString());
             permissionList.add(permission);
         }
@@ -55,11 +55,11 @@ public class ComkerPermissionValidatorUnitTest {
         }
 
         Mockito.when(permissionDao.getByAuthority(Mockito.anyString()))
-                .thenAnswer(new Answer<ComkerPermission>() {
+                .thenAnswer(new Answer<ComkerPermissionDPO>() {
             @Override
-            public ComkerPermission answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerPermissionDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerPermission permission:permissionList) {
+                for(ComkerPermissionDPO permission:permissionList) {
                     if (permission.getAuthority().equals(id)) {
                         return permission;
                     }

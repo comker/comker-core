@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerModule;
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Session;
@@ -42,14 +42,14 @@ public class ComkerModuleDaoUnitTest {
     
     @Before
     public void init() {
-        ComkerModule item = null;
+        ComkerModuleDPO item = null;
         Session session = testSessionFactory.getCurrentSession();
         
         for(int i=0; i<20; i++) {
             String authorityString = "MODULE_" + i;
             moduleCodes.add(authorityString);
 
-            item = new ComkerModule(authorityString, "Module " + i, "Description Module " + i);
+            item = new ComkerModuleDPO(authorityString, "Module " + i, "Description Module " + i);
             session.saveOrUpdate(item);
             moduleIdx.add(item.getId());
         }
@@ -65,7 +65,7 @@ public class ComkerModuleDaoUnitTest {
         List list = testModuleDao.findAll(null);
         Set<String> resultSet = new HashSet<String>();
         for(Object item:list) {
-            ComkerModule module = (ComkerModule) item;
+            ComkerModuleDPO module = (ComkerModuleDPO) item;
             resultSet.add(module.getCode());
         }
         Assert.assertThat(resultSet, CoreMatchers.is(moduleCodes));
@@ -79,26 +79,26 @@ public class ComkerModuleDaoUnitTest {
 
     @Test
     public void test_get_by_code() {
-        ComkerModule item = testModuleDao.getByCode("MODULE_1");
+        ComkerModuleDPO item = testModuleDao.getByCode("MODULE_1");
         Assert.assertNotNull(item);
     }
 
     @Test
     public void test_get_by_code_with_invalid_code() {
-        ComkerModule item = testModuleDao.getByCode("MODULE_NOT_FOUND");
+        ComkerModuleDPO item = testModuleDao.getByCode("MODULE_NOT_FOUND");
         Assert.assertNull(item);
     }
 
     @Test
     public void test_get_by_id() {
-        ComkerModule item = testModuleDao.getByCode("MODULE_1");
-        ComkerModule item2 = testModuleDao.get(item.getId());
+        ComkerModuleDPO item = testModuleDao.getByCode("MODULE_1");
+        ComkerModuleDPO item2 = testModuleDao.get(item.getId());
         Assert.assertEquals(item, item2);
     }
 
     @Test
     public void test_get_by_id_with_invalid_id() {
-        ComkerModule item = testModuleDao.get("ID_NOT_FOUND");
+        ComkerModuleDPO item = testModuleDao.get("ID_NOT_FOUND");
         Assert.assertNull(item);
     }
 
@@ -122,7 +122,7 @@ public class ComkerModuleDaoUnitTest {
     public void test_create() {
         int currentCount = testModuleDao.count();
 
-        ComkerModule item = new ComkerModule(
+        ComkerModuleDPO item = new ComkerModuleDPO(
                 "MODULE_" + currentCount,
                 "Module " + currentCount,
                 "Description Module " + currentCount);

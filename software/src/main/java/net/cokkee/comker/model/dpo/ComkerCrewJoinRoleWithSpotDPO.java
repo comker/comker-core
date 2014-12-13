@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;
@@ -19,53 +20,53 @@ import javax.persistence.Transient;
     @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "f_role_id")),
     @AssociationOverride(name = "pk.spot", joinColumns = @JoinColumn(name = "f_spot_id"))
 })
-public class ComkerCrewJoinRoleWithSpot extends ComkerAbstractItem {
+public class ComkerCrewJoinRoleWithSpotDPO extends ComkerAbstractDPO {
 
-    public ComkerCrewJoinRoleWithSpot() {
+    public ComkerCrewJoinRoleWithSpotDPO() {
         super();
-        this.pk = new ComkerCrewJoinRoleWithSpotPk();
+        this.pk = new ComkerCrewJoinRoleWithSpotPK();
     }
 
-    public ComkerCrewJoinRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot) {
+    public ComkerCrewJoinRoleWithSpotDPO(ComkerCrewDPO crew, ComkerRoleDPO role, ComkerSpotDPO spot) {
         super();
-        this.pk = new ComkerCrewJoinRoleWithSpotPk(crew, role, spot);
+        this.pk = new ComkerCrewJoinRoleWithSpotPK(crew, role, spot);
     }
 
-    private ComkerCrewJoinRoleWithSpotPk pk;
+    private ComkerCrewJoinRoleWithSpotPK pk;
 
     @EmbeddedId
-    public ComkerCrewJoinRoleWithSpotPk getPk() {
+    public ComkerCrewJoinRoleWithSpotPK getPk() {
         return pk;
     }
 
-    public void setPk(ComkerCrewJoinRoleWithSpotPk pk) {
+    public void setPk(ComkerCrewJoinRoleWithSpotPK pk) {
         this.pk = pk;
     }
 
     @Transient
-    public ComkerCrew getCrew() {
+    public ComkerCrewDPO getCrew() {
         return getPk().getCrew();
     }
 
-    public void setCrew(ComkerCrew item) {
+    public void setCrew(ComkerCrewDPO item) {
         getPk().setCrew(item);
     }
 
     @Transient
-    public ComkerRole getRole() {
+    public ComkerRoleDPO getRole() {
         return getPk().getRole();
     }
 
-    public void setRole(ComkerRole item) {
+    public void setRole(ComkerRoleDPO item) {
         getPk().setRole(item);
     }
 
     @Transient
-    public ComkerSpot getSpot() {
+    public ComkerSpotDPO getSpot() {
         return getPk().getSpot();
     }
 
-    public void setSpot(ComkerSpot item) {
+    public void setSpot(ComkerSpotDPO item) {
         getPk().setSpot(item);
     }
 
@@ -74,7 +75,7 @@ public class ComkerCrewJoinRoleWithSpot extends ComkerAbstractItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerCrewJoinRoleWithSpot that = (ComkerCrewJoinRoleWithSpot) o;
+        ComkerCrewJoinRoleWithSpotDPO that = (ComkerCrewJoinRoleWithSpotDPO) o;
 
         if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
 

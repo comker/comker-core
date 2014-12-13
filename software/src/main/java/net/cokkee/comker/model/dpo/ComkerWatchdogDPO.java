@@ -1,4 +1,4 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -15,7 +15,7 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Table(name = "comker_watchdog")
-public class ComkerWatchdog extends ComkerAbstractItem {
+public class ComkerWatchdogDPO extends ComkerAbstractDPO {
 
     public static final int HIT_STATE_SUCCESS = 0;
     public static final int HIT_STATE_FAILURE = 1;
@@ -30,17 +30,17 @@ public class ComkerWatchdog extends ComkerAbstractItem {
 
     private String comment;
 
-    public ComkerWatchdog() {
+    public ComkerWatchdogDPO() {
         super();
     }
 
-    public ComkerWatchdog(String username, String methodName) {
+    public ComkerWatchdogDPO(String username, String methodName) {
         this.username = username;
         this.methodName = methodName;
     }
 
 
-    public ComkerWatchdog(String username, String methodName, String methodArgs,
+    public ComkerWatchdogDPO(String username, String methodName, String methodArgs,
             Date hitTime, Long hitDuration, Integer hitState) {
         this();
         this.username = username;

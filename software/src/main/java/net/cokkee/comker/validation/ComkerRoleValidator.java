@@ -3,7 +3,7 @@ package net.cokkee.comker.validation;
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
-import net.cokkee.comker.model.po.ComkerRole;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -50,7 +50,7 @@ public class ComkerRoleValidator extends ComkerAbstractValidator {
                     new Object[] {"msg.field_code"},
                     "Code value is invalid format");
         } else {
-            ComkerRole dupItem = roleDao.getByCode(item.getCode());
+            ComkerRoleDPO dupItem = roleDao.getByCode(item.getCode());
             if (dupItem != null && !dupItem.getId().equals(item.getId())) {
                 e.rejectValue("code",
                         "msg.__field__has_duplicated_value",

@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -12,12 +13,12 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
  * @author drupalex
  */
 @Embeddable
-public class ComkerUserJoinCrewPk implements Serializable {
+public class ComkerUserJoinCrewPK implements Serializable {
 
-    public ComkerUserJoinCrewPk() {
+    public ComkerUserJoinCrewPK() {
     }
 
-    public ComkerUserJoinCrewPk(ComkerUser user, ComkerCrew crew) {
+    public ComkerUserJoinCrewPK(ComkerUserDPO user, ComkerCrewDPO crew) {
         if (user == null || crew == null) {
             throw new ComkerInvalidParameterException(
                 "ComkerUserJoinCrewPk_user_or_crew_is_null",
@@ -29,26 +30,26 @@ public class ComkerUserJoinCrewPk implements Serializable {
         this.crew = crew;
     }
 
-    private ComkerUser user;
-    private ComkerCrew crew;
+    private ComkerUserDPO user;
+    private ComkerCrewDPO crew;
 
     @ManyToOne
     @JoinColumn(name="f_user_id")
-    public ComkerUser getUser() {
+    public ComkerUserDPO getUser() {
         return user;
     }
 
-    public void setUser(ComkerUser user) {
+    public void setUser(ComkerUserDPO user) {
         this.user = user;
     }
 
     @ManyToOne
     @JoinColumn(name="f_crew_id")
-    public ComkerCrew getCrew() {
+    public ComkerCrewDPO getCrew() {
         return crew;
     }
 
-    public void setCrew(ComkerCrew crew) {
+    public void setCrew(ComkerCrewDPO crew) {
         this.crew = crew;
     }
 
@@ -58,7 +59,7 @@ public class ComkerUserJoinCrewPk implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerUserJoinCrewPk that = (ComkerUserJoinCrewPk) o;
+        ComkerUserJoinCrewPK that = (ComkerUserJoinCrewPK) o;
 
         if (user != null ? !user.equals(that.user) : that.user != null) return false;
         if (crew != null ? !crew.equals(that.crew) : that.crew != null)

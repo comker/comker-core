@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerModule;
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -28,27 +28,27 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerModule find(String query, Map<String,Object> params) {
+    public ComkerModuleDPO find(String query, Map<String,Object> params) {
         Query q = getSessionFactory().getCurrentSession().createQuery(query);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             q.setParameter(param.getKey(), param.getValue());
         }
-        return (ComkerModule) q.uniqueResult();
+        return (ComkerModuleDPO) q.uniqueResult();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerModule findWhere(Map<String,Object> params) {
+    public ComkerModuleDPO findWhere(Map<String,Object> params) {
         List result = findAllWhere(params, ComkerQueryPager.ONE);
         if (result.isEmpty()) return null;
-        return (ComkerModule)result.get(0);
+        return (ComkerModuleDPO)result.get(0);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerModule.class);
+        Criteria c = session.createCriteria(ComkerModuleDPO.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -57,7 +57,7 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerModule.class);
+        Criteria c = session.createCriteria(ComkerModuleDPO.class);
         ComkerQueryPager.apply(c, filter);
         return c.list();
     }
@@ -66,7 +66,7 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer countWhere(Map<String,Object> params) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerModule.class);
+        Criteria c = session.createCriteria(ComkerModuleDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -78,7 +78,7 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerModule.class);
+        Criteria c = session.createCriteria(ComkerModuleDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -92,21 +92,21 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
         Query query = this.getSessionFactory().getCurrentSession().
                 createQuery(MessageFormat.format(
                     "select 1 from {0} t where t.id = :id",
-                    new Object[] {ComkerModule.class.getSimpleName()}));
+                    new Object[] {ComkerModuleDPO.class.getSimpleName()}));
         query.setString("id", id);
         return (query.uniqueResult() != null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerModule get(String id) {
+    public ComkerModuleDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        return (ComkerModule) session.get(ComkerModule.class, id);
+        return (ComkerModuleDPO) session.get(ComkerModuleDPO.class, id);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerModule getByCode(String code) {
+    public ComkerModuleDPO getByCode(String code) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(FIELD_CODE, code);
         return findWhere(params);
@@ -114,7 +114,7 @@ public class ComkerModuleDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerModule save(ComkerModule item) {
+    public ComkerModuleDPO save(ComkerModuleDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;

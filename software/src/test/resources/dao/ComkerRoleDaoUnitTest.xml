@@ -21,10 +21,10 @@
             class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="annotatedClasses">
             <list>
-                <value>net.cokkee.comker.model.po.ComkerPermission</value>
-                <value>net.cokkee.comker.model.po.ComkerRole</value>
-                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermission</value>
-                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk</value>
+                <value>net.cokkee.comker.model.dpo.ComkerPermissionDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionPK</value>
             </list>
         </property>
         <property name="dataSource" ref="comkerDataSource"/>

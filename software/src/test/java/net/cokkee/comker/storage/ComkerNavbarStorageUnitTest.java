@@ -11,7 +11,7 @@ import net.cokkee.comker.storage.impl.ComkerNavbarStorageImpl;
 import net.cokkee.comker.model.dto.ComkerNavNodeFormDTO;
 import net.cokkee.comker.model.dto.ComkerNavNodeViewDTO;
 
-import net.cokkee.comker.model.po.ComkerNavbarNode;
+import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
 import org.junit.Assert;
 
 import org.junit.runner.RunWith;
@@ -38,17 +38,17 @@ public class ComkerNavbarStorageUnitTest {
     @Mock
     private ComkerNavbarDao navbarDao;
 
-    private ComkerNavbarNode navbarRootDPO = null;
+    private ComkerNavbarNodeDPO navbarRootDPO = null;
 
-    private Map<String, ComkerNavbarNode> navbarMap = new HashMap<String, ComkerNavbarNode>();
+    private Map<String, ComkerNavbarNodeDPO> navbarMap = new HashMap<String, ComkerNavbarNodeDPO>();
 
     @Before
     public void init() {
-        ComkerNavbarNode item = null;
-        ComkerNavbarNode subitem = null;
-        ComkerNavbarNode subsubitem = null;
+        ComkerNavbarNodeDPO item = null;
+        ComkerNavbarNodeDPO subitem = null;
+        ComkerNavbarNodeDPO subsubitem = null;
 
-        navbarRootDPO = new ComkerNavbarNode(
+        navbarRootDPO = new ComkerNavbarNodeDPO(
                 "NAVBAR_ROOT",
                 "http://comker.net/",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -56,7 +56,7 @@ public class ComkerNavbarStorageUnitTest {
         navbarRootDPO.setParent(null);
         navbarMap.put(navbarRootDPO.getId(), navbarRootDPO);
 
-        item = new ComkerNavbarNode(
+        item = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH01",
                 "http://comker.net/branch01",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -65,7 +65,7 @@ public class ComkerNavbarStorageUnitTest {
         navbarRootDPO.getChildren().add(item);
         navbarMap.put(item.getId(), item);
 
-        subitem = new ComkerNavbarNode(
+        subitem = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH01_SUB01",
                 "http://comker.net/branch01/sub01",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -74,7 +74,7 @@ public class ComkerNavbarStorageUnitTest {
         item.getChildren().add(subitem);
         navbarMap.put(subitem.getId(), subitem);
 
-        subitem = new ComkerNavbarNode(
+        subitem = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH01_SUB02",
                 "http://comker.net/branch01/sub02",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -83,7 +83,7 @@ public class ComkerNavbarStorageUnitTest {
         item.getChildren().add(subitem);
         navbarMap.put(subitem.getId(), subitem);
 
-        item = new ComkerNavbarNode(
+        item = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH02",
                 "http://comker.net/branch02",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -99,37 +99,37 @@ public class ComkerNavbarStorageUnitTest {
             }
         });
 
-        Mockito.when(navbarDao.getTree()).thenAnswer(new Answer<ComkerNavbarNode>() {
+        Mockito.when(navbarDao.getTree()).thenAnswer(new Answer<ComkerNavbarNodeDPO>() {
             @Override
-            public ComkerNavbarNode answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerNavbarNodeDPO answer(InvocationOnMock invocation) throws Throwable {
                 return navbarRootDPO;
             }
         });
 
-        Mockito.when(navbarDao.getTree(anyString(), anyString())).thenAnswer(new Answer<ComkerNavbarNode>() {
+        Mockito.when(navbarDao.getTree(anyString(), anyString())).thenAnswer(new Answer<ComkerNavbarNodeDPO>() {
             @Override
-            public ComkerNavbarNode answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerNavbarNodeDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return navbarMap.get(id);
             }
         });
 
-        Mockito.when(navbarDao.get(anyString())).thenAnswer(new Answer<ComkerNavbarNode>() {
+        Mockito.when(navbarDao.get(anyString())).thenAnswer(new Answer<ComkerNavbarNodeDPO>() {
             @Override
-            public ComkerNavbarNode answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerNavbarNodeDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return navbarMap.get(id);
             }
         });
         
-        Mockito.when(navbarDao.create(any(ComkerNavbarNode.class)))
-                .thenAnswer(new Answer<ComkerNavbarNode>() {
+        Mockito.when(navbarDao.create(any(ComkerNavbarNodeDPO.class)))
+                .thenAnswer(new Answer<ComkerNavbarNodeDPO>() {
             @Override
-            public ComkerNavbarNode answer(InvocationOnMock invocation) throws Throwable {
-                ComkerNavbarNode item = (ComkerNavbarNode) invocation.getArguments()[0];
+            public ComkerNavbarNodeDPO answer(InvocationOnMock invocation) throws Throwable {
+                ComkerNavbarNodeDPO item = (ComkerNavbarNodeDPO) invocation.getArguments()[0];
 
                 item.setId("ID_" + item.getCode());
-                ComkerNavbarNode parent = item.getParent();
+                ComkerNavbarNodeDPO parent = item.getParent();
                 parent.getChildren().add(item);
                 item.setParent(parent);
 
@@ -141,7 +141,7 @@ public class ComkerNavbarStorageUnitTest {
 
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerNavbarNode item = (ComkerNavbarNode) invocation.getArguments()[0];
+                ComkerNavbarNodeDPO item = (ComkerNavbarNodeDPO) invocation.getArguments()[0];
                 if(item == null) return null;
 
                 if (item == navbarRootDPO) {
@@ -150,7 +150,7 @@ public class ComkerNavbarStorageUnitTest {
                 } else {
                     item.getParent().getChildren().remove(item);
                     
-                    Queue<ComkerNavbarNode> queue = new LinkedList<ComkerNavbarNode>();
+                    Queue<ComkerNavbarNodeDPO> queue = new LinkedList<ComkerNavbarNodeDPO>();
                     queue.add(item);
 
                     while(!queue.isEmpty()) {
@@ -162,7 +162,7 @@ public class ComkerNavbarStorageUnitTest {
                 return null;
             }
 
-        }).when(navbarDao).delete(any(ComkerNavbarNode.class));
+        }).when(navbarDao).delete(any(ComkerNavbarNodeDPO.class));
     }
 
     @Test

@@ -8,7 +8,7 @@ import java.util.Map;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -30,7 +30,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerSpot.class);
+        Criteria c = session.createCriteria(ComkerSpotDPO.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -39,29 +39,29 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerSpot.class);
+        Criteria c = session.createCriteria(ComkerSpotDPO.class);
         ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerSpot findWhere(Map<String, Object> params) {
+    public ComkerSpotDPO findWhere(Map<String, Object> params) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerSpot.class);
+        Criteria c = session.createCriteria(ComkerSpotDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
         List result = c.list();
         if (result.isEmpty()) return null;
-        return (ComkerSpot)result.get(0);
+        return (ComkerSpotDPO)result.get(0);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerSpot.class);
+        Criteria c = session.createCriteria(ComkerSpotDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -75,31 +75,31 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
         Query query = this.getSessionFactory().getCurrentSession().
                 createQuery(MessageFormat.format(
                     "select 1 from {0} t where t.id = :id",
-                    new Object[] {ComkerSpot.class.getSimpleName()}));
+                    new Object[] {ComkerSpotDPO.class.getSimpleName()}));
         query.setString("id", id);
         return (query.uniqueResult() != null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerSpot get(String id) {
+    public ComkerSpotDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSpot item = (ComkerSpot) session.get(ComkerSpot.class, id);
+        ComkerSpotDPO item = (ComkerSpotDPO) session.get(ComkerSpotDPO.class, id);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerSpot getByCode(String code) {
+    public ComkerSpotDPO getByCode(String code) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(FIELD_CODE, code);
-        ComkerSpot item = findWhere(params);
+        ComkerSpotDPO item = findWhere(params);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerSpot create(ComkerSpot item) {
+    public ComkerSpotDPO create(ComkerSpotDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.save(item);
         return item;
@@ -107,7 +107,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerSpot update(ComkerSpot item) {
+    public ComkerSpotDPO update(ComkerSpotDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;
@@ -115,7 +115,7 @@ public class ComkerSpotDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(ComkerSpot item) {
+    public void delete(ComkerSpotDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.delete(item);
     }

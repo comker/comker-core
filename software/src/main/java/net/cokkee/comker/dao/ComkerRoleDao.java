@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 
-import net.cokkee.comker.model.po.ComkerRole;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
 
 /**
  *
@@ -19,25 +19,25 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
     List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager);
 
-    ComkerRole findWhere(Map<String,Object> params);
+    ComkerRoleDPO findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerQueryPager pager);
 
     Boolean exists(String id);
 
-    ComkerRole get(String id);
+    ComkerRoleDPO get(String id);
 
-    ComkerRole getByCode(String code);
+    ComkerRoleDPO getByCode(String code);
 
-    ComkerRole create(ComkerRole item);
+    ComkerRoleDPO create(ComkerRoleDPO item);
 
-    void update(ComkerRole item);
+    void update(ComkerRoleDPO item);
 
-    void delete(ComkerRole item);
+    void delete(ComkerRoleDPO item);
 
-    void addPermission(ComkerRole role, ComkerPermission permission);
+    void addPermission(ComkerRoleDPO role, ComkerPermissionDPO permission);
 
-    void removePermission(ComkerRole role, ComkerPermission permission);
+    void removePermission(ComkerRoleDPO role, ComkerPermissionDPO permission);
 
-    void collectPermission(Set<ComkerPermission> bag, ComkerRole role);
+    void collectPermission(Set<ComkerPermissionDPO> bag, ComkerRoleDPO role);
 }

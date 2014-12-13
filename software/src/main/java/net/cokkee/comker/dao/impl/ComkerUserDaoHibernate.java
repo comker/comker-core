@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerUser;
-import net.cokkee.comker.model.po.ComkerUserJoinCrew;
-import net.cokkee.comker.model.po.ComkerUserJoinCrewPk;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
+import net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerUserJoinCrewPK;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
@@ -40,7 +40,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerUser.class);
+        Criteria c = session.createCriteria(ComkerUserDPO.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -49,20 +49,20 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerUser.class);
+        Criteria c = session.createCriteria(ComkerUserDPO.class);
         ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerUser findWhere(Map<String, Object> params) {
+    public ComkerUserDPO findWhere(Map<String, Object> params) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerUser.class);
+        Criteria c = session.createCriteria(ComkerUserDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
-        ComkerUser item = (ComkerUser)c.uniqueResult();
+        ComkerUserDPO item = (ComkerUserDPO)c.uniqueResult();
         return item;
     }
 
@@ -70,7 +70,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerUser.class);
+        Criteria c = session.createCriteria(ComkerUserDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -85,22 +85,22 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
         Query query = this.getSessionFactory().getCurrentSession().
                 createQuery(MessageFormat.format(
                     "select 1 from {0} t where t.id = :id",
-                    new Object[] {ComkerUser.class.getSimpleName()}));
+                    new Object[] {ComkerUserDPO.class.getSimpleName()}));
         query.setString("id", id);
         return (query.uniqueResult() != null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerUser get(String id) {
+    public ComkerUserDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
+        ComkerUserDPO item = (ComkerUserDPO) session.get(ComkerUserDPO.class, id);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerUser getByEmail(String email) {
+    public ComkerUserDPO getByEmail(String email) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(FIELD_EMAIL, email);
         return findWhere(params);
@@ -108,7 +108,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerUser getByUsername(String username) {
+    public ComkerUserDPO getByUsername(String username) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(FIELD_USERNAME, username);
         return findWhere(params);
@@ -116,7 +116,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerUser create(ComkerUser item) {
+    public ComkerUserDPO create(ComkerUserDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.save(item);
         return item;
@@ -124,7 +124,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerUser update(ComkerUser item) {
+    public ComkerUserDPO update(ComkerUserDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;
@@ -132,7 +132,7 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(ComkerUser item) {
+    public void delete(ComkerUserDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.delete(item);
     }
@@ -141,37 +141,37 @@ public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerUser item = (ComkerUser) session.get(ComkerUser.class, id);
+        ComkerUserDPO item = (ComkerUserDPO) session.get(ComkerUserDPO.class, id);
         session.delete(item);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void addCrew(ComkerUser user, ComkerCrew crew) {
-        ComkerUserJoinCrewPk id = new ComkerUserJoinCrewPk(user, crew);
-        ComkerUserJoinCrew item = new ComkerUserJoinCrew();
+    public void addCrew(ComkerUserDPO user, ComkerCrewDPO crew) {
+        ComkerUserJoinCrewPK id = new ComkerUserJoinCrewPK(user, crew);
+        ComkerUserJoinCrewDPO item = new ComkerUserJoinCrewDPO();
         item.setPk(id);
         Session session = this.getSessionFactory().getCurrentSession();
-        if (session.get(ComkerUserJoinCrew.class, id) == null) {
+        if (session.get(ComkerUserJoinCrewDPO.class, id) == null) {
             session.saveOrUpdate(item);
         }
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void removeCrew(ComkerUser user, ComkerCrew crew) {
+    public void removeCrew(ComkerUserDPO user, ComkerCrewDPO crew) {
         Session session = this.getSessionFactory().getCurrentSession();
-        session.delete(new ComkerUserJoinCrew(user, crew));
+        session.delete(new ComkerUserJoinCrewDPO(user, crew));
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void collectCrew(Set<ComkerCrew> bag, ComkerUser user) {
+    public void collectCrew(Set<ComkerCrewDPO> bag, ComkerUserDPO user) {
         if (bag == null) return;
         Session session = this.getSessionFactory().getCurrentSession();
         session.buildLockRequest(LockOptions.NONE).lock(user);
-        List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
-        for(ComkerUserJoinCrew item:list) {
+        List<ComkerUserJoinCrewDPO> list = user.getUserJoinCrewList();
+        for(ComkerUserJoinCrewDPO item:list) {
             bag.add(item.getCrew());
         }
     }

@@ -1,4 +1,4 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
 import java.io.Serializable;
 import javax.persistence.Embeddable;
@@ -12,12 +12,12 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
  * @author drupalex
  */
 @Embeddable
-public class ComkerCrewJoinGlobalRolePk implements Serializable {
+public class ComkerCrewJoinGlobalRolePK implements Serializable {
 
-    public ComkerCrewJoinGlobalRolePk() {
+    public ComkerCrewJoinGlobalRolePK() {
     }
 
-    public ComkerCrewJoinGlobalRolePk(ComkerCrew crew, ComkerRole role) {
+    public ComkerCrewJoinGlobalRolePK(ComkerCrewDPO crew, ComkerRoleDPO role) {
         if (crew == null || role == null) {
             throw new ComkerInvalidParameterException(
                     "ComkerCrewJoinGlobalRolePk_crew_or_role_is_null",
@@ -29,26 +29,26 @@ public class ComkerCrewJoinGlobalRolePk implements Serializable {
         this.role = role;
     }
 
-    private ComkerCrew crew;
-    private ComkerRole role;
+    private ComkerCrewDPO crew;
+    private ComkerRoleDPO role;
 
     @ManyToOne
     @JoinColumn(name="f_crew_id")
-    public ComkerCrew getCrew() {
+    public ComkerCrewDPO getCrew() {
         return crew;
     }
 
-    public void setCrew(ComkerCrew crew) {
+    public void setCrew(ComkerCrewDPO crew) {
         this.crew = crew;
     }
 
     @ManyToOne
     @JoinColumn(name="f_role_id")
-    public ComkerRole getRole() {
+    public ComkerRoleDPO getRole() {
         return role;
     }
 
-    public void setRole(ComkerRole role) {
+    public void setRole(ComkerRoleDPO role) {
         this.role = role;
     }
 
@@ -58,7 +58,7 @@ public class ComkerCrewJoinGlobalRolePk implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerCrewJoinGlobalRolePk that = (ComkerCrewJoinGlobalRolePk) o;
+        ComkerCrewJoinGlobalRolePK that = (ComkerCrewJoinGlobalRolePK) o;
 
         if (crew != null ? !crew.equals(that.crew) : that.crew != null) return false;
         if (role != null ? !role.equals(that.role) : that.role != null)

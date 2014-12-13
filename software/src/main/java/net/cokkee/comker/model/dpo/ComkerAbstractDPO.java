@@ -1,4 +1,4 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
 import net.cokkee.comker.model.ComkerObject;
 import org.springframework.validation.Errors;
@@ -7,7 +7,7 @@ import org.springframework.validation.Errors;
  *
  * @author drupalex
  */
-public class ComkerAbstractItem  extends ComkerObject {
+public class ComkerAbstractDPO  extends ComkerObject {
 
     public static final String NULL = "--null--";
     public static final String EMPTY = "";

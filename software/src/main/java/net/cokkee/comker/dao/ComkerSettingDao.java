@@ -1,8 +1,8 @@
 package net.cokkee.comker.dao;
 
-import net.cokkee.comker.model.po.ComkerSettingKey;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 
 /**
  *
@@ -10,27 +10,27 @@ import net.cokkee.comker.model.po.ComkerUser;
  */
 public interface ComkerSettingDao {
 
-    ComkerSettingKey get(String id);
+    ComkerSettingKeyDPO get(String id);
 
-    ComkerSettingKey getByCode(String code);
+    ComkerSettingKeyDPO getByCode(String code);
 
-    ComkerSettingKey create(ComkerSettingKey item);
+    ComkerSettingKeyDPO create(ComkerSettingKeyDPO item);
 
-    ComkerSettingKey update(ComkerSettingKey item);
+    ComkerSettingKeyDPO update(ComkerSettingKeyDPO item);
 
-    void delete(ComkerSettingKey item);
+    void delete(ComkerSettingKeyDPO item);
 
     @Deprecated
     void delete(String id);
 
-    <T> void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T defaultValue);
+    <T> void define(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz, T defaultValue);
 
-    <T> T getValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz);
+    <T> T getValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz);
 
-    <T> void setValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T value);
+    <T> void setValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz, T value);
 
     @Deprecated
-    void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String defaultValue);
+    void define(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, String defaultValue);
 
     @Deprecated
     String getValue(String spotCode, String username, String keyCode);
@@ -39,8 +39,8 @@ public interface ComkerSettingDao {
     void setValue(String spotCode, String username, String keyCode, String value);
 
     @Deprecated
-    String getValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key);
+    String getValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key);
 
     @Deprecated
-    void setValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String value);
+    void setValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, String value);
 }

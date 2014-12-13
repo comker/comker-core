@@ -1,4 +1,4 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -17,16 +17,16 @@ import org.hibernate.annotations.GenericGenerator;
  * @author drupalex
  */
 @Entity
-@Table(name = "comker_audit_field_integer")
-public class ComkerAuditFieldString extends ComkerAbstractItem {
+@Table(name = "comker_version_field_double")
+public class ComkerVersionFieldDoubleDPO extends ComkerAbstractDPO {
 
     private String id;
     private String field;
-    private String value;
+    private Double value;
     private Date changedOn;
     private Long revision;
 
-    private ComkerAuditEntity entity;
+    private ComkerVersionEntityDPO entity;
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -49,12 +49,12 @@ public class ComkerAuditFieldString extends ComkerAbstractItem {
         this.field = field;
     }
 
-    @Column(name = "f_value", unique = false, nullable = true, columnDefinition="text")
-    public String getValue() {
+    @Column(name = "f_value", unique = false, nullable = true)
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
@@ -79,11 +79,11 @@ public class ComkerAuditFieldString extends ComkerAbstractItem {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="f_entity_id")
-    public ComkerAuditEntity getEntity() {
+    public ComkerVersionEntityDPO getEntity() {
         return entity;
     }
 
-    public void setEntity(ComkerAuditEntity entity) {
+    public void setEntity(ComkerVersionEntityDPO entity) {
         this.entity = entity;
     }
 }

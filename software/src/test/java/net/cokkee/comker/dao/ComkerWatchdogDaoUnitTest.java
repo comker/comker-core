@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerWatchdog;
+import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Session;
@@ -40,7 +40,7 @@ public class ComkerWatchdogDaoUnitTest {
     
     @Before
     public void init() {
-        ComkerWatchdog item = null;
+        ComkerWatchdogDPO item = null;
         Session session = testSessionFactory.getCurrentSession();
 
         Random random = new Random();
@@ -48,11 +48,11 @@ public class ComkerWatchdogDaoUnitTest {
             String prefix = (i<10)?"0":"";
             String username = (i/2 == 0) ? "pnhung177":"someone";
 
-            item = new ComkerWatchdog(username, "method_" + prefix, "{}",
+            item = new ComkerWatchdogDPO(username, "method_" + prefix, "{}",
                     Calendar.getInstance().getTime(), random.nextLong(),
-                    ComkerWatchdog.HIT_STATE_SUCCESS);
+                    ComkerWatchdogDPO.HIT_STATE_SUCCESS);
 
-            //item = new ComkerWatchdog(username, "method_" + prefix);
+            //item = new ComkerWatchdogDPO(username, "method_" + prefix);
             session.saveOrUpdate(item);
             watchdogIds.add(item.getId());
         }
@@ -68,7 +68,7 @@ public class ComkerWatchdogDaoUnitTest {
         List list = testWatchdogDao.findAll(null, null);
         List<String> resultSet = new ArrayList<String>();
         for(Object item:list) {
-            ComkerWatchdog permission = (ComkerWatchdog) item;
+            ComkerWatchdogDPO permission = (ComkerWatchdogDPO) item;
             resultSet.add(permission.getId());
         }
         Assert.assertThat(resultSet, CoreMatchers.is(watchdogIds));
@@ -83,14 +83,14 @@ public class ComkerWatchdogDaoUnitTest {
     @Test
     public void test_get_by_id() {
         for(int i=0; i<watchdogIds.size(); i++) {
-            ComkerWatchdog item = testWatchdogDao.get(watchdogIds.get(i));
+            ComkerWatchdogDPO item = testWatchdogDao.get(watchdogIds.get(i));
             Assert.assertNotNull(item);
         }
     }
 
     @Test
     public void test_get_by_id_with_invalid_id() {
-        ComkerWatchdog item = testWatchdogDao.get("ID_NOT_FOUND");
+        ComkerWatchdogDPO item = testWatchdogDao.get("ID_NOT_FOUND");
         Assert.assertNull(item);
     }
 }

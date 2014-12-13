@@ -7,9 +7,9 @@ import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.storage.ComkerSettingStorage;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
-import net.cokkee.comker.model.po.ComkerSettingKey;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +59,8 @@ public class ComkerSettingStorageImpl implements ComkerSettingStorage {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerSpot getSpotNotNullByCode(String code) {
-        ComkerSpot dbItem = spotDao.getByCode(code);
+    private ComkerSpotDPO getSpotNotNullByCode(String code) {
+        ComkerSpotDPO dbItem = spotDao.getByCode(code);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "spot_with__code__not_found",
@@ -73,8 +73,8 @@ public class ComkerSettingStorageImpl implements ComkerSettingStorage {
     }
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerUser getUserNotNullByUsername(String username) {
-        ComkerUser dbItem = userDao.getByUsername(username);
+    private ComkerUserDPO getUserNotNullByUsername(String username) {
+        ComkerUserDPO dbItem = userDao.getByUsername(username);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "user_with__username__not_found",
@@ -87,8 +87,8 @@ public class ComkerSettingStorageImpl implements ComkerSettingStorage {
     }
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerSettingKey getNotNullByCode(String code) {
-        ComkerSettingKey dbItem = settingDao.getByCode(code);
+    private ComkerSettingKeyDPO getNotNullByCode(String code) {
+        ComkerSettingKeyDPO dbItem = settingDao.getByCode(code);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "setting_key_with__code__not_found",

@@ -13,7 +13,7 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.storage.ComkerNavbarStorage;
 import net.cokkee.comker.model.dto.ComkerNavNodeFormDTO;
 import net.cokkee.comker.model.dto.ComkerNavNodeViewDTO;
-import net.cokkee.comker.model.po.ComkerNavbarNode;
+import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +57,7 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerNavNodeViewDTO get(String id) {
-        ComkerNavbarNode nodeDPO = getNotNull(id);
+        ComkerNavbarNodeDPO nodeDPO = getNotNull(id);
         ComkerNavNodeViewDTO result = new ComkerNavNodeViewDTO();
         ComkerDataUtil.copyPropertiesExcludes(nodeDPO, result, new String[] {"children"});
         loadAggregationRefs(nodeDPO, result);
@@ -68,7 +68,7 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerNavNodeViewDTO create(ComkerNavNodeFormDTO item) {
 
-        ComkerNavbarNode nodeDPO = new ComkerNavbarNode();
+        ComkerNavbarNodeDPO nodeDPO = new ComkerNavbarNodeDPO();
         ComkerDataUtil.copyPropertiesExcludes(item, nodeDPO, new String[] {"children"});
         saveAggregationRefs(item, nodeDPO);
         nodeDPO = navbarDao.create(nodeDPO);
@@ -94,12 +94,12 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     //--------------------------------------------------------------------------
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private void loadAggregationRefs(ComkerNavbarNode source, ComkerNavNodeViewDTO target) {
+    private void loadAggregationRefs(ComkerNavbarNodeDPO source, ComkerNavNodeViewDTO target) {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    private void saveAggregationRefs(ComkerNavNodeFormDTO source, ComkerNavbarNode target) {
-        ComkerNavbarNode parent = null;
+    private void saveAggregationRefs(ComkerNavNodeFormDTO source, ComkerNavbarNodeDPO target) {
+        ComkerNavbarNodeDPO parent = null;
         String parentId = source.getParentId();
         if (parentId != null) {
             parent = getNotNull(parentId);
@@ -114,8 +114,8 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerNavbarNode getNotNull(String id) {
-        ComkerNavbarNode dbItem = navbarDao.get(id);
+    private ComkerNavbarNodeDPO getNotNull(String id) {
+        ComkerNavbarNodeDPO dbItem = navbarDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "navbarnode_with__id__not_found",
@@ -128,10 +128,10 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerNavNodeViewDTO convertDPOTree(ComkerNavbarNode rootDPO) {
+    private ComkerNavNodeViewDTO convertDPOTree(ComkerNavbarNodeDPO rootDPO) {
         if (rootDPO == null) return null;
 
-        Queue<ComkerNavbarNode> queueDPO = new LinkedList<ComkerNavbarNode>();
+        Queue<ComkerNavbarNodeDPO> queueDPO = new LinkedList<ComkerNavbarNodeDPO>();
         Queue<ComkerNavNodeViewDTO> queueDTO = new LinkedList<ComkerNavNodeViewDTO>();
 
         queueDPO.add(rootDPO);
@@ -140,16 +140,16 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
         queueDTO.add(rootDTO);
 
         while(!queueDPO.isEmpty()) {
-            ComkerNavbarNode nodeDPO = queueDPO.remove();
+            ComkerNavbarNodeDPO nodeDPO = queueDPO.remove();
             ComkerNavNodeViewDTO nodeDTO = queueDTO.remove();
             ComkerDataUtil.copyPropertiesExcludes(nodeDPO, nodeDTO,
                     new String[] {"children"});
 
-            Set<ComkerNavbarNode> childrenDPO = nodeDPO.getChildren();
+            Set<ComkerNavbarNodeDPO> childrenDPO = nodeDPO.getChildren();
             Set<ComkerNavNodeViewDTO> childrenDTO = nodeDTO.getChildren();
             if (childrenDPO == null) continue;
 
-            for(ComkerNavbarNode childDPO:childrenDPO) {
+            for(ComkerNavbarNodeDPO childDPO:childrenDPO) {
                 ComkerNavNodeViewDTO childDTO = new ComkerNavNodeViewDTO();
                 childrenDTO.add(childDTO);
 
@@ -162,9 +162,9 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private List<ComkerNavNodeViewDTO> convertDPOList(List<ComkerNavbarNode> listDPO) {
+    private List<ComkerNavNodeViewDTO> convertDPOList(List<ComkerNavbarNodeDPO> listDPO) {
         List<ComkerNavNodeViewDTO> listDTO = new ArrayList<ComkerNavNodeViewDTO>();
-        for(ComkerNavbarNode itemDPO:listDPO) {
+        for(ComkerNavbarNodeDPO itemDPO:listDPO) {
             ComkerNavNodeViewDTO itemDTO = new ComkerNavNodeViewDTO();
             ComkerDataUtil.copyPropertiesExcludes(itemDPO, itemDTO,
                     new String[] {"children"});

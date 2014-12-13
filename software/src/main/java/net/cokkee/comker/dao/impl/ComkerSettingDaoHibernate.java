@@ -5,11 +5,11 @@ import net.cokkee.comker.dao.*;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
 
-import net.cokkee.comker.model.po.ComkerSettingEntry;
-import net.cokkee.comker.model.po.ComkerSettingEntryPk;
-import net.cokkee.comker.model.po.ComkerSettingKey;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerSettingEntryDPO;
+import net.cokkee.comker.model.dpo.ComkerSettingEntryPK;
+import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 
 import org.hibernate.Criteria;
@@ -61,24 +61,24 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerSettingKey get(String id) {
+    public ComkerSettingKeyDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingKey item = (ComkerSettingKey) session.get(ComkerSettingKey.class, id);
+        ComkerSettingKeyDPO item = (ComkerSettingKeyDPO) session.get(ComkerSettingKeyDPO.class, id);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerSettingKey getByCode(String code) {
+    public ComkerSettingKeyDPO getByCode(String code) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerSettingKey.class);
+        Criteria c = session.createCriteria(ComkerSettingKeyDPO.class);
         c.add(Restrictions.eq(FIELD_CODE, code));
-        return (ComkerSettingKey) c.uniqueResult();
+        return (ComkerSettingKeyDPO) c.uniqueResult();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerSettingKey create(ComkerSettingKey item) {
+    public ComkerSettingKeyDPO create(ComkerSettingKeyDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.save(item);
         return item;
@@ -86,7 +86,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerSettingKey update(ComkerSettingKey item) {
+    public ComkerSettingKeyDPO update(ComkerSettingKeyDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;
@@ -94,7 +94,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(ComkerSettingKey item) {
+    public void delete(ComkerSettingKeyDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.delete(item);
     }
@@ -103,18 +103,18 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingKey item = (ComkerSettingKey) session.get(ComkerSettingKey.class, id);
+        ComkerSettingKeyDPO item = (ComkerSettingKeyDPO) session.get(ComkerSettingKeyDPO.class, id);
         session.delete(item);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public <T> void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T defaultValue) {
+    public <T> void define(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz, T defaultValue) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
-        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        ComkerSettingEntryPK pk = new ComkerSettingEntryPK(key, spot, user);
+        ComkerSettingEntryDPO item = (ComkerSettingEntryDPO) session.get(ComkerSettingEntryDPO.class, pk);
         if (item == null) {
-            item = new ComkerSettingEntry(key, spot, user);
+            item = new ComkerSettingEntryDPO(key, spot, user);
         }
 
         setSettingEntryValue(item, clazz, defaultValue);
@@ -124,10 +124,10 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public <T> T getValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz) {
+    public <T> T getValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
-        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        ComkerSettingEntryPK pk = new ComkerSettingEntryPK(key, spot, user);
+        ComkerSettingEntryDPO item = (ComkerSettingEntryDPO) session.get(ComkerSettingEntryDPO.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
                 throw new ComkerObjectNotFoundException(
@@ -147,10 +147,10 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public <T> void setValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, Class<T> clazz, T value) {
+    public <T> void setValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, Class<T> clazz, T value) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
-        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        ComkerSettingEntryPK pk = new ComkerSettingEntryPK(key, spot, user);
+        ComkerSettingEntryDPO item = (ComkerSettingEntryDPO) session.get(ComkerSettingEntryDPO.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
                 throw new ComkerObjectNotFoundException(
@@ -173,7 +173,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public void define(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String defaultValue) {
+    public void define(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, String defaultValue) {
         define(spot, user, key, String.class, defaultValue);
     }
 
@@ -193,10 +193,10 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public String getValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key) {
+    public String getValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
-        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        ComkerSettingEntryPK pk = new ComkerSettingEntryPK(key, spot, user);
+        ComkerSettingEntryDPO item = (ComkerSettingEntryDPO) session.get(ComkerSettingEntryDPO.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
                 throw new ComkerObjectNotFoundException("Setting not found");
@@ -209,10 +209,10 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void setValue(ComkerSpot spot, ComkerUser user, ComkerSettingKey key, String value) {
+    public void setValue(ComkerSpotDPO spot, ComkerUserDPO user, ComkerSettingKeyDPO key, String value) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerSettingEntryPk pk = new ComkerSettingEntryPk(key, spot, user);
-        ComkerSettingEntry item = (ComkerSettingEntry) session.get(ComkerSettingEntry.class, pk);
+        ComkerSettingEntryPK pk = new ComkerSettingEntryPK(key, spot, user);
+        ComkerSettingEntryDPO item = (ComkerSettingEntryDPO) session.get(ComkerSettingEntryDPO.class, pk);
         if (item == null) {
             if (isErrorCatched()) {
                 throw new ComkerObjectNotFoundException("Setting not found");
@@ -226,7 +226,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
 
     //--------------------------------------------------------------------------
     
-    private <T> T getSettingEntryValue(ComkerSettingEntry item, Class<T> clazz) {
+    private <T> T getSettingEntryValue(ComkerSettingEntryDPO item, Class<T> clazz) {
         T result = null;
         if (clazz == String.class) {
             result = clazz.cast(item.getValueString());
@@ -242,7 +242,7 @@ public class ComkerSettingDaoHibernate extends ComkerAbstractDaoHibernate
         return result;
     }
 
-    private <T> void setSettingEntryValue(ComkerSettingEntry item, Class<T> clazz, T value) {
+    private <T> void setSettingEntryValue(ComkerSettingEntryDPO item, Class<T> clazz, T value) {
         if (clazz == String.class) {
             item.setValueString((String)value);
         } else if (clazz == Double.class) {

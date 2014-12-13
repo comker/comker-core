@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.validation.Errors;
 
@@ -46,7 +46,7 @@ public class ComkerUserValidator extends ComkerAbstractValidator {
                     new Object[] {"msg.field_email"},
                     "Email value is invalid format");
         } else {
-            ComkerUser dupItem = userDao.getByEmail(item.getEmail());
+            ComkerUserDPO dupItem = userDao.getByEmail(item.getEmail());
             if (dupItem != null && !dupItem.getId().equals(item.getId())) {
                 e.rejectValue("email",
                         "msg.__field__has_duplicated_value",
@@ -66,7 +66,7 @@ public class ComkerUserValidator extends ComkerAbstractValidator {
                     new Object[] {"msg.field_username", item.getUsername()},
                     "Username value is invalid format");
         } else {
-            ComkerUser dupItem = userDao.getByUsername(item.getUsername());
+            ComkerUserDPO dupItem = userDao.getByUsername(item.getUsername());
             if (dupItem != null && !dupItem.getId().equals(item.getId())) {
                 e.rejectValue("username",
                         "msg.__field__has_duplicated_value",

@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -12,12 +13,12 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
  * @author drupalex
  */
 @Embeddable
-public class ComkerSpotJoinModulePk implements Serializable {
+public class ComkerSpotJoinModulePK implements Serializable {
 
-    public ComkerSpotJoinModulePk() {
+    public ComkerSpotJoinModulePK() {
     }
 
-    public ComkerSpotJoinModulePk(ComkerSpot spot, ComkerModule module) {
+    public ComkerSpotJoinModulePK(ComkerSpotDPO spot, ComkerModuleDPO module) {
         if (spot == null || module == null) {
             throw new ComkerInvalidParameterException(
                 "ComkerSpotJoinModulePk_spot_or_module_is_null",
@@ -29,26 +30,26 @@ public class ComkerSpotJoinModulePk implements Serializable {
         this.module = module;
     }
 
-    private ComkerSpot spot;
-    private ComkerModule module;
+    private ComkerSpotDPO spot;
+    private ComkerModuleDPO module;
 
     @ManyToOne
     @JoinColumn(name="f_spot_id")
-    public ComkerSpot getSpot() {
+    public ComkerSpotDPO getSpot() {
         return spot;
     }
 
-    public void setSpot(ComkerSpot spot) {
+    public void setSpot(ComkerSpotDPO spot) {
         this.spot = spot;
     }
 
     @ManyToOne
     @JoinColumn(name="f_module_id")
-    public ComkerModule getModule() {
+    public ComkerModuleDPO getModule() {
         return module;
     }
 
-    public void setModule(ComkerModule module) {
+    public void setModule(ComkerModuleDPO module) {
         this.module = module;
     }
 
@@ -58,7 +59,7 @@ public class ComkerSpotJoinModulePk implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerSpotJoinModulePk that = (ComkerSpotJoinModulePk) o;
+        ComkerSpotJoinModulePK that = (ComkerSpotJoinModulePK) o;
 
         if (spot != null ? !spot.equals(that.spot) : that.spot != null) return false;
         if (module != null ? !module.equals(that.module) : that.module != null)

@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 
 /**
  *
@@ -22,35 +22,35 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager);
     
-    ComkerCrew findWhere(Map<String,Object> params);
+    ComkerCrewDPO findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerQueryPager filter);
     
-    List findAllWhere(ComkerRole globalRole);
+    List findAllWhere(ComkerRoleDPO globalRole);
 
     Boolean exists(String id);
 
-    ComkerCrew get(String id);
+    ComkerCrewDPO get(String id);
 
-    ComkerCrew getByName(String name);
+    ComkerCrewDPO getByName(String name);
 
-    ComkerCrew getBySpotWithRole(ComkerSpot spot, ComkerRole role);
+    ComkerCrewDPO getBySpotWithRole(ComkerSpotDPO spot, ComkerRoleDPO role);
 
-    ComkerCrew create(ComkerCrew item);
+    ComkerCrewDPO create(ComkerCrewDPO item);
 
-    ComkerCrew update(ComkerCrew item);
+    ComkerCrewDPO update(ComkerCrewDPO item);
 
-    void delete(ComkerCrew item);
+    void delete(ComkerCrewDPO item);
 
-    void addGlobalRole(ComkerCrew crew, ComkerRole role);
+    void addGlobalRole(ComkerCrewDPO crew, ComkerRoleDPO role);
 
-    void removeGlobalRole(ComkerCrew crew, ComkerRole role);
+    void removeGlobalRole(ComkerCrewDPO crew, ComkerRoleDPO role);
 
-    void collectGlobalRole(Set<ComkerRole> bag, ComkerCrew crew);
+    void collectGlobalRole(Set<ComkerRoleDPO> bag, ComkerCrewDPO crew);
 
-    void addRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
+    void addRoleWithSpot(ComkerCrewDPO crew, ComkerRoleDPO role, ComkerSpotDPO spot);
 
-    void removeRoleWithSpot(ComkerCrew crew, ComkerRole role, ComkerSpot spot);
+    void removeRoleWithSpot(ComkerCrewDPO crew, ComkerRoleDPO role, ComkerSpotDPO spot);
 
-    void collectSpotWithRole(Map<ComkerSpot,Set<ComkerRole>> bag, ComkerCrew crew);
+    void collectSpotWithRole(Map<ComkerSpotDPO,Set<ComkerRoleDPO>> bag, ComkerCrewDPO crew);
 }

@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;
@@ -18,44 +19,44 @@ import javax.persistence.Transient;
     @AssociationOverride(name = "pk.crew", joinColumns = @JoinColumn(name = "f_crew_id")),
     @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "f_role_id"))
 })
-public class ComkerCrewJoinGlobalRole extends ComkerAbstractItem {
+public class ComkerCrewJoinGlobalRoleDPO extends ComkerAbstractDPO {
 
-    public ComkerCrewJoinGlobalRole() {
+    public ComkerCrewJoinGlobalRoleDPO() {
         super();
-        this.pk = new ComkerCrewJoinGlobalRolePk();
+        this.pk = new ComkerCrewJoinGlobalRolePK();
     }
 
-    public ComkerCrewJoinGlobalRole(ComkerCrew crew, ComkerRole role) {
+    public ComkerCrewJoinGlobalRoleDPO(ComkerCrewDPO crew, ComkerRoleDPO role) {
         super();
-        this.pk = new ComkerCrewJoinGlobalRolePk(crew, role);
+        this.pk = new ComkerCrewJoinGlobalRolePK(crew, role);
     }
 
-    private ComkerCrewJoinGlobalRolePk pk;
+    private ComkerCrewJoinGlobalRolePK pk;
 
     @EmbeddedId
-    public ComkerCrewJoinGlobalRolePk getPk() {
+    public ComkerCrewJoinGlobalRolePK getPk() {
         return pk;
     }
 
-    public void setPk(ComkerCrewJoinGlobalRolePk pk) {
+    public void setPk(ComkerCrewJoinGlobalRolePK pk) {
         this.pk = pk;
     }
 
     @Transient
-    public ComkerCrew getCrew() {
+    public ComkerCrewDPO getCrew() {
         return getPk().getCrew();
     }
 
-    public void setCrew(ComkerCrew item) {
+    public void setCrew(ComkerCrewDPO item) {
         getPk().setCrew(item);
     }
 
     @Transient
-    public ComkerRole getRole() {
+    public ComkerRoleDPO getRole() {
         return getPk().getRole();
     }
 
-    public void setRole(ComkerRole product) {
+    public void setRole(ComkerRoleDPO product) {
         getPk().setRole(product);
     }
 
@@ -64,7 +65,7 @@ public class ComkerCrewJoinGlobalRole extends ComkerAbstractItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerCrewJoinGlobalRole that = (ComkerCrewJoinGlobalRole) o;
+        ComkerCrewJoinGlobalRoleDPO that = (ComkerCrewJoinGlobalRoleDPO) o;
 
         if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
 

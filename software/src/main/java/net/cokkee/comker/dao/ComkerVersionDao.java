@@ -4,6 +4,6 @@ package net.cokkee.comker.dao;
  *
  * @author drupalex
  */
-public interface ComkerAuditEntityDao extends ComkerAbstractDao {
+public interface ComkerVersionDao extends ComkerAbstractDao {
 }
 

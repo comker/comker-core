@@ -7,7 +7,7 @@ import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
-import net.cokkee.comker.model.po.ComkerRole;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.springframework.validation.ValidationUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerRoleValidatorUnitTest {
 
-    private List<ComkerRole> roleList = new ArrayList<ComkerRole>();
+    private List<ComkerRoleDPO> roleList = new ArrayList<ComkerRoleDPO>();
 
     private List<String> permissionIds = new ArrayList<String>();
     
@@ -50,7 +50,7 @@ public class ComkerRoleValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerRole role = new ComkerRole("ROLE_" + i, "Role " + i, "This is role " + i);
+            ComkerRoleDPO role = new ComkerRoleDPO("ROLE_" + i, "Role " + i, "This is role " + i);
             role.setId(UUID.randomUUID().toString());
             roleList.add(role);
         }
@@ -59,11 +59,11 @@ public class ComkerRoleValidatorUnitTest {
             permissionIds.add(UUID.randomUUID().toString());
         }
 
-        Mockito.when(roleDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerRole>() {
+        Mockito.when(roleDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerRoleDPO>() {
             @Override
-            public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerRole role:roleList) {
+                for(ComkerRoleDPO role:roleList) {
                     if (role.getCode().equals(id)) {
                         return role;
                     }

@@ -21,25 +21,25 @@
             class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="annotatedClasses">
             <list>
-                <value>net.cokkee.comker.model.po.ComkerPermission</value>
-                <value>net.cokkee.comker.model.po.ComkerRole</value>
-                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermission</value>
-                <value>net.cokkee.comker.model.po.ComkerRoleJoinPermissionPk</value>
-                <value>net.cokkee.comker.model.po.ComkerModule</value>
-                <value>net.cokkee.comker.model.po.ComkerSpot</value>
-                <value>net.cokkee.comker.model.po.ComkerSpotJoinModule</value>
-                <value>net.cokkee.comker.model.po.ComkerSpotJoinModulePk</value>
-                <value>net.cokkee.comker.model.po.ComkerCrew</value>
-                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole</value>
-                <value>net.cokkee.comker.model.po.ComkerCrewJoinGlobalRolePk</value>
-                <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot</value>
-                <value>net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpotPk</value>
-                <value>net.cokkee.comker.model.po.ComkerUser</value>
-                <value>net.cokkee.comker.model.po.ComkerUserJoinCrew</value>
-                <value>net.cokkee.comker.model.po.ComkerUserJoinCrewPk</value>
-                <value>net.cokkee.comker.model.po.ComkerSettingEntry</value>
-                <value>net.cokkee.comker.model.po.ComkerSettingEntryPk</value>
-                <value>net.cokkee.comker.model.po.ComkerSettingKey</value>
+                <value>net.cokkee.comker.model.dpo.ComkerPermissionDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionPK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerModuleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotJoinModulePK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerCrewDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerCrewJoinGlobalRoleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerCrewJoinGlobalRolePK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerCrewJoinRoleWithSpotDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerCrewJoinRoleWithSpotPK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerUserDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerUserJoinCrewPK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSettingEntryDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSettingEntryPK</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSettingKeyDPO</value>
             </list>
         </property>
         <property name="dataSource" ref="comkerDataSource"/>

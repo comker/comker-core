@@ -21,10 +21,10 @@
             class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="annotatedClasses">
             <list>
-                <value>net.cokkee.comker.model.po.ComkerModule</value>
-                <value>net.cokkee.comker.model.po.ComkerSpot</value>
-                <value>net.cokkee.comker.model.po.ComkerSpotJoinModule</value>
-                <value>net.cokkee.comker.model.po.ComkerSpotJoinModulePk</value>
+                <value>net.cokkee.comker.model.dpo.ComkerModuleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO</value>
+                <value>net.cokkee.comker.model.dpo.ComkerSpotJoinModulePK</value>
             </list>
         </property>
         <property name="dataSource" ref="comkerDataSource"/>

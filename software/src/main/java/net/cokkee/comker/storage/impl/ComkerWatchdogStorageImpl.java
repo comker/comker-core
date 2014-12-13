@@ -7,7 +7,7 @@ import net.cokkee.comker.storage.ComkerWatchdogStorage;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
-import net.cokkee.comker.model.po.ComkerWatchdog;
+import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.transaction.annotation.Propagation;
@@ -69,7 +69,7 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
         for(Object dbItem:dbList) {
             ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
-            loadAggregationRefs((ComkerWatchdog)dbItem, poItem);
+            loadAggregationRefs((ComkerWatchdogDPO)dbItem, poItem);
             poList.add(poItem);
         }
         return poList;
@@ -78,7 +78,7 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerWatchdogDTO get(String id) {
-        ComkerWatchdog dbItem = getWatchdogDao().get(id);
+        ComkerWatchdogDPO dbItem = getWatchdogDao().get(id);
         ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
         ComkerDataUtil.copyProperties(dbItem, poItem);
         loadAggregationRefs(dbItem, poItem);
@@ -88,7 +88,7 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerWatchdogDTO create(ComkerWatchdogDTO item) {
-        ComkerWatchdog dbItem = new ComkerWatchdog();
+        ComkerWatchdogDPO dbItem = new ComkerWatchdogDPO();
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
         dbItem = getWatchdogDao().create(dbItem);
@@ -100,7 +100,7 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void update(ComkerWatchdogDTO item) {
-        ComkerWatchdog dbItem = getWatchdogDao().get(item.getId());
+        ComkerWatchdogDPO dbItem = getWatchdogDao().get(item.getId());
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
         getWatchdogDao().update(dbItem);
@@ -109,15 +109,15 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
-        ComkerWatchdog dbItem = getWatchdogDao().get(id);
+        ComkerWatchdogDPO dbItem = getWatchdogDao().get(id);
         getWatchdogDao().delete(dbItem);
     }
 
     //--------------------------------------------------------------------------
     
-    private void loadAggregationRefs(ComkerWatchdog dbItem, ComkerWatchdogDTO poItem) {
+    private void loadAggregationRefs(ComkerWatchdogDPO dbItem, ComkerWatchdogDTO poItem) {
     }
 
-    private void saveAggregationRefs(ComkerWatchdogDTO poItem, ComkerWatchdog dbItem) {
+    private void saveAggregationRefs(ComkerWatchdogDTO poItem, ComkerWatchdogDPO dbItem) {
     }
 }

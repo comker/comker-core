@@ -4,8 +4,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import net.cokkee.comker.dao.ComkerWatchdogDao;
-import net.cokkee.comker.model.po.ComkerAbstractItem;
-import net.cokkee.comker.model.po.ComkerWatchdog;
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
+import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerToolboxService;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -73,7 +73,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
         Object result = null;
 
-        ComkerWatchdog item = new ComkerWatchdog();
+        ComkerWatchdogDPO item = new ComkerWatchdogDPO();
         item.setHitTime(getToolboxService().getTime());
         
         try {
@@ -82,9 +82,9 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
             long end = getToolboxService().getTimeInMillis();
             item.setHitDuration(end - start);
 
-            item.setHitState(ComkerWatchdog.HIT_STATE_SUCCESS);
+            item.setHitState(ComkerWatchdogDPO.HIT_STATE_SUCCESS);
         } catch (RuntimeException e) {
-            item.setHitState(ComkerWatchdog.HIT_STATE_FAILURE);
+            item.setHitState(ComkerWatchdogDPO.HIT_STATE_FAILURE);
             if (log.isErrorEnabled()) {
                 log.error(MessageFormat.format(
                         "ComkerWatchInterceptor.invoke() - Exception:{0} / Message:{1}",
@@ -101,9 +101,9 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
     private class WriteWatchdogTask implements Runnable {
 
         private MethodInvocation method;
-        private ComkerWatchdog item;
+        private ComkerWatchdogDPO item;
 
-        public WriteWatchdogTask(MethodInvocation method, ComkerWatchdog item) {
+        public WriteWatchdogTask(MethodInvocation method, ComkerWatchdogDPO item) {
             this.method = method;
             this.item = item;
         }
@@ -126,11 +126,11 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
             }
         }
 
-        private void extractUserInfo(ComkerWatchdog item) {
+        private void extractUserInfo(ComkerWatchdogDPO item) {
             item.setUsername(getSecurityService().getUsername());
         }
         
-        private void extractMethodInfo(MethodInvocation invocation, ComkerWatchdog watchLog) {
+        private void extractMethodInfo(MethodInvocation invocation, ComkerWatchdogDPO watchLog) {
             String className = invocation.getMethod().getDeclaringClass().getName();
             String methodName = invocation.getMethod().getName();
             Object[] params = invocation.getArguments();
@@ -139,7 +139,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
             List<Object> objs = new ArrayList<Object>();
             for(int i=0; (params!=null) && (i<params.length); i++) {
-                if (params[i] instanceof ComkerAbstractItem ||
+                if (params[i] instanceof ComkerAbstractDPO ||
                         params[i] instanceof String ||
                         params[i] instanceof Integer) {
                     objs.add(params[i]);

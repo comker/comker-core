@@ -10,10 +10,10 @@ import net.cokkee.comker.dao.ComkerSettingDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.storage.impl.ComkerSettingStorageImpl;
-import net.cokkee.comker.model.po.ComkerSettingEntry;
-import net.cokkee.comker.model.po.ComkerSettingKey;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerSettingEntryDPO;
+import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 
 import org.junit.runner.RunWith;
@@ -38,10 +38,10 @@ import org.mockito.Mockito;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerSettingStorageUnitTest {
 
-    private Map<String, ComkerSpot> spotMap = new HashMap<String, ComkerSpot>();
-    private Map<String, ComkerUser> userMap = new HashMap<String, ComkerUser>();
-    private Map<String, ComkerSettingKey> settingKeyMap = new HashMap<String, ComkerSettingKey>();
-    private Map<String, ComkerSettingEntry> settingEntryMap = new HashMap<String, ComkerSettingEntry>();
+    private Map<String, ComkerSpotDPO> spotMap = new HashMap<String, ComkerSpotDPO>();
+    private Map<String, ComkerUserDPO> userMap = new HashMap<String, ComkerUserDPO>();
+    private Map<String, ComkerSettingKeyDPO> settingKeyMap = new HashMap<String, ComkerSettingKeyDPO>();
+    private Map<String, ComkerSettingEntryDPO> settingEntryMap = new HashMap<String, ComkerSettingEntryDPO>();
 
     @InjectMocks
     private ComkerSettingStorageImpl settingStorage;
@@ -60,42 +60,42 @@ public class ComkerSettingStorageUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<2; i++) {
-            ComkerSpot spot = new ComkerSpot("SPOT_" + i, "Spot " + i, "This is spot " + i);
+            ComkerSpotDPO spot = new ComkerSpotDPO("SPOT_" + i, "Spot " + i, "This is spot " + i);
             spot.setId("ID_" + spot.getCode());
             spotMap.put(spot.getId(), spot);
         }
 
-        Mockito.when(spotDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSpot>() {
+        Mockito.when(spotDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
                 String code = (String) invocation.getArguments()[0];
                 return spotMap.get("ID_" + code);
             }
         });
 
         for(int i=0; i<3; i++) {
-            ComkerUser user = new ComkerUser("user-" + i + "@comker.net", "user" + i, "123456", "User " + i);
+            ComkerUserDPO user = new ComkerUserDPO("user-" + i + "@comker.net", "user" + i, "123456", "User " + i);
             user.setId("ID_" + user.getUsername());
             userMap.put(user.getId(), user);
         }
 
-        Mockito.when(userDao.getByUsername(Mockito.anyString())).thenAnswer(new Answer<ComkerUser>() {
+        Mockito.when(userDao.getByUsername(Mockito.anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String username = (String) invocation.getArguments()[0];
                 return userMap.get("ID_" + username);
             }
         });
 
         for(int i=0; i<8; i++) {
-            ComkerSettingKey settingKey = new ComkerSettingKey("APPLICATION_SETTING_" + i, null, null);
+            ComkerSettingKeyDPO settingKey = new ComkerSettingKeyDPO("APPLICATION_SETTING_" + i, null, null);
             settingKey.setId("ID_" + settingKey.getCode());
             settingKeyMap.put(settingKey.getId(), settingKey);
         }
 
-        Mockito.when(settingDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSettingKey>() {
+        Mockito.when(settingDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSettingKeyDPO>() {
             @Override
-            public ComkerSettingKey answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSettingKeyDPO answer(InvocationOnMock invocation) throws Throwable {
                 String code = (String) invocation.getArguments()[0];
                 return settingKeyMap.get("ID_" + code);
             }
@@ -104,21 +104,21 @@ public class ComkerSettingStorageUnitTest {
         Mockito.doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpot spot = (ComkerSpot) invocation.getArguments()[0];
-                ComkerUser user = (ComkerUser) invocation.getArguments()[1];
-                ComkerSettingKey key = (ComkerSettingKey) invocation.getArguments()[2];
+                ComkerSpotDPO spot = (ComkerSpotDPO) invocation.getArguments()[0];
+                ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[1];
+                ComkerSettingKeyDPO key = (ComkerSettingKeyDPO) invocation.getArguments()[2];
                 Class clazz = (Class) invocation.getArguments()[3];
                 Object defaultValue =  invocation.getArguments()[4];
 
                 String id = spot.getCode() + "-" + user.getUsername() + "-" + key.getCode();
-                ComkerSettingEntry entry = new ComkerSettingEntry(key, spot, user);
+                ComkerSettingEntryDPO entry = new ComkerSettingEntryDPO(key, spot, user);
                 setSettingEntryValue(entry, clazz, defaultValue);
                 settingEntryMap.put(id, entry);
 
                 return null;
             }
-        }).when(settingDao).define(Mockito.any(ComkerSpot.class),
-                Mockito.any(ComkerUser.class), Mockito.any(ComkerSettingKey.class),
+        }).when(settingDao).define(Mockito.any(ComkerSpotDPO.class),
+                Mockito.any(ComkerUserDPO.class), Mockito.any(ComkerSettingKeyDPO.class),
                 Mockito.any(Class.class), Mockito.any());
     }
 
@@ -129,7 +129,7 @@ public class ComkerSettingStorageUnitTest {
         settingStorage.define("SPOT_1", "user1", "APPLICATION_SETTING_3", Double.class, 3.14);
         settingStorage.define("SPOT_1", "user1", "APPLICATION_SETTING_4", Boolean.class, true);
         
-        ComkerSettingEntry entry = settingEntryMap.get("SPOT_1-user1-APPLICATION_SETTING_1");
+        ComkerSettingEntryDPO entry = settingEntryMap.get("SPOT_1-user1-APPLICATION_SETTING_1");
         Assert.assertNotNull(entry);
         Assert.assertTrue(entry.getValueInteger() == 100);
 
@@ -144,17 +144,17 @@ public class ComkerSettingStorageUnitTest {
 
 //    @Test
 //    public void test_set_value() {
-//        settingStorage.define(ComkerSpot.UNKNOWN, ComkerUser.UNKNOWN, "APPLICATION_SETTING_1", Integer.class, 100);
+//        settingStorage.define(ComkerSpotDPO.UNKNOWN, ComkerUserDPO.UNKNOWN, "APPLICATION_SETTING_1", Integer.class, 100);
 //        settingStorage.define("SPOT_1", "user1", "APPLICATION_SETTING_1", Integer.class, 100);
 //
-//        ComkerSettingEntry entry = settingEntryMap.get("SPOT_1-user1-APPLICATION_SETTING_1");
+//        ComkerSettingEntryDPO entry = settingEntryMap.get("SPOT_1-user1-APPLICATION_SETTING_1");
 //        Assert.assertNotNull(entry);
 //        Assert.assertTrue(entry.getValueInteger() == 100);
 //    }
 
     //--------------------------------------------------------------------------
     
-    private <T> T getSettingEntryValue(ComkerSettingEntry item, Class<T> clazz) {
+    private <T> T getSettingEntryValue(ComkerSettingEntryDPO item, Class<T> clazz) {
         T result = null;
         if (clazz == String.class) {
             result = clazz.cast(item.getValueString());
@@ -170,7 +170,7 @@ public class ComkerSettingStorageUnitTest {
         return result;
     }
 
-    private <T> void setSettingEntryValue(ComkerSettingEntry item, Class<T> clazz, T value) {
+    private <T> void setSettingEntryValue(ComkerSettingEntryDPO item, Class<T> clazz, T value) {
         if (clazz == String.class) {
             item.setValueString((String)value);
         } else if (clazz == Double.class) {

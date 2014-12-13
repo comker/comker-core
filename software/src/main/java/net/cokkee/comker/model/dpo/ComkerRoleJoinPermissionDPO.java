@@ -1,5 +1,7 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;
@@ -18,44 +20,44 @@ import javax.persistence.Transient;
     @AssociationOverride(name = "pk.role", joinColumns = @JoinColumn(name = "f_role_id")),
     @AssociationOverride(name = "pk.permission", joinColumns = @JoinColumn(name = "f_permission_id"))
 })
-public class ComkerRoleJoinPermission extends ComkerAbstractItem {
+public class ComkerRoleJoinPermissionDPO extends ComkerAbstractDPO {
 
-    public ComkerRoleJoinPermission() {
+    public ComkerRoleJoinPermissionDPO() {
         super();
-        this.pk = new ComkerRoleJoinPermissionPk();
+        this.pk = new ComkerRoleJoinPermissionPK();
     }
 
-    public ComkerRoleJoinPermission(ComkerRole role, ComkerPermission permission) {
+    public ComkerRoleJoinPermissionDPO(ComkerRoleDPO role, ComkerPermissionDPO permission) {
         super();
-        this.pk = new ComkerRoleJoinPermissionPk(role, permission);
+        this.pk = new ComkerRoleJoinPermissionPK(role, permission);
     }
 
-    private ComkerRoleJoinPermissionPk pk;
+    private ComkerRoleJoinPermissionPK pk;
 
     @EmbeddedId
-    public ComkerRoleJoinPermissionPk getPk() {
+    public ComkerRoleJoinPermissionPK getPk() {
         return pk;
     }
 
-    public void setPk(ComkerRoleJoinPermissionPk pk) {
+    public void setPk(ComkerRoleJoinPermissionPK pk) {
         this.pk = pk;
     }
 
     @Transient
-    public ComkerRole getRole() {
+    public ComkerRoleDPO getRole() {
         return getPk().getRole();
     }
 
-    public void setRole(ComkerRole item) {
+    public void setRole(ComkerRoleDPO item) {
         getPk().setRole(item);
     }
 
     @Transient
-    public ComkerPermission getPermission() {
+    public ComkerPermissionDPO getPermission() {
         return getPk().getPermission();
     }
 
-    public void setPermission(ComkerPermission product) {
+    public void setPermission(ComkerPermissionDPO product) {
         getPk().setPermission(product);
     }
 
@@ -64,7 +66,7 @@ public class ComkerRoleJoinPermission extends ComkerAbstractItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerRoleJoinPermission that = (ComkerRoleJoinPermission) o;
+        ComkerRoleJoinPermissionDPO that = (ComkerRoleJoinPermissionDPO) o;
 
         if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
 

@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "comker_setting_key",
         uniqueConstraints = @UniqueConstraint(columnNames = "f_code"))
-public class ComkerSettingKey extends ComkerAbstractItem {
+public class ComkerSettingKeyDPO extends ComkerAbstractDPO {
 
     public static final String TYPE_STRING = "string";
     public static final String TYPE_INTEGER = "integer";
@@ -32,11 +33,11 @@ public class ComkerSettingKey extends ComkerAbstractItem {
 
     public static final String CODE_USER_LANGUAGE = "USER_LANGUAGE";
 
-    public ComkerSettingKey() {
+    public ComkerSettingKeyDPO() {
         super();
     }
 
-    public ComkerSettingKey(String code, String type, String range) {
+    public ComkerSettingKeyDPO(String code, String type, String range) {
         super();
         this.code = code;
         this.type = type;

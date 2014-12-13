@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerModule;
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
 
 /**
  *
@@ -12,9 +12,9 @@ import net.cokkee.comker.model.po.ComkerModule;
  */
 public interface ComkerModuleDao {
 
-    ComkerModule find(String query, Map<String,Object> params);
+    ComkerModuleDPO find(String query, Map<String,Object> params);
     
-    ComkerModule findWhere(Map<String,Object> params);
+    ComkerModuleDPO findWhere(Map<String,Object> params);
 
     Integer count();
 
@@ -26,10 +26,10 @@ public interface ComkerModuleDao {
 
     Boolean exists(String id);
 
-    ComkerModule get(String id);
+    ComkerModuleDPO get(String id);
 
-    ComkerModule getByCode(String code);
+    ComkerModuleDPO getByCode(String code);
 
-    ComkerModule save(ComkerModule item);
+    ComkerModuleDPO save(ComkerModuleDPO item);
 
 }

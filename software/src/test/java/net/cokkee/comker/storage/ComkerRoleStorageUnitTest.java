@@ -12,9 +12,9 @@ import net.cokkee.comker.storage.impl.ComkerRoleStorageImpl;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
-import net.cokkee.comker.model.po.ComkerPermission;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerRoleValidator;
 
@@ -38,9 +38,9 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerRoleStorageUnitTest {
 
-    private List<ComkerRole> roleIdx = new ArrayList<ComkerRole>();
+    private List<ComkerRoleDPO> roleIdx = new ArrayList<ComkerRoleDPO>();
 
-    private List<ComkerPermission> permissionIdx = new ArrayList<ComkerPermission>();
+    private List<ComkerPermissionDPO> permissionIdx = new ArrayList<ComkerPermissionDPO>();
 
     @InjectMocks
     private ComkerRoleStorageImpl roleStorage;
@@ -61,7 +61,7 @@ public class ComkerRoleStorageUnitTest {
         roleStorage.setRoleValidator(roleValidator);
         
         for(int i=0; i<7; i++) {
-            ComkerPermission permission = new ComkerPermission("PERMISSION_0" + i);
+            ComkerPermissionDPO permission = new ComkerPermissionDPO("PERMISSION_0" + i);
             permission.setId(UUID.randomUUID().toString());
             permissionIdx.add(permission);
         }
@@ -70,41 +70,41 @@ public class ComkerRoleStorageUnitTest {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerPermission permission:permissionIdx) {
+                for(ComkerPermissionDPO permission:permissionIdx) {
                     if(permission.getId().equals(id)) return true;
                 }
                 return false;
             }
         });
 
-        when(permissionDao.get(anyString())).thenAnswer(new Answer<ComkerPermission>() {
+        when(permissionDao.get(anyString())).thenAnswer(new Answer<ComkerPermissionDPO>() {
             @Override
-            public ComkerPermission answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerPermissionDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerPermission permission:permissionIdx) {
+                for(ComkerPermissionDPO permission:permissionIdx) {
                     if(permission.getId().equals(id)) return permission;
                 }
                 return null;
             }
         });
 
-        ComkerRole role;
+        ComkerRoleDPO role;
 
         for(int i=0; i<4; i++) {
-            role = new ComkerRole("ROLE_0" + i, "Role 0" + i, "This is role 0" + i);
+            role = new ComkerRoleDPO("ROLE_0" + i, "Role 0" + i, "This is role 0" + i);
             role.setId(UUID.randomUUID().toString());
             roleIdx.add(role);
         }
 
         role = roleIdx.get(1);
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(1)));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(2)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(1)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(2)));
 
         role = roleIdx.get(2);
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(1)));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(2)));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(3)));
-        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionIdx.get(4)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(1)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(2)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(3)));
+        role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionIdx.get(4)));
 
         /*
          * mocks for count() method
@@ -117,30 +117,30 @@ public class ComkerRoleStorageUnitTest {
         });
 
         when(roleDao.findAll(any(ComkerQuerySieve.class), any(ComkerQueryPager.class)))
-                .thenAnswer(new Answer<List<ComkerRole>>() {
+                .thenAnswer(new Answer<List<ComkerRoleDPO>>() {
             @Override
-            public List<ComkerRole> answer(InvocationOnMock invocation) throws Throwable {
-                List<ComkerRole> result = new ArrayList<ComkerRole>(roleIdx);
+            public List<ComkerRoleDPO> answer(InvocationOnMock invocation) throws Throwable {
+                List<ComkerRoleDPO> result = new ArrayList<ComkerRoleDPO>(roleIdx);
                 return result;
             }
         });
 
-        when(roleDao.get(anyString())).thenAnswer(new Answer<ComkerRole>() {
+        when(roleDao.get(anyString())).thenAnswer(new Answer<ComkerRoleDPO>() {
             @Override
-            public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerRole role:roleIdx) {
+                for(ComkerRoleDPO role:roleIdx) {
                     if(role.getId().equals(id)) return role;
                 }
                 return null;
             }
         });
 
-        when(roleDao.getByCode(anyString())).thenAnswer(new Answer<ComkerRole>() {
+        when(roleDao.getByCode(anyString())).thenAnswer(new Answer<ComkerRoleDPO>() {
             @Override
-            public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
                 String code = (String) invocation.getArguments()[0];
-                for(ComkerRole role:roleIdx) {
+                for(ComkerRoleDPO role:roleIdx) {
                     if(role.getCode().equals(code)) return role;
                 }
                 return null;
@@ -150,33 +150,33 @@ public class ComkerRoleStorageUnitTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Set<ComkerPermission> bag = (Set<ComkerPermission>) invocation.getArguments()[0];
-                ComkerRole role = (ComkerRole) invocation.getArguments()[1];
-                List<ComkerRoleJoinPermission> list = role.getRoleJoinPermissionList();
-                for(ComkerRoleJoinPermission item:list) {
+                Set<ComkerPermissionDPO> bag = (Set<ComkerPermissionDPO>) invocation.getArguments()[0];
+                ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[1];
+                List<ComkerRoleJoinPermissionDPO> list = role.getRoleJoinPermissionList();
+                for(ComkerRoleJoinPermissionDPO item:list) {
                     bag.add(item.getPermission());
                 }
                 return null;
             }
-        }).when(roleDao).collectPermission(anySet(), any(ComkerRole.class));
+        }).when(roleDao).collectPermission(anySet(), any(ComkerRoleDPO.class));
 
-        doAnswer(new Answer<ComkerRole>() {
+        doAnswer(new Answer<ComkerRoleDPO>() {
             @Override
-            public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
-                ComkerRole role = (ComkerRole) invocation.getArguments()[0];
+            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
+                ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[0];
                 role.setId(UUID.randomUUID().toString());
                 roleIdx.add(role);
                 return role;
             }
-        }).when(roleDao).create(any(ComkerRole.class));
+        }).when(roleDao).create(any(ComkerRoleDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerRole role = (ComkerRole) invocation.getArguments()[0];
+                ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[0];
 
-                ComkerRole roleOnDB = null;
-                for(ComkerRole item:roleIdx) {
+                ComkerRoleDPO roleOnDB = null;
+                for(ComkerRoleDPO item:roleIdx) {
                     if(item.getId().equals(role.getId())) {
                         roleOnDB = item;
                         break;
@@ -188,15 +188,15 @@ public class ComkerRoleStorageUnitTest {
                 }
                 return null;
             }
-        }).when(roleDao).update(any(ComkerRole.class));
+        }).when(roleDao).update(any(ComkerRoleDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerRole role = (ComkerRole) invocation.getArguments()[0];
+                ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[0];
 
-                ComkerRole roleOnDB = null;
-                for(ComkerRole item:roleIdx) {
+                ComkerRoleDPO roleOnDB = null;
+                for(ComkerRoleDPO item:roleIdx) {
                     if(item.getId().equals(role.getId())) {
                         roleOnDB = item;
                         break;
@@ -208,7 +208,7 @@ public class ComkerRoleStorageUnitTest {
                 }
                 return null;
             }
-        }).when(roleDao).delete(any(ComkerRole.class));
+        }).when(roleDao).delete(any(ComkerRoleDPO.class));
     }
 
     @Test
@@ -320,7 +320,7 @@ public class ComkerRoleStorageUnitTest {
 
     @Test
     public void test_update_role_object_with_null_permissionIds() {
-        ComkerRole source = roleIdx.get(1);
+        ComkerRoleDPO source = roleIdx.get(1);
         ComkerRoleDTO param = new ComkerRoleDTO(source.getCode(), source.getName() + " - modified", null);
         param.setId(source.getId());
         roleStorage.update(param);
@@ -331,7 +331,7 @@ public class ComkerRoleStorageUnitTest {
 
     @Test
     public void test_update_role_object_with_valid_permissionIds() {
-        ComkerRole source = roleIdx.get(1);
+        ComkerRoleDPO source = roleIdx.get(1);
 
         ComkerRoleDTO param = new ComkerRoleDTO(source.getCode(),
                 source.getName() + " - modified", source.getDescription() + " - modified");

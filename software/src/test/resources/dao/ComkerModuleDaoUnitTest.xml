@@ -21,7 +21,7 @@
             class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="annotatedClasses">
             <list>
-                <value>net.cokkee.comker.model.po.ComkerModule</value>
+                <value>net.cokkee.comker.model.dpo.ComkerModuleDPO</value>
             </list>
         </property>
         <property name="dataSource" ref="comkerDataSource"/>

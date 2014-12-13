@@ -3,7 +3,7 @@ package net.cokkee.comker.validation;
 import net.cokkee.comker.dao.ComkerModuleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -50,7 +50,7 @@ public class ComkerSpotValidator extends ComkerAbstractValidator {
                     new Object[] {"msg.field_code"},
                     "Code value is invalid format");
         } else {
-            ComkerSpot dupItem = spotDao.getByCode(item.getCode());
+            ComkerSpotDPO dupItem = spotDao.getByCode(item.getCode());
             if (dupItem != null && !dupItem.getId().equals(item.getId())) {
                 e.rejectValue("code",
                         "msg.__field__has_duplicated_value",

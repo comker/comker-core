@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -17,14 +18,17 @@ import org.hibernate.annotations.GenericGenerator;
  * @author drupalex
  */
 @Entity
-@Table(name = "comker_role")
-public class ComkerRole extends ComkerAbstractItem {
+@Table(name = "comker_spot")
+public class ComkerSpotDPO extends ComkerAbstractDPO {
 
-    public ComkerRole() {
+    public static final String UNKNOWN = "__UNKNOWN_SPOT__";
+    public static final String DEFAULT = "__DEFAULT_SPOT__";
+
+    public ComkerSpotDPO() {
         super();
     }
 
-    public ComkerRole(String code, String name, String description) {
+    public ComkerSpotDPO(String code, String name, String description) {
         super();
         this.code = code;
         this.name = name;
@@ -35,8 +39,13 @@ public class ComkerRole extends ComkerAbstractItem {
     private String code;
     private String name;
     private String description;
-    private List<ComkerRoleJoinPermission> roleJoinPermissionList =
-            new LinkedList<ComkerRoleJoinPermission>();
+    private List<ComkerSpotJoinModuleDPO> spotJoinModuleList = 
+            new LinkedList<ComkerSpotJoinModuleDPO>();
+
+    /*
+    private List<ComkerCrewJoinRoleWithSpot> crewJoinRoleWithSpotList =
+            new LinkedList<ComkerCrewJoinRoleWithSpot>();
+    */
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -77,12 +86,23 @@ public class ComkerRole extends ComkerAbstractItem {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role", cascade=CascadeType.ALL, orphanRemoval=true)
-    public List<ComkerRoleJoinPermission> getRoleJoinPermissionList() {
-        return roleJoinPermissionList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.spot", cascade=CascadeType.ALL, orphanRemoval=true)
+    public List<ComkerSpotJoinModuleDPO> getSpotJoinModuleList() {
+        return spotJoinModuleList;
     }
 
-    public void setRoleJoinPermissionList(List<ComkerRoleJoinPermission> roleJoinPermission) {
-        this.roleJoinPermissionList = roleJoinPermission;
+    public void setSpotJoinModuleList(List<ComkerSpotJoinModuleDPO> spotJoinModule) {
+        this.spotJoinModuleList = spotJoinModule;
     }
+
+    /*
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.spot", cascade=CascadeType.ALL, orphanRemoval=true)
+    public List<ComkerCrewJoinRoleWithSpot> getCrewJoinRoleWithSpotList() {
+        return crewJoinRoleWithSpotList;
+    }
+
+    public void setCrewJoinRoleWithSpotList(List<ComkerCrewJoinRoleWithSpot> item) {
+        this.crewJoinRoleWithSpotList = item;
+    }
+    */
 }

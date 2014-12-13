@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 
 /**
  *
@@ -18,29 +18,29 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager);
 
-    ComkerUser findWhere(Map<String,Object> params);
+    ComkerUserDPO findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerQueryPager pager);
 
     Boolean exists(String id);
     
-    ComkerUser get(String id);
+    ComkerUserDPO get(String id);
 
-    ComkerUser getByEmail(String email);
+    ComkerUserDPO getByEmail(String email);
 
-    ComkerUser getByUsername(String username);
+    ComkerUserDPO getByUsername(String username);
 
-    ComkerUser create(ComkerUser item);
+    ComkerUserDPO create(ComkerUserDPO item);
 
-    ComkerUser update(ComkerUser item);
+    ComkerUserDPO update(ComkerUserDPO item);
 
-    void delete(ComkerUser item);
+    void delete(ComkerUserDPO item);
 
     void delete(String id);
 
-    void addCrew(ComkerUser user, ComkerCrew crew);
+    void addCrew(ComkerUserDPO user, ComkerCrewDPO crew);
 
-    void removeCrew(ComkerUser user, ComkerCrew crew);
+    void removeCrew(ComkerUserDPO user, ComkerCrewDPO crew);
 
-    void collectCrew(Set<ComkerCrew> bag, ComkerUser user);
+    void collectCrew(Set<ComkerCrewDPO> bag, ComkerUserDPO user);
 }

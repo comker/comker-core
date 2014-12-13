@@ -1,7 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,27 +10,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-@XmlRootElement
 @Entity
-@Table(name = "comker_audit_field_double")
-public class ComkerAuditFieldDouble extends ComkerAbstractItem {
+@Table(name = "comker_version_field_temporal")
+public class ComkerVersionFieldTemporalDPO extends ComkerAbstractDPO {
 
     private String id;
     private String field;
-    private Double value;
+    private Date value;
     private Date changedOn;
     private Long revision;
 
-    private ComkerAuditEntity entity;
+    private ComkerVersionEntityDPO entity;
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -55,11 +50,12 @@ public class ComkerAuditFieldDouble extends ComkerAbstractItem {
     }
 
     @Column(name = "f_value", unique = false, nullable = true)
-    public Double getValue() {
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    public Date getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(Date value) {
         this.value = value;
     }
 
@@ -84,11 +80,11 @@ public class ComkerAuditFieldDouble extends ComkerAbstractItem {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="f_entity_id")
-    public ComkerAuditEntity getEntity() {
+    public ComkerVersionEntityDPO getEntity() {
         return entity;
     }
 
-    public void setEntity(ComkerAuditEntity entity) {
+    public void setEntity(ComkerVersionEntityDPO entity) {
         this.entity = entity;
     }
 }

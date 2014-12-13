@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerPermission;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO;
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Session;
@@ -37,7 +37,7 @@ public class ComkerRoleDaoUnitTest {
     @Autowired
     private ComkerRoleDao testRoleDao = null;
 
-    private ComkerRole[] roles = new ComkerRole[5];
+    private ComkerRoleDPO[] roles = new ComkerRoleDPO[5];
 
     private String[] permissionIds = new String[8];
 
@@ -47,7 +47,7 @@ public class ComkerRoleDaoUnitTest {
         
         for(int n=0; n<roles.length; n++) {
             String postfix = "0" + (n + 1);
-            roles[n] = new ComkerRole("ROLE_" + postfix,
+            roles[n] = new ComkerRoleDPO("ROLE_" + postfix,
                     "Role " + postfix, "Description Role " + postfix);
         }
         
@@ -55,24 +55,24 @@ public class ComkerRoleDaoUnitTest {
             String prefix = (i<10)?"0":"";
 
             String authorityString = "PERMISSION_" + prefix + (i + 1);
-            ComkerPermission item = new ComkerPermission(authorityString);
+            ComkerPermissionDPO item = new ComkerPermissionDPO(authorityString);
             session.saveOrUpdate(item);
 
             permissionIds[i] = item.getId();
 
             if(i<4) {
-                roles[0].getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(roles[0], item));
+                roles[0].getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(roles[0], item));
             }
 
             if (3<=i && i<7) {
-                roles[1].getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(roles[1], item));
+                roles[1].getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(roles[1], item));
             }
 
             if (4<=i && i<8) {
-                roles[2].getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(roles[2], item));
+                roles[2].getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(roles[2], item));
             }
 
-            roles[3].getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(roles[3], item));
+            roles[3].getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(roles[3], item));
         }
 
         for(int n=0; n<roles.length; n++) {
@@ -87,14 +87,14 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_list_all() {
-        List<ComkerRole> list = testRoleDao.findAll(null, null);
+        List<ComkerRoleDPO> list = testRoleDao.findAll(null, null);
         Assert.assertTrue(list.size() == roles.length);
 
         int count = 0;
         Set<String> authorities1 = new HashSet();
         Set<String> authorities2 = new HashSet();
-        ComkerRole role0 = list.get(0);
-        for(ComkerRoleJoinPermission perm:role0.getRoleJoinPermissionList()) {
+        ComkerRoleDPO role0 = list.get(0);
+        for(ComkerRoleJoinPermissionDPO perm:role0.getRoleJoinPermissionList()) {
             authorities1.add("PERMISSION_0" + (++count));
             authorities2.add(perm.getPermission().getAuthority());
         }
@@ -104,7 +104,7 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager() {
-        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerQueryPager(1, 3));
+        List<ComkerRoleDPO> list = testRoleDao.findAll(null, new ComkerQueryPager(1, 3));
         Assert.assertTrue(list.size() == 3);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_02");
         Assert.assertEquals(list.get(2).getCode(), "ROLE_04");
@@ -112,33 +112,33 @@ public class ComkerRoleDaoUnitTest {
 
     @Test
     public void test_find_all_with_pager_out_of_range() {
-        List<ComkerRole> list = testRoleDao.findAll(null, new ComkerQueryPager(4, 10));
+        List<ComkerRoleDPO> list = testRoleDao.findAll(null, new ComkerQueryPager(4, 10));
         Assert.assertTrue(list.size() == 1);
         Assert.assertEquals(list.get(0).getCode(), "ROLE_05");
     }
 
     @Test
     public void test_get_by_id() {
-        ComkerRole item1 = testRoleDao.getByCode("ROLE_03");
-        ComkerRole item2 = testRoleDao.get(item1.getId());
+        ComkerRoleDPO item1 = testRoleDao.getByCode("ROLE_03");
+        ComkerRoleDPO item2 = testRoleDao.get(item1.getId());
         Assert.assertEquals(item1, item2);
     }
 
     @Test
     public void test_get_by_id_with_invalid_id() {
-        ComkerRole item = testRoleDao.get("ID_NOT_FOUND");
+        ComkerRoleDPO item = testRoleDao.get("ID_NOT_FOUND");
         Assert.assertNull(item);
     }
 
     @Test
     public void test_get_by_code() {
-        ComkerRole item = testRoleDao.getByCode("ROLE_02");
+        ComkerRoleDPO item = testRoleDao.getByCode("ROLE_02");
         Assert.assertNotNull(item);
     }
 
     @Test
     public void test_get_by_code_with_invalid_code() {
-        ComkerRole item = testRoleDao.getByCode("ROLE_CODE_NOT_FOUND");
+        ComkerRoleDPO item = testRoleDao.getByCode("ROLE_CODE_NOT_FOUND");
         Assert.assertNull(item);
     }
 
@@ -165,37 +165,37 @@ public class ComkerRoleDaoUnitTest {
         int currentCount = testRoleDao.count(null);
         Assert.assertTrue(currentCount == roles.length);
 
-        ComkerRole item = new ComkerRole("ROLE_06", "Role 06", "Description Role 06");
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item, 
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[0])));
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item,
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[1])));
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item,
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[3])));
+        ComkerRoleDPO item = new ComkerRoleDPO("ROLE_06", "Role 06", "Description Role 06");
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item, 
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[0])));
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[1])));
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[3])));
         testRoleDao.create(item);
 
         Assert.assertTrue(testRoleDao.count(null) == currentCount + 1);
         
-        ComkerRole result = testRoleDao.getByCode("ROLE_06");
+        ComkerRoleDPO result = testRoleDao.getByCode("ROLE_06");
         Assert.assertTrue(result.getRoleJoinPermissionList().size() == 3);
     }
 
     @Test
     public void test_update() {
         Session session = testSessionFactory.getCurrentSession();
-        ComkerRole item = testRoleDao.getByCode("ROLE_01");
+        ComkerRoleDPO item = testRoleDao.getByCode("ROLE_01");
         Assert.assertTrue(item.getRoleJoinPermissionList().size() == 4);
 
         item.getRoleJoinPermissionList().clear();
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item,
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[5])));
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item,
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[6])));
-        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(item,
-                (ComkerPermission) session.get(ComkerPermission.class, permissionIds[7])));
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[5])));
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[6])));
+        item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,
+                (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[7])));
         testRoleDao.update(item);
 
-        ComkerRole result = testRoleDao.getByCode("ROLE_01");
+        ComkerRoleDPO result = testRoleDao.getByCode("ROLE_01");
         Assert.assertTrue(result.getRoleJoinPermissionList().size() == 3);
     }
 

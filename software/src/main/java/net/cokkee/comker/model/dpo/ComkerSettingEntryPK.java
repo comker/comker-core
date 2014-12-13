@@ -1,5 +1,7 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -10,48 +12,48 @@ import javax.persistence.ManyToOne;
  * @author drupalex
  */
 @Embeddable
-public class ComkerSettingEntryPk implements Serializable {
+public class ComkerSettingEntryPK implements Serializable {
 
-    public ComkerSettingEntryPk() {
+    public ComkerSettingEntryPK() {
     }
 
-    public ComkerSettingEntryPk(ComkerSettingKey settingKey, ComkerSpot spot, ComkerUser user) {
+    public ComkerSettingEntryPK(ComkerSettingKeyDPO settingKey, ComkerSpotDPO spot, ComkerUserDPO user) {
         this.settingKey = settingKey;
         this.spot = spot;
         this.user = user;
     }
 
-    private ComkerSettingKey settingKey;
-    private ComkerSpot spot;
-    private ComkerUser user;
+    private ComkerSettingKeyDPO settingKey;
+    private ComkerSpotDPO spot;
+    private ComkerUserDPO user;
 
     @ManyToOne
     @JoinColumn(name="f_setting_key_id", nullable=false)
-    public ComkerSettingKey getSettingKey() {
+    public ComkerSettingKeyDPO getSettingKey() {
         return settingKey;
     }
 
-    public void setSettingKey(ComkerSettingKey settingKey) {
+    public void setSettingKey(ComkerSettingKeyDPO settingKey) {
         this.settingKey = settingKey;
     }
     
     @ManyToOne
     @JoinColumn(name="f_spot_id", nullable=true)
-    public ComkerSpot getSpot() {
+    public ComkerSpotDPO getSpot() {
         return spot;
     }
 
-    public void setSpot(ComkerSpot spot) {
+    public void setSpot(ComkerSpotDPO spot) {
         this.spot = spot;
     }
 
     @ManyToOne
     @JoinColumn(name="f_user_id", nullable=true)
-    public ComkerUser getUser() {
+    public ComkerUserDPO getUser() {
         return user;
     }
 
-    public void setUser(ComkerUser user) {
+    public void setUser(ComkerUserDPO user) {
         this.user = user;
     }
 
@@ -60,7 +62,7 @@ public class ComkerSettingEntryPk implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerSettingEntryPk that = (ComkerSettingEntryPk) o;
+        ComkerSettingEntryPK that = (ComkerSettingEntryPK) o;
 
         if (settingKey != null ? !settingKey.equals(that.settingKey) : that.settingKey != null) return false;
         if (spot != null ? !spot.equals(that.spot) : that.spot != null) return false;

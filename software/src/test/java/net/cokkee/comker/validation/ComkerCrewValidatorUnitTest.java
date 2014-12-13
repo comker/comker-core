@@ -8,7 +8,7 @@ import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
-import net.cokkee.comker.model.po.ComkerCrew;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import org.springframework.validation.ValidationUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerCrewValidatorUnitTest {
 
-    private List<ComkerCrew> crewList = new ArrayList<ComkerCrew>();
+    private List<ComkerCrewDPO> crewList = new ArrayList<ComkerCrewDPO>();
 
     private List<String> spotIds = new ArrayList<String>();
 
@@ -54,7 +54,7 @@ public class ComkerCrewValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerCrew crew = new ComkerCrew("Crew " + i, "This is crew " + i);
+            ComkerCrewDPO crew = new ComkerCrewDPO("Crew " + i, "This is crew " + i);
             crew.setId(UUID.randomUUID().toString());
             crewList.add(crew);
         }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import net.cokkee.comker.model.po.ComkerNavbarNode;
+import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Criteria;
@@ -41,19 +41,19 @@ public class ComkerNavbarDaoUnitTest {
     public void init() {
         Session session = testSessionFactory.getCurrentSession();
         
-        ComkerNavbarNode navbarRootDPO = null;
-        ComkerNavbarNode item = null;
-        ComkerNavbarNode subitem = null;
-        ComkerNavbarNode subsubitem = null;
+        ComkerNavbarNodeDPO navbarRootDPO = null;
+        ComkerNavbarNodeDPO item = null;
+        ComkerNavbarNodeDPO subitem = null;
+        ComkerNavbarNodeDPO subsubitem = null;
 
-        navbarRootDPO = new ComkerNavbarNode(
+        navbarRootDPO = new ComkerNavbarNodeDPO(
                 "NAVBAR_ROOT",
                 "http://comker.net/",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
         navbarRootDPO.setParent(null);
         session.saveOrUpdate(navbarRootDPO);
 
-        item = new ComkerNavbarNode(
+        item = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH01",
                 "http://comker.net/branch01",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -61,7 +61,7 @@ public class ComkerNavbarDaoUnitTest {
         navbarRootDPO.getChildren().add(item);
         session.saveOrUpdate(item);
 
-        subitem = new ComkerNavbarNode(
+        subitem = new ComkerNavbarNodeDPO(
                 item.getCode() + "_SUB01",
                 item.getUrl() + "/sub01",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -69,7 +69,7 @@ public class ComkerNavbarDaoUnitTest {
         item.getChildren().add(subitem);
         session.saveOrUpdate(subitem);
 
-        subitem = new ComkerNavbarNode(
+        subitem = new ComkerNavbarNodeDPO(
                 item.getCode() + "_SUB02",
                 item.getUrl() + "/sub02",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -77,7 +77,7 @@ public class ComkerNavbarDaoUnitTest {
         item.getChildren().add(subitem);
         session.saveOrUpdate(subitem);
 
-        subsubitem = new ComkerNavbarNode(
+        subsubitem = new ComkerNavbarNodeDPO(
                 subitem.getCode() + "_SUBSUB01",
                 subitem.getUrl() + "/subsub01",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -85,7 +85,7 @@ public class ComkerNavbarDaoUnitTest {
         subitem.getChildren().add(subsubitem);
         session.saveOrUpdate(subsubitem);
 
-        subsubitem = new ComkerNavbarNode(
+        subsubitem = new ComkerNavbarNodeDPO(
                 subitem.getCode() + "_SUBSUB02",
                 subitem.getUrl() + "/subsub02",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -93,7 +93,7 @@ public class ComkerNavbarDaoUnitTest {
         subitem.getChildren().add(subsubitem);
         session.saveOrUpdate(subsubitem);
 
-        subsubitem = new ComkerNavbarNode(
+        subsubitem = new ComkerNavbarNodeDPO(
                 subitem.getCode() + "_SUBSUB03",
                 subitem.getUrl() + "/subsub03",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -101,7 +101,7 @@ public class ComkerNavbarDaoUnitTest {
         subitem.getChildren().add(subsubitem);
         session.saveOrUpdate(subsubitem);
 
-        item = new ComkerNavbarNode(
+        item = new ComkerNavbarNodeDPO(
                 "NAVBAR_BRANCH02",
                 "http://comker.net/branch02",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
@@ -109,14 +109,14 @@ public class ComkerNavbarDaoUnitTest {
         navbarRootDPO.getChildren().add(item);
         session.saveOrUpdate(item);
 
-        ComkerNavbarNode root = testNavbarDao.getByCode("NAVBAR_ROOT");
+        ComkerNavbarNodeDPO root = testNavbarDao.getByCode("NAVBAR_ROOT");
         testNavbarDao.update(root);
     }
 
     @Test
     public void test_database() {
         Session session = testSessionFactory.getCurrentSession();
-        Criteria c = session.createCriteria(ComkerNavbarNode.class);
+        Criteria c = session.createCriteria(ComkerNavbarNodeDPO.class);
         List all = c.list();
         Assert.assertTrue(all.size() == 8);
     }
@@ -128,7 +128,7 @@ public class ComkerNavbarDaoUnitTest {
 
     @Test
     public void test_navbar_get_tree() {
-        ComkerNavbarNode root = testNavbarDao.getTree();
+        ComkerNavbarNodeDPO root = testNavbarDao.getTree();
         Map<String, Object> info = extractTreeInformation(root);
         Assert.assertTrue((Integer)info.get("depth")== 4);
         Assert.assertTrue((Integer)info.get("total")== 8);
@@ -136,24 +136,24 @@ public class ComkerNavbarDaoUnitTest {
 
     @Test
     public void test_navbar_get_node_by_code() {
-        ComkerNavbarNode root = testNavbarDao.getByCode("NAVBAR_ROOT");
+        ComkerNavbarNodeDPO root = testNavbarDao.getByCode("NAVBAR_ROOT");
         Assert.assertNotNull(root);
 
-        ComkerNavbarNode node = testNavbarDao.getByCode("NAVBAR_BRANCH02");
+        ComkerNavbarNodeDPO node = testNavbarDao.getByCode("NAVBAR_BRANCH02");
         Assert.assertNotNull(node);
         Assert.assertEquals(node.getUrl(), "http://comker.net/branch02");
     }
 
     @Test
     public void test_navbar_get_node_by_code_with_invalid_code() {
-        ComkerNavbarNode root = testNavbarDao.getByCode("NAVBAR_NOT_FOUND");
+        ComkerNavbarNodeDPO root = testNavbarDao.getByCode("NAVBAR_NOT_FOUND");
         Assert.assertNull(root);
     }
 
     @Test
     public void test_navbar_get_node_by_id() {
-        ComkerNavbarNode node1 = testNavbarDao.getByCode("NAVBAR_BRANCH01");
-        ComkerNavbarNode node2 = testNavbarDao.get(node1.getId());
+        ComkerNavbarNodeDPO node1 = testNavbarDao.getByCode("NAVBAR_BRANCH01");
+        ComkerNavbarNodeDPO node2 = testNavbarDao.get(node1.getId());
         Assert.assertTrue(node1 == node2);
     }
 
@@ -164,19 +164,19 @@ public class ComkerNavbarDaoUnitTest {
 
     @Test
     public void test_navbar_create_node() {
-        ComkerNavbarNode subitem = null;
-        ComkerNavbarNode subsubitem = null;
+        ComkerNavbarNodeDPO subitem = null;
+        ComkerNavbarNodeDPO subsubitem = null;
 
         subitem = testNavbarDao.getByCode("NAVBAR_BRANCH01_SUB02");
         Assert.assertNotNull(subitem);
 
-        subsubitem = new ComkerNavbarNode(
+        subsubitem = new ComkerNavbarNodeDPO(
                 subitem.getCode() + "_SUBSUB04",
                 subitem.getUrl() + "/subsub04",
                 new String[] {"PERMISSION_01", "PERMISSION_02"});
         subsubitem.setParent(subitem);
         subitem.getChildren().add(subsubitem);
-        ComkerNavbarNode result = testNavbarDao.create(subsubitem);
+        ComkerNavbarNodeDPO result = testNavbarDao.create(subsubitem);
 
         Assert.assertNotNull(result);
         Assert.assertEquals(subsubitem.getCode(), result.getCode());
@@ -184,7 +184,7 @@ public class ComkerNavbarDaoUnitTest {
         Assert.assertEquals(subsubitem.getLabel(), result.getLabel());
         Assert.assertEquals(subsubitem.getDescription(), result.getDescription());
 
-        ComkerNavbarNode node = result;
+        ComkerNavbarNodeDPO node = result;
         String treeId = result.getId();
         while(node.getParent() != null) {
             node = node.getParent();
@@ -196,10 +196,10 @@ public class ComkerNavbarDaoUnitTest {
     @Test
     public void test_navbar_update_node() {
         
-        ComkerNavbarNode item = testNavbarDao.getByCode("NAVBAR_BRANCH02");
+        ComkerNavbarNodeDPO item = testNavbarDao.getByCode("NAVBAR_BRANCH02");
         Assert.assertNotNull(item);
 
-        ComkerNavbarNode subitem = testNavbarDao.getByCode("NAVBAR_BRANCH01_SUB02");
+        ComkerNavbarNodeDPO subitem = testNavbarDao.getByCode("NAVBAR_BRANCH01_SUB02");
         Assert.assertNotNull(subitem);
 
         item.getChildren().add(subitem);
@@ -207,13 +207,13 @@ public class ComkerNavbarDaoUnitTest {
         testNavbarDao.update(subitem);
 
         // assert the relationship between parent and new child
-        ComkerNavbarNode result = testNavbarDao.getByCode("NAVBAR_BRANCH01_SUB02");
+        ComkerNavbarNodeDPO result = testNavbarDao.getByCode("NAVBAR_BRANCH01_SUB02");
         item = result.getParent();
         Assert.assertEquals("NAVBAR_BRANCH02", item.getCode());
         Assert.assertThat(item.getChildren(), CoreMatchers.hasItem(result));
 
         // assert the new treeId
-        ComkerNavbarNode node = result;
+        ComkerNavbarNodeDPO node = result;
         String treeId = result.getId();
         while(node.getParent() != null) {
             node = node.getParent();
@@ -224,10 +224,10 @@ public class ComkerNavbarDaoUnitTest {
 
     @Test
     public void test_navbar_delete_node() {
-        ComkerNavbarNode node = testNavbarDao.getByCode("NAVBAR_BRANCH01");
+        ComkerNavbarNodeDPO node = testNavbarDao.getByCode("NAVBAR_BRANCH01");
         testNavbarDao.delete(node);
 
-        ComkerNavbarNode root = testNavbarDao.getTree();
+        ComkerNavbarNodeDPO root = testNavbarDao.getTree();
         Map<String, Object> info = extractTreeInformation(root);
         Assert.assertTrue((Integer)info.get("depth")== 2);
         Assert.assertTrue((Integer)info.get("total")== 2);
@@ -235,20 +235,20 @@ public class ComkerNavbarDaoUnitTest {
 
     @Test
     public void test_navbar_delete_root() {
-        ComkerNavbarNode node = testNavbarDao.getByCode("NAVBAR_ROOT");
+        ComkerNavbarNodeDPO node = testNavbarDao.getByCode("NAVBAR_ROOT");
         testNavbarDao.delete(node);
 
-        ComkerNavbarNode root = testNavbarDao.getTree();
+        ComkerNavbarNodeDPO root = testNavbarDao.getTree();
         Assert.assertNull(root);
     }
 
-    private Map<String, Object> extractTreeInformation(ComkerNavbarNode root) {
+    private Map<String, Object> extractTreeInformation(ComkerNavbarNodeDPO root) {
         int depth = 0;
         int count = 0;
 
-        Queue<ComkerNavbarNode> queue = new LinkedList<ComkerNavbarNode>();
-        Queue<ComkerNavbarNode> subqueue = new LinkedList<ComkerNavbarNode>();
-        Queue<ComkerNavbarNode> tempo = null;
+        Queue<ComkerNavbarNodeDPO> queue = new LinkedList<ComkerNavbarNodeDPO>();
+        Queue<ComkerNavbarNodeDPO> subqueue = new LinkedList<ComkerNavbarNodeDPO>();
+        Queue<ComkerNavbarNodeDPO> tempo = null;
 
         if (root != null) {
             queue.add(root);
@@ -259,7 +259,7 @@ public class ComkerNavbarDaoUnitTest {
             subqueue.clear();
             while(!queue.isEmpty()) {
                 count++;
-                ComkerNavbarNode node = queue.remove();
+                ComkerNavbarNodeDPO node = queue.remove();
                 subqueue.addAll(node.getChildren());
             }
             tempo = subqueue;

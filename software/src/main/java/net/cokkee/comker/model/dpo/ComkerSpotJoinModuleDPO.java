@@ -1,5 +1,7 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;
@@ -18,44 +20,44 @@ import javax.persistence.Transient;
     @AssociationOverride(name = "pk.spot", joinColumns = @JoinColumn(name = "f_spot_id")),
     @AssociationOverride(name = "pk.module", joinColumns = @JoinColumn(name = "f_module_id"))
 })
-public class ComkerSpotJoinModule extends ComkerAbstractItem {
+public class ComkerSpotJoinModuleDPO extends ComkerAbstractDPO {
 
-    public ComkerSpotJoinModule() {
+    public ComkerSpotJoinModuleDPO() {
         super();
-        this.pk = new ComkerSpotJoinModulePk();
+        this.pk = new ComkerSpotJoinModulePK();
     }
 
-    public ComkerSpotJoinModule(ComkerSpot spot, ComkerModule module) {
+    public ComkerSpotJoinModuleDPO(ComkerSpotDPO spot, ComkerModuleDPO module) {
         super();
-        this.pk = new ComkerSpotJoinModulePk(spot, module);
+        this.pk = new ComkerSpotJoinModulePK(spot, module);
     }
 
-    private ComkerSpotJoinModulePk pk;
+    private ComkerSpotJoinModulePK pk;
 
     @EmbeddedId
-    public ComkerSpotJoinModulePk getPk() {
+    public ComkerSpotJoinModulePK getPk() {
         return pk;
     }
 
-    public void setPk(ComkerSpotJoinModulePk pk) {
+    public void setPk(ComkerSpotJoinModulePK pk) {
         this.pk = pk;
     }
 
     @Transient
-    public ComkerSpot getSpot() {
+    public ComkerSpotDPO getSpot() {
         return getPk().getSpot();
     }
 
-    public void setSpot(ComkerSpot item) {
+    public void setSpot(ComkerSpotDPO item) {
         getPk().setSpot(item);
     }
 
     @Transient
-    public ComkerModule getModule() {
+    public ComkerModuleDPO getModule() {
         return getPk().getModule();
     }
 
-    public void setModule(ComkerModule product) {
+    public void setModule(ComkerModuleDPO product) {
         getPk().setModule(product);
     }
 
@@ -64,7 +66,7 @@ public class ComkerSpotJoinModule extends ComkerAbstractItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerSpotJoinModule that = (ComkerSpotJoinModule) o;
+        ComkerSpotJoinModuleDPO that = (ComkerSpotJoinModuleDPO) o;
 
         if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) return false;
 

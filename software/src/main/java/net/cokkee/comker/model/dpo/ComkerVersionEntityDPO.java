@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +15,8 @@ import org.hibernate.annotations.GenericGenerator;
  * @author drupalex
  */
 @Entity
-@Table(name = "comker_audit_entity")
-public class ComkerAuditEntity extends ComkerAbstractItem {
+@Table(name = "comker_version_entity")
+public class ComkerVersionEntityDPO extends ComkerAbstractDPO {
 
     private String id;
     private String entityClass;
@@ -148,7 +149,7 @@ public class ComkerAuditEntity extends ComkerAbstractItem {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ComkerAuditEntity other = (ComkerAuditEntity) obj;
+        final ComkerVersionEntityDPO other = (ComkerVersionEntityDPO) obj;
         if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
             return false;
         }

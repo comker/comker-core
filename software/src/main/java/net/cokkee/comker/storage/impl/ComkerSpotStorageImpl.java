@@ -12,9 +12,9 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
-import net.cokkee.comker.model.po.ComkerModule;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerSpotJoinModule;
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerSpotValidator;
@@ -86,7 +86,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
         for(Object dbItem:dbList) {
             ComkerSpotDTO poItem = new ComkerSpotDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
-            loadAggregationRefs((ComkerSpot)dbItem, poItem);
+            loadAggregationRefs((ComkerSpotDPO)dbItem, poItem);
             poList.add(poItem);
         }
         return poList;
@@ -95,7 +95,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerSpotDTO get(String id) {
-        ComkerSpot dbItem = getNotNull(id);
+        ComkerSpotDPO dbItem = getNotNull(id);
         ComkerSpotDTO poItem = new ComkerSpotDTO();
 
         ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -107,7 +107,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerSpotDTO getByCode(String code) {
-        ComkerSpot dbItem = getNotNullByCode(code);
+        ComkerSpotDPO dbItem = getNotNullByCode(code);
         ComkerSpotDTO poItem = new ComkerSpotDTO();
 
         ComkerDataUtil.copyProperties(dbItem, poItem);
@@ -121,7 +121,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     public ComkerSpotDTO create(ComkerSpotDTO item) {
         invokeValidator(spotValidator, item);
 
-        ComkerSpot dbItem = new ComkerSpot();
+        ComkerSpotDPO dbItem = new ComkerSpotDPO();
         ComkerDataUtil.copyProperties(item, dbItem);
         saveAggregationRefs(item, dbItem);
         dbItem = spotDao.create(dbItem);
@@ -135,7 +135,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void update(ComkerSpotDTO item) {
-        ComkerSpot dbItem = getNotNull(item.getId());
+        ComkerSpotDPO dbItem = getNotNull(item.getId());
 
         invokeValidator(spotValidator, item);
         
@@ -147,25 +147,25 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void delete(String id) {
-        ComkerSpot dbItem = getNotNull(id);
+        ComkerSpotDPO dbItem = getNotNull(id);
         spotDao.delete(dbItem);
     }
 
     //--------------------------------------------------------------------------
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private void loadAggregationRefs(ComkerSpot dbItem, ComkerSpotDTO poItem) {
+    private void loadAggregationRefs(ComkerSpotDPO dbItem, ComkerSpotDTO poItem) {
         if (dbItem == null || poItem == null) return;
         List<String> idsOfModuleList = new ArrayList<String>();
-        List<ComkerSpotJoinModule> list = dbItem.getSpotJoinModuleList();
-        for(ComkerSpotJoinModule item:list) {
+        List<ComkerSpotJoinModuleDPO> list = dbItem.getSpotJoinModuleList();
+        for(ComkerSpotJoinModuleDPO item:list) {
             idsOfModuleList.add(item.getModule().getId());
         }
         poItem.setModuleIds(idsOfModuleList.toArray(new String[0]));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    private void saveAggregationRefs(ComkerSpotDTO poItem, ComkerSpot dbItem) {
+    private void saveAggregationRefs(ComkerSpotDTO poItem, ComkerSpotDPO dbItem) {
         if (dbItem == null || poItem == null) return;
 
         if (poItem.getModuleIds() == null) return;
@@ -177,16 +177,16 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
                     new Object[] {newIds.size()}));
         }
 
-        List<ComkerSpotJoinModule> oldList = dbItem.getSpotJoinModuleList();
+        List<ComkerSpotJoinModuleDPO> oldList = dbItem.getSpotJoinModuleList();
 
         if (log.isDebugEnabled()) {
             log.debug(MessageFormat.format("Number of old modules: {0}",
                     new Object[] {oldList.size()}));
         }
 
-        List<ComkerSpotJoinModule> newList = new ArrayList<ComkerSpotJoinModule>();
+        List<ComkerSpotJoinModuleDPO> newList = new ArrayList<ComkerSpotJoinModuleDPO>();
 
-        for(ComkerSpotJoinModule item:oldList) {
+        for(ComkerSpotJoinModuleDPO item:oldList) {
             String oldId = item.getModule().getId();
             if (newIds.contains(oldId)) {
                 newList.add(item);
@@ -194,9 +194,9 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
             }
         }
         for(String newId:newIds) {
-            ComkerModule module = moduleDao.get(newId);
+            ComkerModuleDPO module = moduleDao.get(newId);
             if (module == null) continue;
-            newList.add(new ComkerSpotJoinModule(dbItem, module));
+            newList.add(new ComkerSpotJoinModuleDPO(dbItem, module));
         }
         dbItem.getSpotJoinModuleList().clear();
         dbItem.getSpotJoinModuleList().addAll(newList);
@@ -208,8 +208,8 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerSpot getNotNull(String id) {
-        ComkerSpot dbItem = spotDao.get(id);
+    private ComkerSpotDPO getNotNull(String id) {
+        ComkerSpotDPO dbItem = spotDao.get(id);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "spot_with__id__not_found",
@@ -222,8 +222,8 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    private ComkerSpot getNotNullByCode(String code) {
-        ComkerSpot dbItem = spotDao.getByCode(code);
+    private ComkerSpotDPO getNotNullByCode(String code) {
+        ComkerSpotDPO dbItem = spotDao.getByCode(code);
         if (dbItem == null) {
             throw new ComkerObjectNotFoundException(
                     "spot_with__code__not_found",

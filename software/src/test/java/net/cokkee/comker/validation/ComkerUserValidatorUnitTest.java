@@ -7,7 +7,7 @@ import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerUserDao;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -32,7 +32,7 @@ import org.springframework.validation.ValidationUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerUserValidatorUnitTest {
 
-    private List<ComkerUser> userList = new ArrayList<ComkerUser>();
+    private List<ComkerUserDPO> userList = new ArrayList<ComkerUserDPO>();
 
     private List<String> crewIds = new ArrayList<String>();
     
@@ -50,7 +50,7 @@ public class ComkerUserValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerUser user = new ComkerUser(
+            ComkerUserDPO user = new ComkerUserDPO(
                     "user" + i + "@gmail.com",
                     "username" + i, 
                     "password",
@@ -63,11 +63,11 @@ public class ComkerUserValidatorUnitTest {
             crewIds.add(UUID.randomUUID().toString());
         }
 
-        Mockito.when(userDao.getByUsername(Mockito.anyString())).thenAnswer(new Answer<ComkerUser>() {
+        Mockito.when(userDao.getByUsername(Mockito.anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerUser user:userList) {
+                for(ComkerUserDPO user:userList) {
                     if (user.getUsername().equals(id)) {
                         return user;
                     }
@@ -76,11 +76,11 @@ public class ComkerUserValidatorUnitTest {
             }
         });
 
-        Mockito.when(userDao.getByEmail(Mockito.anyString())).thenAnswer(new Answer<ComkerUser>() {
+        Mockito.when(userDao.getByEmail(Mockito.anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerUser user:userList) {
+                for(ComkerUserDPO user:userList) {
                     if (user.getEmail().equals(id)) {
                         return user;
                     }

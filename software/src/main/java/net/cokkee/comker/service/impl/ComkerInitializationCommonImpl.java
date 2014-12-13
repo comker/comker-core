@@ -10,13 +10,13 @@ import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSettingDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.dao.ComkerUserDao;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerNavbarNode;
-import net.cokkee.comker.model.po.ComkerPermission;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerSettingKey;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -103,39 +103,39 @@ public abstract class ComkerInitializationCommonImpl
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void initDefaultSpot(ComkerSpot spot) {
+    public void initDefaultSpot(ComkerSpotDPO spot) {
 
         if (spot == null) return;
 
-        ComkerSpot spotDefault = getDefaultSpot();
-        ComkerUser userUnknown = getUnknownUser();
-        ComkerUser userDefault = getDefaultUser();
+        ComkerSpotDPO spotDefault = getDefaultSpot();
+        ComkerUserDPO userUnknown = getUnknownUser();
+        ComkerUserDPO userDefault = getDefaultUser();
 
         // -- init spot settings
-        ComkerSettingKey key = null;
+        ComkerSettingKeyDPO key = null;
         String value = null;
 
-        key = getOrCreateSettingKey(ComkerSettingKey.CODE_SPOT_THEME, ComkerSettingKey.TYPE_STRING, "");
+        key = getOrCreateSettingKey(ComkerSettingKeyDPO.CODE_SPOT_THEME, ComkerSettingKeyDPO.TYPE_STRING, "");
         value = settingDao.getValue(spotDefault, userUnknown, key);
         settingDao.define(spot, userUnknown, key, value);
 
-        key = getOrCreateSettingKey(ComkerSettingKey.CODE_USER_LANGUAGE, ComkerSettingKey.TYPE_STRING, "");
+        key = getOrCreateSettingKey(ComkerSettingKeyDPO.CODE_USER_LANGUAGE, ComkerSettingKeyDPO.TYPE_STRING, "");
         value = settingDao.getValue(spotDefault, userDefault, key);
         settingDao.define(spot, userDefault, key, value);
 
         // -- init crews (groups)
-        ComkerRole roleMgr = getManagerRole();
-        ComkerCrew crewMgrs = getOrCreateCrew(spot, roleMgr);
+        ComkerRoleDPO roleMgr = getManagerRole();
+        ComkerCrewDPO crewMgrs = getOrCreateCrew(spot, roleMgr);
 
-        ComkerRole roleMbr = getMemberRole();
-        ComkerCrew crewMbrs = getOrCreateCrew(spot, roleMbr);
+        ComkerRoleDPO roleMbr = getMemberRole();
+        ComkerCrewDPO crewMbrs = getOrCreateCrew(spot, roleMbr);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void initDefaultUser(ComkerUser user, ComkerSpot spot, ComkerRole role) {
+    public void initDefaultUser(ComkerUserDPO user, ComkerSpotDPO spot, ComkerRoleDPO role) {
 
         if (user == null) return;
-        ComkerUser userDefault = getDefaultUser();
+        ComkerUserDPO userDefault = getDefaultUser();
 
         if (spot == null) {
             spot = getDefaultSpot();
@@ -146,69 +146,69 @@ public abstract class ComkerInitializationCommonImpl
         }
 
         // init user settings
-        ComkerSettingKey key = null;
+        ComkerSettingKeyDPO key = null;
         String value = null;
 
-        key = getOrCreateSettingKey(ComkerSettingKey.CODE_USER_LANGUAGE, ComkerSettingKey.TYPE_STRING, "");
+        key = getOrCreateSettingKey(ComkerSettingKeyDPO.CODE_USER_LANGUAGE, ComkerSettingKeyDPO.TYPE_STRING, "");
         value = settingDao.getValue(spot, userDefault, key);
         settingDao.define(spot, user, key, value);
 
         // init user group
-        ComkerCrew crew = getOrCreateCrew(spot, role);
+        ComkerCrewDPO crew = getOrCreateCrew(spot, role);
         userDao.addCrew(user, crew);
     }
 
     //==========================================================================
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerSpot getOrCreateSpot(String code, String name, String description) {
-        ComkerSpot item = spotDao.getByCode(code);
+    protected ComkerSpotDPO getOrCreateSpot(String code, String name, String description) {
+        ComkerSpotDPO item = spotDao.getByCode(code);
         if (item == null) {
-            item = new ComkerSpot(code, name, description);
+            item = new ComkerSpotDPO(code, name, description);
             spotDao.create(item);
         }
         return item;
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerSpot getUnknownSpot() {
-        return getOrCreateSpot(ComkerSpot.UNKNOWN, "UNKNOWN SPOT", "");
+    protected ComkerSpotDPO getUnknownSpot() {
+        return getOrCreateSpot(ComkerSpotDPO.UNKNOWN, "UNKNOWN SPOT", "");
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerSpot getDefaultSpot() {
-        return getOrCreateSpot(ComkerSpot.DEFAULT, "DEFAULT SPOT", "");
+    protected ComkerSpotDPO getDefaultSpot() {
+        return getOrCreateSpot(ComkerSpotDPO.DEFAULT, "DEFAULT SPOT", "");
     }
 
     //==========================================================================
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerUser getOrCreateUser(String email, String username, String password, String fullname){
-        ComkerUser item = userDao.getByUsername(username);
+    protected ComkerUserDPO getOrCreateUser(String email, String username, String password, String fullname){
+        ComkerUserDPO item = userDao.getByUsername(username);
         if (item == null) {
-            item = new ComkerUser(email, username, password, fullname);
+            item = new ComkerUserDPO(email, username, password, fullname);
             userDao.create(item);
         }
         return item;
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerUser getUnknownUser(){
-        return getOrCreateUser("unknown@cokkee.net", ComkerUser.UNKNOWN, "ff808181442e048701442e04aa710008", "UNKNOWN USER");
+    protected ComkerUserDPO getUnknownUser(){
+        return getOrCreateUser("unknown@cokkee.net", ComkerUserDPO.UNKNOWN, "ff808181442e048701442e04aa710008", "UNKNOWN USER");
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerUser getDefaultUser(){
-        return getOrCreateUser("default@cokkee.net", ComkerUser.DEFAULT, "ff808181442e048701442e04aa610006", "DEFAULT USER");
+    protected ComkerUserDPO getDefaultUser(){
+        return getOrCreateUser("default@cokkee.net", ComkerUserDPO.DEFAULT, "ff808181442e048701442e04aa610006", "DEFAULT USER");
     }
 
     //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerSettingKey getOrCreateSettingKey(String code, String type, String range) {
-        ComkerSettingKey item = settingDao.getByCode(code);
+    protected ComkerSettingKeyDPO getOrCreateSettingKey(String code, String type, String range) {
+        ComkerSettingKeyDPO item = settingDao.getByCode(code);
         if (item == null) {
-            item = new ComkerSettingKey(code, type, range);
+            item = new ComkerSettingKeyDPO(code, type, range);
             settingDao.create(item);
         }
         return item;
@@ -217,10 +217,10 @@ public abstract class ComkerInitializationCommonImpl
     //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerCrew getOrCreateCrew(ComkerRole globalRole, String name, String description) {
-        ComkerCrew item = crewDao.getByName(name);
+    protected ComkerCrewDPO getOrCreateCrew(ComkerRoleDPO globalRole, String name, String description) {
+        ComkerCrewDPO item = crewDao.getByName(name);
         if (item == null) {
-            item = new ComkerCrew(name, description);
+            item = new ComkerCrewDPO(name, description);
             crewDao.create(item);
             crewDao.addGlobalRole(item, globalRole);
         } 
@@ -228,10 +228,10 @@ public abstract class ComkerInitializationCommonImpl
     }
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerCrew getOrCreateCrew(ComkerSpot spot, ComkerRole role, String name, String description) {
-        ComkerCrew item = crewDao.getByName(name);
+    protected ComkerCrewDPO getOrCreateCrew(ComkerSpotDPO spot, ComkerRoleDPO role, String name, String description) {
+        ComkerCrewDPO item = crewDao.getByName(name);
         if (item == null) {
-            item = new ComkerCrew(name, description);
+            item = new ComkerCrewDPO(name, description);
             crewDao.update(item);
             crewDao.addRoleWithSpot(item, role, spot);
         }
@@ -239,7 +239,7 @@ public abstract class ComkerInitializationCommonImpl
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerCrew getOrCreateCrew(ComkerSpot spot, ComkerRole role) {
+    protected ComkerCrewDPO getOrCreateCrew(ComkerSpotDPO spot, ComkerRoleDPO role) {
         Assert.notNull(spot, "Spot should be not null");
         Assert.notNull(role, "Role should be not null");
 
@@ -249,42 +249,42 @@ public abstract class ComkerInitializationCommonImpl
     //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRole getOrCreateRole(String code, String name, String description) {
-        ComkerRole item = roleDao.getByCode(code);
+    protected ComkerRoleDPO getOrCreateRole(String code, String name, String description) {
+        ComkerRoleDPO item = roleDao.getByCode(code);
         if (item == null) {
-            item = new ComkerRole(code, name, description);
+            item = new ComkerRoleDPO(code, name, description);
             roleDao.create(item);
         }
         return item;
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRole getAdministratorRole() {
+    protected ComkerRoleDPO getAdministratorRole() {
         return getOrCreateRole("Administrator", "Quản trị hệ thống", "Quản quản trị hệ thống");
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRole getManagerRole() {
+    protected ComkerRoleDPO getManagerRole() {
         return getOrCreateRole("Manager", "Quản lý Spot", "Quản lý vùng hoạt động");
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRole getMemberRole() {
+    protected ComkerRoleDPO getMemberRole() {
         return getOrCreateRole("Member", "Thành viên Spot", "Thành viên vùng hoạt động");
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRole getGuestRole() {
+    protected ComkerRoleDPO getGuestRole() {
         return getOrCreateRole("Guest", "Thành viên tự do", "Thành viên không thuộc vùng hoạt động");
     }
 
     //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerPermission getOrCreatePermission(String authority) {
-        ComkerPermission item = permissionDao.getByAuthority(authority);
+    protected ComkerPermissionDPO getOrCreatePermission(String authority) {
+        ComkerPermissionDPO item = permissionDao.getByAuthority(authority);
         if (item == null) {
-            item = new ComkerPermission(authority);
+            item = new ComkerPermissionDPO(authority);
             permissionDao.save(item);
         }
         return item;
@@ -294,12 +294,12 @@ public abstract class ComkerInitializationCommonImpl
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected void initComkerNavbars() {
-        ComkerNavbarNode nodeRoot = new ComkerNavbarNode("__NAVBAR_ROOT__", null, 
+        ComkerNavbarNodeDPO nodeRoot = new ComkerNavbarNodeDPO("__NAVBAR_ROOT__", null, 
                 new String[] {"PERM_COMKER_GUEST"});
         nodeRoot = navbarDao.create(nodeRoot);
 
-        ComkerNavbarNode parent = nodeRoot;
-        ComkerNavbarNode node = new ComkerNavbarNode("home", "#", 
+        ComkerNavbarNodeDPO parent = nodeRoot;
+        ComkerNavbarNodeDPO node = new ComkerNavbarNodeDPO("home", "#", 
                 new String[] {"PERM_COMKER_GUEST"});
         parent.getChildren().add(node);
         node.setParent(parent);
@@ -307,7 +307,7 @@ public abstract class ComkerInitializationCommonImpl
 
         // Administration sub-menu
         parent = nodeRoot;
-        node = new ComkerNavbarNode("administration", "#administration",
+        node = new ComkerNavbarNodeDPO("administration", "#administration",
                 new String[] {
                     "PERM_COMKER_ADM_USER",
                     "PERM_COMKER_ADM_CREW",
@@ -318,7 +318,7 @@ public abstract class ComkerInitializationCommonImpl
 
         parent = node;
 
-        node = new ComkerNavbarNode("administration.userList", "#user/list",
+        node = new ComkerNavbarNodeDPO("administration.userList", "#user/list",
                 new String[] {
                     "PERM_COMKER_MOD_USER",
                     "PERM_COMKER_ADM_USER"});
@@ -326,7 +326,7 @@ public abstract class ComkerInitializationCommonImpl
         node.setParent(parent);
         node = navbarDao.create(node);
 
-        node = new ComkerNavbarNode("administration.crewList", "#crew/list",
+        node = new ComkerNavbarNodeDPO("administration.crewList", "#crew/list",
                 new String[] {
                     "PERM_COMKER_MOD_CREW",
                     "PERM_COMKER_ADM_CREW"});

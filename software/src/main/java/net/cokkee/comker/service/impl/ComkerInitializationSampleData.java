@@ -1,9 +1,9 @@
 package net.cokkee.comker.service.impl;
 
 import net.cokkee.comker.service.*;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,51 +35,51 @@ public class ComkerInitializationSampleData extends ComkerInitializationCommonIm
             log.debug("ComkerInitializationSampleData.init() - start");
         }
 
-        ComkerRole roleMgr = getManagerRole();
-        ComkerRole roleMbr = getMemberRole();
+        ComkerRoleDPO roleMgr = getManagerRole();
+        ComkerRoleDPO roleMbr = getMemberRole();
 
-        ComkerSpot spotBnho = getOrCreateSpot("BUOCNHO_COM", "Buocnho Training & Technology", "");
+        ComkerSpotDPO spotBnho = getOrCreateSpot("BUOCNHO_COM", "Buocnho Training & Technology", "");
         initDefaultSpot(spotBnho);
 
-        ComkerUser userBnho0 = getOrCreateUser(
+        ComkerUserDPO userBnho0 = getOrCreateUser(
                 "manager@buocnho.com",
                 "BNA00000",
                 passwordEncoder.encodePassword("dobietday", null),
                 "Buocnho Manager");
         initDefaultUser(userBnho0, spotBnho, roleMgr);
 
-        ComkerUser userBnho1 = getOrCreateUser(
+        ComkerUserDPO userBnho1 = getOrCreateUser(
                 "member1@buocnho.com",
                 "BNA00001",
                 passwordEncoder.encodePassword("nopassword", null),
                 "Buocnho Member One");
         initDefaultUser(userBnho1, spotBnho, roleMbr);
 
-        ComkerUser userBnho2 = getOrCreateUser(
+        ComkerUserDPO userBnho2 = getOrCreateUser(
                 "member2@buocnho.com",
                 "BNA00002",
                 passwordEncoder.encodePassword("nopassword", null),
                 "Buocnho Member Two");
         initDefaultUser(userBnho2, spotBnho, roleMbr);
 
-        ComkerSpot spotPctu = getOrCreateSpot("PCTU_EDU_VN", "Đại học Phan Châu Trinh - Hội An", "");
+        ComkerSpotDPO spotPctu = getOrCreateSpot("PCTU_EDU_VN", "Đại học Phan Châu Trinh - Hội An", "");
         initDefaultSpot(spotPctu);
 
-        ComkerUser userPctu0 = getOrCreateUser(
+        ComkerUserDPO userPctu0 = getOrCreateUser(
                 "manager@pctu.edu.vn",
                 "PCT00000",
                 passwordEncoder.encodePassword("dobietday", null),
                 "Pctu Manager");
         initDefaultUser(userPctu0, spotPctu, roleMgr);
 
-        ComkerUser userPctu1 = getOrCreateUser(
+        ComkerUserDPO userPctu1 = getOrCreateUser(
                 "member1@pctu.edu.vn",
                 "PCT00001",
                 passwordEncoder.encodePassword("nopassword", null),
                 "Pctu Member One");
         initDefaultUser(userPctu1, spotPctu, roleMbr);
 
-        ComkerUser userPctu2 = getOrCreateUser(
+        ComkerUserDPO userPctu2 = getOrCreateUser(
                 "member2@pctu.edu.vn",
                 "PCT00002",
                 passwordEncoder.encodePassword("nopassword", null),

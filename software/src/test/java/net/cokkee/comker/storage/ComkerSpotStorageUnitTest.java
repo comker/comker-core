@@ -11,9 +11,9 @@ import net.cokkee.comker.storage.impl.ComkerSpotStorageImpl;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
-import net.cokkee.comker.model.po.ComkerModule;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerSpotJoinModule;
+import net.cokkee.comker.model.dpo.ComkerModuleDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerSpotValidator;
 
@@ -37,9 +37,9 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerSpotStorageUnitTest {
 
-    private List<ComkerSpot> spotIdx = new ArrayList<ComkerSpot>();
+    private List<ComkerSpotDPO> spotIdx = new ArrayList<ComkerSpotDPO>();
 
-    private List<ComkerModule> moduleIdx = new ArrayList<ComkerModule>();
+    private List<ComkerModuleDPO> moduleIdx = new ArrayList<ComkerModuleDPO>();
 
     @InjectMocks
     private ComkerSpotStorageImpl spotStorage;
@@ -60,7 +60,7 @@ public class ComkerSpotStorageUnitTest {
         spotStorage.setSpotValidator(spotValidator);
         
         for(int i=0; i<7; i++) {
-            ComkerModule module = new ComkerModule(
+            ComkerModuleDPO module = new ComkerModuleDPO(
                     "MODULE_0" + i,
                     "Module " + i,
                     "Description for module " + i);
@@ -72,41 +72,41 @@ public class ComkerSpotStorageUnitTest {
             @Override
             public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerModule module:moduleIdx) {
+                for(ComkerModuleDPO module:moduleIdx) {
                     if(module.getId().equals(id)) return true;
                 }
                 return false;
             }
         });
 
-        when(moduleDao.get(anyString())).thenAnswer(new Answer<ComkerModule>() {
+        when(moduleDao.get(anyString())).thenAnswer(new Answer<ComkerModuleDPO>() {
             @Override
-            public ComkerModule answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerModuleDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerModule module:moduleIdx) {
+                for(ComkerModuleDPO module:moduleIdx) {
                     if(module.getId().equals(id)) return module;
                 }
                 return null;
             }
         });
 
-        ComkerSpot spot;
+        ComkerSpotDPO spot;
 
         for(int i=0; i<4; i++) {
-            spot = new ComkerSpot("SPOT_0" + i, "Spot 0" + i, "This is spot 0" + i);
+            spot = new ComkerSpotDPO("SPOT_0" + i, "Spot 0" + i, "This is spot 0" + i);
             spot.setId(UUID.randomUUID().toString());
             spotIdx.add(spot);
         }
 
         spot = spotIdx.get(1);
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(1)));
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(2)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(1)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(2)));
 
         spot = spotIdx.get(2);
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(1)));
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(2)));
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(3)));
-        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModule(spot, moduleIdx.get(4)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(1)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(2)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(3)));
+        spot.getSpotJoinModuleList().add(new ComkerSpotJoinModuleDPO(spot, moduleIdx.get(4)));
 
         /*
          * mocks for count() method
@@ -119,53 +119,53 @@ public class ComkerSpotStorageUnitTest {
         });
 
         when(spotDao.findAll(any(ComkerQuerySieve.class),any(ComkerQueryPager.class)))
-                .thenAnswer(new Answer<List<ComkerSpot>>() {
+                .thenAnswer(new Answer<List<ComkerSpotDPO>>() {
             @Override
-            public List<ComkerSpot> answer(InvocationOnMock invocation) throws Throwable {
-                List<ComkerSpot> result = new ArrayList<ComkerSpot>(spotIdx);
+            public List<ComkerSpotDPO> answer(InvocationOnMock invocation) throws Throwable {
+                List<ComkerSpotDPO> result = new ArrayList<ComkerSpotDPO>(spotIdx);
                 return result;
             }
         });
 
-        when(spotDao.get(anyString())).thenAnswer(new Answer<ComkerSpot>() {
+        when(spotDao.get(anyString())).thenAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerSpot spot:spotIdx) {
+                for(ComkerSpotDPO spot:spotIdx) {
                     if(spot.getId().equals(id)) return spot;
                 }
                 return null;
             }
         });
 
-        when(spotDao.getByCode(anyString())).thenAnswer(new Answer<ComkerSpot>() {
+        when(spotDao.getByCode(anyString())).thenAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
                 String code = (String) invocation.getArguments()[0];
-                for(ComkerSpot spot:spotIdx) {
+                for(ComkerSpotDPO spot:spotIdx) {
                     if(spot.getCode().equals(code)) return spot;
                 }
                 return null;
             }
         });
 
-        doAnswer(new Answer<ComkerSpot>() {
+        doAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpot spot = (ComkerSpot) invocation.getArguments()[0];
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
+                ComkerSpotDPO spot = (ComkerSpotDPO) invocation.getArguments()[0];
                 spot.setId(UUID.randomUUID().toString());
                 spotIdx.add(spot);
                 return spot;
             }
-        }).when(spotDao).create(any(ComkerSpot.class));
+        }).when(spotDao).create(any(ComkerSpotDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpot spot = (ComkerSpot) invocation.getArguments()[0];
+                ComkerSpotDPO spot = (ComkerSpotDPO) invocation.getArguments()[0];
 
-                ComkerSpot spotOnDB = null;
-                for(ComkerSpot item:spotIdx) {
+                ComkerSpotDPO spotOnDB = null;
+                for(ComkerSpotDPO item:spotIdx) {
                     if(item.getId().equals(spot.getId())) {
                         spotOnDB = item;
                         break;
@@ -177,15 +177,15 @@ public class ComkerSpotStorageUnitTest {
                 }
                 return null;
             }
-        }).when(spotDao).update(any(ComkerSpot.class));
+        }).when(spotDao).update(any(ComkerSpotDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerSpot spot = (ComkerSpot) invocation.getArguments()[0];
+                ComkerSpotDPO spot = (ComkerSpotDPO) invocation.getArguments()[0];
 
-                ComkerSpot spotOnDB = null;
-                for(ComkerSpot item:spotIdx) {
+                ComkerSpotDPO spotOnDB = null;
+                for(ComkerSpotDPO item:spotIdx) {
                     if(item.getId().equals(spot.getId())) {
                         spotOnDB = item;
                         break;
@@ -197,7 +197,7 @@ public class ComkerSpotStorageUnitTest {
                 }
                 return null;
             }
-        }).when(spotDao).delete(any(ComkerSpot.class));
+        }).when(spotDao).delete(any(ComkerSpotDPO.class));
     }
 
     @Test
@@ -301,7 +301,7 @@ public class ComkerSpotStorageUnitTest {
 
     @Test
     public void test_update_spot_object_with_null_moduleIds() {
-        ComkerSpot source = spotIdx.get(1);
+        ComkerSpotDPO source = spotIdx.get(1);
         ComkerSpotDTO param = new ComkerSpotDTO(source.getCode(), source.getName() + " - modified", null);
         param.setId(source.getId());
         spotStorage.update(param);
@@ -312,7 +312,7 @@ public class ComkerSpotStorageUnitTest {
 
     @Test
     public void test_update_spot_object_with_valid_moduleIds() {
-        ComkerSpot source = spotIdx.get(1);
+        ComkerSpotDPO source = spotIdx.get(1);
 
         ComkerSpotDTO param = new ComkerSpotDTO(source.getCode(),
                 source.getName() + " - modified", source.getDescription() + " - modified");

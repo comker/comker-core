@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 
 /**
  *
@@ -13,7 +13,7 @@ import net.cokkee.comker.model.po.ComkerPermission;
  */
 public interface ComkerPermissionDao {
 
-    ComkerPermission findWhere(Map<String,Object> params);
+    ComkerPermissionDPO findWhere(Map<String,Object> params);
 
     Integer count(ComkerQuerySieve sieve);
 
@@ -23,9 +23,9 @@ public interface ComkerPermissionDao {
 
     Boolean exists(String id);
 
-    ComkerPermission get(String id);
+    ComkerPermissionDPO get(String id);
 
-    ComkerPermission getByAuthority(String authority);
+    ComkerPermissionDPO getByAuthority(String authority);
 
-    ComkerPermission save(ComkerPermission item);
+    ComkerPermissionDPO save(ComkerPermissionDPO item);
 }

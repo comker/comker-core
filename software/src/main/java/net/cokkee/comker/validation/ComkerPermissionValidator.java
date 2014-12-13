@@ -2,7 +2,7 @@ package net.cokkee.comker.validation;
 
 import net.cokkee.comker.dao.ComkerPermissionDao;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.validation.Errors;
 
@@ -38,7 +38,7 @@ public class ComkerPermissionValidator extends ComkerAbstractValidator {
                     new Object[] {"msg.field_authority"},
                     "Authority value is invalid format");
         } else {
-            ComkerPermission dupItem = permissionDao.getByAuthority(item.getAuthority());
+            ComkerPermissionDPO dupItem = permissionDao.getByAuthority(item.getAuthority());
             if (dupItem != null && !dupItem.getId().equals(item.getId())) {
                 e.rejectValue("authority",
                         "msg.__field__has_duplicated_value",

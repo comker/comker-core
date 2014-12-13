@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,27 +14,24 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-@XmlRootElement
 @Entity
 @Table(name = "comker_user")
-public class ComkerUser extends ComkerAbstractItem {
+public class ComkerUserDPO extends ComkerAbstractDPO {
 
     public static final String UNKNOWN = "__UNKNOWN_USER__";
     public static final String DEFAULT = "__DEFAULT_USER__";
 
-    public ComkerUser() {
+    public ComkerUserDPO() {
         super();
     }
 
-    public ComkerUser(String email, String username, String password, String fullname) {
+    public ComkerUserDPO(String email, String username, String password, String fullname) {
         super();
         this.email = email;
         this.username = username;
@@ -51,8 +49,8 @@ public class ComkerUser extends ComkerAbstractItem {
     private boolean accountLocked;
     private boolean passwordExpired;
 
-    private List<ComkerUserJoinCrew> userJoinCrewList =
-            new LinkedList<ComkerUserJoinCrew>();
+    private List<ComkerUserJoinCrewDPO> userJoinCrewList =
+            new LinkedList<ComkerUserJoinCrewDPO>();
 
     private Set<String> idsOfCrewList = new HashSet<String>();
 
@@ -113,13 +111,12 @@ public class ComkerUser extends ComkerAbstractItem {
         this.enabled = enabled;
     }
 
-    @XmlTransient
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.user", cascade=CascadeType.ALL, orphanRemoval=true)
-    public List<ComkerUserJoinCrew> getUserJoinCrewList() {
+    public List<ComkerUserJoinCrewDPO> getUserJoinCrewList() {
         return userJoinCrewList;
     }
 
-    public void setUserJoinCrewList(List<ComkerUserJoinCrew> list) {
+    public void setUserJoinCrewList(List<ComkerUserJoinCrewDPO> list) {
         this.userJoinCrewList = list;
     }
 

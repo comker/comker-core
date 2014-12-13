@@ -7,7 +7,7 @@ import net.cokkee.comker.dao.ComkerModuleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.springframework.validation.ValidationUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class ComkerSpotValidatorUnitTest {
 
-    private List<ComkerSpot> spotList = new ArrayList<ComkerSpot>();
+    private List<ComkerSpotDPO> spotList = new ArrayList<ComkerSpotDPO>();
 
     private List<String> moduleIds = new ArrayList<String>();
     
@@ -50,7 +50,7 @@ public class ComkerSpotValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerSpot spot = new ComkerSpot("SPOT_" + i, "Spot " + i, "This is spot " + i);
+            ComkerSpotDPO spot = new ComkerSpotDPO("SPOT_" + i, "Spot " + i, "This is spot " + i);
             spot.setId(UUID.randomUUID().toString());
             spotList.add(spot);
         }
@@ -59,11 +59,11 @@ public class ComkerSpotValidatorUnitTest {
             moduleIds.add(UUID.randomUUID().toString());
         }
 
-        Mockito.when(spotDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSpot>() {
+        Mockito.when(spotDao.getByCode(Mockito.anyString())).thenAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(ComkerSpot spot:spotList) {
+                for(ComkerSpotDPO spot:spotList) {
                     if (spot.getCode().equals(id)) {
                         return spot;
                     }

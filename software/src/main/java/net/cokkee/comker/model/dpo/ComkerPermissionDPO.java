@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,13 +22,13 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "comker_permission",
         uniqueConstraints = @UniqueConstraint(columnNames = "f_authority"))
-public class ComkerPermission extends ComkerAbstractItem {
+public class ComkerPermissionDPO extends ComkerAbstractDPO {
 
-    public ComkerPermission() {
+    public ComkerPermissionDPO() {
         super();
     }
 
-    public ComkerPermission(String authority) {
+    public ComkerPermissionDPO(String authority) {
         super();
         this.authority = authority;
     }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.cokkee.comker.model.po.ComkerNavbarNode;
+import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
@@ -22,9 +22,9 @@ public interface ComkerNavbarDao {
     
     Integer count();
 
-    ComkerNavbarNode getTree();
+    ComkerNavbarNodeDPO getTree();
 
-    ComkerNavbarNode getTree(String fromNodeId, String excludeNodeId);
+    ComkerNavbarNodeDPO getTree(String fromNodeId, String excludeNodeId);
 
     List getList();
     
@@ -32,15 +32,15 @@ public interface ComkerNavbarDao {
 
     Boolean exists(String id);
 
-    ComkerNavbarNode get(String id);
+    ComkerNavbarNodeDPO get(String id);
 
-    ComkerNavbarNode getByCode(String code);
+    ComkerNavbarNodeDPO getByCode(String code);
 
-    ComkerNavbarNode create(ComkerNavbarNode item);
+    ComkerNavbarNodeDPO create(ComkerNavbarNodeDPO item);
     
-    void update(ComkerNavbarNode item);
+    void update(ComkerNavbarNodeDPO item);
 
-    void delete(ComkerNavbarNode item);
+    void delete(ComkerNavbarNodeDPO item);
 
     public static class Interceptor extends EmptyInterceptor {
         private List<String> dirtyPropertyNames = new ArrayList<String>();

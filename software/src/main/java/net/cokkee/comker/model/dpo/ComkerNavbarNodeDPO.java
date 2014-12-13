@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -26,24 +27,24 @@ import org.hibernate.annotations.GenericGenerator;
 @XmlRootElement
 @Entity
 @Table(name = "comker_navbar_node")
-public class ComkerNavbarNode extends ComkerAbstractItem {
+public class ComkerNavbarNodeDPO extends ComkerAbstractDPO {
 
     public static final String ROOT_CODE = "";
 
-    public ComkerNavbarNode() {
+    public ComkerNavbarNodeDPO() {
         super();
         this.parent = null;
         this.enabled = true;
     }
 
-    public ComkerNavbarNode(String code, String url, String[] permissions) {
+    public ComkerNavbarNodeDPO(String code, String url, String[] permissions) {
         this();
         this.code = code;
         this.url = url;
         this.permissions = permissions;
     }
 
-    public ComkerNavbarNode(String code, String url, String[] permissions, String label, String description) {
+    public ComkerNavbarNodeDPO(String code, String url, String[] permissions, String label, String description) {
         this(code, url, permissions);
         this.label = label;
         this.description = description;
@@ -59,8 +60,8 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
     private String[] permissions = null;
     private String permissionStore = null;
 
-    private ComkerNavbarNode parent = null;
-    private Set<ComkerNavbarNode> children = new HashSet<ComkerNavbarNode>();
+    private ComkerNavbarNodeDPO parent = null;
+    private Set<ComkerNavbarNodeDPO> children = new HashSet<ComkerNavbarNodeDPO>();
 
     private String treeId = null;
     private String treeIndent = null;
@@ -146,20 +147,20 @@ public class ComkerNavbarNode extends ComkerAbstractItem {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "f_parent_id", nullable=true)
-    public ComkerNavbarNode getParent() {
+    public ComkerNavbarNodeDPO getParent() {
         return parent;
     }
 
-    public void setParent(ComkerNavbarNode parent) {
+    public void setParent(ComkerNavbarNodeDPO parent) {
         this.parent = parent;
     }
 
     @OneToMany(mappedBy="parent", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    public Set<ComkerNavbarNode> getChildren() {
+    public Set<ComkerNavbarNodeDPO> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<ComkerNavbarNode> children) {
+    public void setChildren(Set<ComkerNavbarNodeDPO> children) {
         this.children = children;
     }
 

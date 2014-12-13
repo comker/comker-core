@@ -5,7 +5,7 @@ import java.util.Map;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 
-import net.cokkee.comker.model.po.ComkerSpot;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 
 /**
  *
@@ -17,19 +17,19 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager);
 
-    ComkerSpot findWhere(Map<String,Object> params);
+    ComkerSpotDPO findWhere(Map<String,Object> params);
 
     List findAllWhere(Map<String,Object> params, ComkerQueryPager filter);
 
     Boolean exists(String id);
 
-    ComkerSpot get(String id);
+    ComkerSpotDPO get(String id);
 
-    ComkerSpot getByCode(String code);
+    ComkerSpotDPO getByCode(String code);
 
-    ComkerSpot create(ComkerSpot item);
+    ComkerSpotDPO create(ComkerSpotDPO item);
 
-    ComkerSpot update(ComkerSpot item);
+    ComkerSpotDPO update(ComkerSpotDPO item);
 
-    void delete(ComkerSpot item);
+    void delete(ComkerSpotDPO item);
 }

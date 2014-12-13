@@ -8,7 +8,7 @@ import java.util.Map;
 
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -29,17 +29,17 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerPermission findWhere(Map<String,Object> params) {
+    public ComkerPermissionDPO findWhere(Map<String,Object> params) {
         List result = findAllWhere(params, ComkerQueryPager.ONE);
         if (result.isEmpty()) return null;
-        return (ComkerPermission)result.get(0);
+        return (ComkerPermissionDPO)result.get(0);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerPermission.class);
+        Criteria c = session.createCriteria(ComkerPermissionDPO.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -48,7 +48,7 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerPermission.class);
+        Criteria c = session.createCriteria(ComkerPermissionDPO.class);
         ComkerQueryPager.apply(c, pager);
         return c.list();
     }
@@ -57,7 +57,7 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerQueryPager filter) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerPermission.class);
+        Criteria c = session.createCriteria(ComkerPermissionDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -71,21 +71,21 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
         Query query = this.getSessionFactory().getCurrentSession().
                 createQuery(MessageFormat.format(
                     "select 1 from {0} t where t.id = :id",
-                    new Object[] {ComkerPermission.class.getSimpleName()}));
+                    new Object[] {ComkerPermissionDPO.class.getSimpleName()}));
         query.setString("id", id);
         return (query.uniqueResult() != null);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerPermission get(String id) {
+    public ComkerPermissionDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        return (ComkerPermission) session.get(ComkerPermission.class, id);
+        return (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, id);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerPermission getByAuthority(String authority) {
+    public ComkerPermissionDPO getByAuthority(String authority) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(FIELD_AUTHORITY, authority);
         return findWhere(params);
@@ -93,7 +93,7 @@ public class ComkerPermissionDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerPermission save(ComkerPermission item) {
+    public ComkerPermissionDPO save(ComkerPermissionDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;

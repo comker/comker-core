@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.po.ComkerWatchdog;
+import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -27,7 +27,7 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerWatchdogDPO.class);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -36,29 +36,29 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAll(ComkerQuerySieve sieve,ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerWatchdogDPO.class);
         ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerWatchdog findWhere(Map<String, Object> params) {
+    public ComkerWatchdogDPO findWhere(Map<String, Object> params) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerWatchdogDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
         List result = c.list();
         if (result.isEmpty()) return null;
-        return (ComkerWatchdog)result.get(0);
+        return (ComkerWatchdogDPO)result.get(0);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List findAllWhere(Map<String,Object> params, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
-        Criteria c = session.createCriteria(ComkerWatchdog.class);
+        Criteria c = session.createCriteria(ComkerWatchdogDPO.class);
         for(Map.Entry<String,Object> param : params.entrySet()) {
             c.add(Restrictions.eq(param.getKey(), param.getValue()));
         }
@@ -68,23 +68,15 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public ComkerWatchdog get(String id) {
+    public ComkerWatchdogDPO get(String id) {
         Session session = this.getSessionFactory().getCurrentSession();
-        ComkerWatchdog item = (ComkerWatchdog) session.get(ComkerWatchdog.class, id);
+        ComkerWatchdogDPO item = (ComkerWatchdogDPO) session.get(ComkerWatchdogDPO.class, id);
         return item;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdog create(ComkerWatchdog item) {
-        Session session = this.getSessionFactory().getCurrentSession();
-        session.saveOrUpdate(item);
-        return item;
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdog update(ComkerWatchdog item) {
+    public ComkerWatchdogDPO create(ComkerWatchdogDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
         return item;
@@ -92,7 +84,15 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public void delete(ComkerWatchdog item) {
+    public ComkerWatchdogDPO update(ComkerWatchdogDPO item) {
+        Session session = this.getSessionFactory().getCurrentSession();
+        session.saveOrUpdate(item);
+        return item;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void delete(ComkerWatchdogDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.delete(item);
     }

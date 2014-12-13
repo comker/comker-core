@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.cokkee.comker.model.ComkerQueryPager;
-import net.cokkee.comker.model.po.ComkerPermission;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Session;
@@ -42,14 +42,14 @@ public class ComkerPermissionDaoUnitTest {
     
     @Before
     public void init() {
-        ComkerPermission item = null;
+        ComkerPermissionDPO item = null;
         Session session = testSessionFactory.getCurrentSession();
         
         for(int i=0; i<20; i++) {
             String authorityString = "PERMISSION_" + i;
             authorities.add(authorityString);
 
-            item = new ComkerPermission(authorityString);
+            item = new ComkerPermissionDPO(authorityString);
             session.saveOrUpdate(item);
             permissionIdx.add(item.getId());
         }
@@ -65,7 +65,7 @@ public class ComkerPermissionDaoUnitTest {
         List list = testPermissionDao.findAll(null, null);
         Set<String> resultSet = new HashSet<String>();
         for(Object item:list) {
-            ComkerPermission permission = (ComkerPermission) item;
+            ComkerPermissionDPO permission = (ComkerPermissionDPO) item;
             resultSet.add(permission.getAuthority());
         }
         Assert.assertThat(resultSet, CoreMatchers.is(authorities));
@@ -79,26 +79,26 @@ public class ComkerPermissionDaoUnitTest {
 
     @Test
     public void test_get_by_authority() {
-        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_1");
+        ComkerPermissionDPO item = testPermissionDao.getByAuthority("PERMISSION_1");
         Assert.assertNotNull(item);
     }
 
     @Test
     public void test_get_by_authority_with_invalid_authority_code() {
-        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_NOT_FOUND");
+        ComkerPermissionDPO item = testPermissionDao.getByAuthority("PERMISSION_NOT_FOUND");
         Assert.assertNull(item);
     }
 
     @Test
     public void test_get_by_id() {
-        ComkerPermission item = testPermissionDao.getByAuthority("PERMISSION_1");
-        ComkerPermission item2 = testPermissionDao.get(item.getId());
+        ComkerPermissionDPO item = testPermissionDao.getByAuthority("PERMISSION_1");
+        ComkerPermissionDPO item2 = testPermissionDao.get(item.getId());
         Assert.assertEquals(item, item2);
     }
 
     @Test
     public void test_get_by_id_with_invalid_id() {
-        ComkerPermission item = testPermissionDao.get("ID_NOT_FOUND");
+        ComkerPermissionDPO item = testPermissionDao.get("ID_NOT_FOUND");
         Assert.assertNull(item);
     }
 
@@ -122,7 +122,7 @@ public class ComkerPermissionDaoUnitTest {
     public void test_create() {
         int currentCount = testPermissionDao.count(null);
 
-        ComkerPermission item = new ComkerPermission("PERMISSION_A");
+        ComkerPermissionDPO item = new ComkerPermissionDPO("PERMISSION_A");
         testPermissionDao.save(item);
 
         Assert.assertTrue(testPermissionDao.count(null) == currentCount + 1);

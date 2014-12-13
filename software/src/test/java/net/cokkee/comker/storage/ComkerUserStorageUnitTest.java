@@ -17,15 +17,15 @@ import net.cokkee.comker.storage.impl.ComkerUserStorageImpl;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
-import net.cokkee.comker.model.po.ComkerCrew;
-import net.cokkee.comker.model.po.ComkerCrewJoinGlobalRole;
-import net.cokkee.comker.model.po.ComkerCrewJoinRoleWithSpot;
-import net.cokkee.comker.model.po.ComkerPermission;
-import net.cokkee.comker.model.po.ComkerRole;
-import net.cokkee.comker.model.po.ComkerRoleJoinPermission;
-import net.cokkee.comker.model.po.ComkerSpot;
-import net.cokkee.comker.model.po.ComkerUser;
-import net.cokkee.comker.model.po.ComkerUserJoinCrew;
+import net.cokkee.comker.model.dpo.ComkerCrewDPO;
+import net.cokkee.comker.model.dpo.ComkerCrewJoinGlobalRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerCrewJoinRoleWithSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleDPO;
+import net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
+import net.cokkee.comker.model.dpo.ComkerUserDPO;
+import net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerUserValidator;
 import org.hamcrest.CoreMatchers;
@@ -61,11 +61,11 @@ public class ComkerUserStorageUnitTest {
     private List<String> roleIdx = new ArrayList<String>();
     private List<String> permissionIdx = new ArrayList<String>();
 
-    private Map<String, ComkerUser> userMap = new HashMap<String, ComkerUser>();
-    private Map<String, ComkerCrew> crewMap = new HashMap<String, ComkerCrew>();
-    private Map<String, ComkerSpot> spotMap = new HashMap<String, ComkerSpot>();
-    private Map<String, ComkerRole> roleMap = new HashMap<String, ComkerRole>();
-    private Map<String, ComkerPermission> permissionMap = new HashMap<String, ComkerPermission>();
+    private Map<String, ComkerUserDPO> userMap = new HashMap<String, ComkerUserDPO>();
+    private Map<String, ComkerCrewDPO> crewMap = new HashMap<String, ComkerCrewDPO>();
+    private Map<String, ComkerSpotDPO> spotMap = new HashMap<String, ComkerSpotDPO>();
+    private Map<String, ComkerRoleDPO> roleMap = new HashMap<String, ComkerRoleDPO>();
+    private Map<String, ComkerPermissionDPO> permissionMap = new HashMap<String, ComkerPermissionDPO>();
 
     @InjectMocks
     private ComkerUserStorageImpl userStorage;
@@ -95,7 +95,7 @@ public class ComkerUserStorageUnitTest {
          * Demo data for spotDao
          */
         for(int i=0; i<3; i++) {
-            ComkerSpot spot = new ComkerSpot("SPOT_0" + i, "Spot 0" + i, "This is spot-0" + i);
+            ComkerSpotDPO spot = new ComkerSpotDPO("SPOT_0" + i, "Spot 0" + i, "This is spot-0" + i);
             spot.setId(UUID.randomUUID().toString());
             spotMap.put(spot.getId(), spot);
             spotIdx.add(spot.getId());
@@ -109,9 +109,9 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        when(spotDao.get(anyString())).thenAnswer(new Answer<ComkerSpot>() {
+        when(spotDao.get(anyString())).thenAnswer(new Answer<ComkerSpotDPO>() {
             @Override
-            public ComkerSpot answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return spotMap.get(id);
             }
@@ -121,7 +121,7 @@ public class ComkerUserStorageUnitTest {
          * Demo data for permissionDao
          */
         for(int i=0; i<9; i++) {
-            ComkerPermission permission = new ComkerPermission("PERMISSION_0" + i);
+            ComkerPermissionDPO permission = new ComkerPermissionDPO("PERMISSION_0" + i);
             permission.setId(UUID.randomUUID().toString());
             permissionMap.put(permission.getId(), permission);
             permissionIdx.add(permission.getId());
@@ -130,10 +130,10 @@ public class ComkerUserStorageUnitTest {
         /*
          * Demo data for roleDao
          */
-        ComkerRole role;
+        ComkerRoleDPO role;
 
         for(int i=0; i<7; i++) {
-            role = new ComkerRole("ROLE_0" + i, "Role 0" + i, "This is role-0" + i);
+            role = new ComkerRoleDPO("ROLE_0" + i, "Role 0" + i, "This is role-0" + i);
             role.setId(UUID.randomUUID().toString());
             roleMap.put(role.getId(), role);
             roleIdx.add(role.getId());
@@ -141,22 +141,22 @@ public class ComkerUserStorageUnitTest {
 
         role = roleMap.get(roleIdx.get(1));
         for(int j=1; j<=2; j++) {
-            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionMap.get(permissionIdx.get(j))));
         }
 
         role = roleMap.get(roleIdx.get(2));
         for(int j=1; j<=4; j++) {
-            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionMap.get(permissionIdx.get(j))));
         }
 
         role = roleMap.get(roleIdx.get(4));
         for(int j=5; j<=7; j++) {
-            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionMap.get(permissionIdx.get(j))));
         }
 
         role = roleMap.get(roleIdx.get(5));
         for(int j=6; j<=8; j++) {
-            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermission(role, permissionMap.get(permissionIdx.get(j))));
+            role.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(role, permissionMap.get(permissionIdx.get(j))));
         }
 
         when(roleDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
@@ -167,9 +167,9 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        when(roleDao.get(anyString())).thenAnswer(new Answer<ComkerRole>() {
+        when(roleDao.get(anyString())).thenAnswer(new Answer<ComkerRoleDPO>() {
             @Override
-            public ComkerRole answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return roleMap.get(id);
             }
@@ -178,72 +178,72 @@ public class ComkerUserStorageUnitTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Set<ComkerPermission> bag = (Set<ComkerPermission>) invocation.getArguments()[0];
-                ComkerRole role = (ComkerRole) invocation.getArguments()[1];
-                List<ComkerRoleJoinPermission> list = role.getRoleJoinPermissionList();
-                for (ComkerRoleJoinPermission item : list) {
+                Set<ComkerPermissionDPO> bag = (Set<ComkerPermissionDPO>) invocation.getArguments()[0];
+                ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[1];
+                List<ComkerRoleJoinPermissionDPO> list = role.getRoleJoinPermissionList();
+                for (ComkerRoleJoinPermissionDPO item : list) {
                     bag.add(item.getPermission());
                 }
                 return null;
             }
-        }).when(roleDao).collectPermission(anySet(), any(ComkerRole.class));
+        }).when(roleDao).collectPermission(anySet(), any(ComkerRoleDPO.class));
 
         /*
          * Demo data for crewDao
          */
-        ComkerCrew crew;
+        ComkerCrewDPO crew;
 
         for(int i=0; i<5; i++) {
-            crew = new ComkerCrew("Crew 0" + i, "This is crew-0" + i);
+            crew = new ComkerCrewDPO("Crew 0" + i, "This is crew-0" + i);
             crew.setId(UUID.randomUUID().toString());
             crewMap.put(crew.getId(), crew);
             crewIdx.add(crew.getId());
         }
 
         crew = crewMap.get(crewIdx.get(1));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(1))));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(2))));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(1))));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(2))));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(2))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRoleDPO(crew, roleMap.get(roleIdx.get(1))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRoleDPO(crew, roleMap.get(roleIdx.get(2))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpotDPO(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(1))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpotDPO(crew, roleMap.get(roleIdx.get(4)), spotMap.get(spotIdx.get(2))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpotDPO(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(2))));
 
         crew = crewMap.get(crewIdx.get(2));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(1))));
-        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRole(crew, roleMap.get(roleIdx.get(3))));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(1))));
-        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpot(crew, roleMap.get(roleIdx.get(6)), spotMap.get(spotIdx.get(1))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRoleDPO(crew, roleMap.get(roleIdx.get(1))));
+        crew.getCrewJoinGlobalRoleList().add(new ComkerCrewJoinGlobalRoleDPO(crew, roleMap.get(roleIdx.get(3))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpotDPO(crew, roleMap.get(roleIdx.get(5)), spotMap.get(spotIdx.get(1))));
+        crew.getCrewJoinRoleWithSpotList().add(new ComkerCrewJoinRoleWithSpotDPO(crew, roleMap.get(roleIdx.get(6)), spotMap.get(spotIdx.get(1))));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Set<ComkerRole> bag = (Set<ComkerRole>) invocation.getArguments()[0];
-                ComkerCrew crew = (ComkerCrew) invocation.getArguments()[1];
-                List<ComkerCrewJoinGlobalRole> list = crew.getCrewJoinGlobalRoleList();
-                for (ComkerCrewJoinGlobalRole item : list) {
+                Set<ComkerRoleDPO> bag = (Set<ComkerRoleDPO>) invocation.getArguments()[0];
+                ComkerCrewDPO crew = (ComkerCrewDPO) invocation.getArguments()[1];
+                List<ComkerCrewJoinGlobalRoleDPO> list = crew.getCrewJoinGlobalRoleList();
+                for (ComkerCrewJoinGlobalRoleDPO item : list) {
                     bag.add(item.getRole());
                 }
                 return null;
             }
-        }).when(crewDao).collectGlobalRole(anySet(), any(ComkerCrew.class));
+        }).when(crewDao).collectGlobalRole(anySet(), any(ComkerCrewDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Map<ComkerSpot, Set<ComkerRole>> bag = (Map<ComkerSpot, Set<ComkerRole>>) invocation.getArguments()[0];
-                ComkerCrew crew = (ComkerCrew) invocation.getArguments()[1];
-                List<ComkerCrewJoinRoleWithSpot> list = crew.getCrewJoinRoleWithSpotList();
-                for (ComkerCrewJoinRoleWithSpot item : list) {
-                    ComkerSpot spot = item.getSpot();
-                    Set<ComkerRole> roleSet = bag.get(spot);
+                Map<ComkerSpotDPO, Set<ComkerRoleDPO>> bag = (Map<ComkerSpotDPO, Set<ComkerRoleDPO>>) invocation.getArguments()[0];
+                ComkerCrewDPO crew = (ComkerCrewDPO) invocation.getArguments()[1];
+                List<ComkerCrewJoinRoleWithSpotDPO> list = crew.getCrewJoinRoleWithSpotList();
+                for (ComkerCrewJoinRoleWithSpotDPO item : list) {
+                    ComkerSpotDPO spot = item.getSpot();
+                    Set<ComkerRoleDPO> roleSet = bag.get(spot);
                     if (roleSet == null) {
-                        roleSet = new HashSet<ComkerRole>();
+                        roleSet = new HashSet<ComkerRoleDPO>();
                         bag.put(spot, roleSet);
                     }
                     roleSet.add(item.getRole());
                 }
                 return null;
             }
-        }).when(crewDao).collectSpotWithRole(anyMap(), any(ComkerCrew.class));
+        }).when(crewDao).collectSpotWithRole(anyMap(), any(ComkerCrewDPO.class));
 
         when(crewDao.exists(anyString())).thenAnswer(new Answer<Boolean>() {
             @Override
@@ -253,29 +253,29 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        when(crewDao.get(anyString())).thenAnswer(new Answer<ComkerCrew>() {
+        when(crewDao.get(anyString())).thenAnswer(new Answer<ComkerCrewDPO>() {
             @Override
-            public ComkerCrew answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerCrewDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return crewMap.get(id);
             }
         });
 
-        ComkerUser user;
+        ComkerUserDPO user;
 
-        user = new ComkerUser("user0@comker.net", "user0", "Matkhau$1", "Phạm Ngọc Hùng");
+        user = new ComkerUserDPO("user0@comker.net", "user0", "Matkhau$1", "Phạm Ngọc Hùng");
         user.setId(UUID.randomUUID().toString());
         userMap.put(user.getId(), user);
         userIdx.add(user.getId());
 
-        user = new ComkerUser("user1@comker.net", "user1", "Matkhau#1", "Nguyễn Tuấn Anh");
+        user = new ComkerUserDPO("user1@comker.net", "user1", "Matkhau#1", "Nguyễn Tuấn Anh");
         user.setId(UUID.randomUUID().toString());
-        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get(crewIdx.get(1))));
-        user.getUserJoinCrewList().add(new ComkerUserJoinCrew(user, crewMap.get(crewIdx.get(2))));
+        user.getUserJoinCrewList().add(new ComkerUserJoinCrewDPO(user, crewMap.get(crewIdx.get(1))));
+        user.getUserJoinCrewList().add(new ComkerUserJoinCrewDPO(user, crewMap.get(crewIdx.get(2))));
         userMap.put(user.getId(), user);
         userIdx.add(user.getId());
 
-        user = new ComkerUser("user2@comker.net", "user2", "Matkhau$1", "Trương Minh Tuấn");
+        user = new ComkerUserDPO("user2@comker.net", "user2", "Matkhau$1", "Trương Minh Tuấn");
         user.setId(UUID.randomUUID().toString());
         userMap.put(user.getId(), user);
         userIdx.add(user.getId());
@@ -283,15 +283,15 @@ public class ComkerUserStorageUnitTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Set<ComkerCrew> bag = (Set<ComkerCrew>) invocation.getArguments()[0];
-                ComkerUser user = (ComkerUser) invocation.getArguments()[1];
-                List<ComkerUserJoinCrew> list = user.getUserJoinCrewList();
-                for (ComkerUserJoinCrew item : list) {
+                Set<ComkerCrewDPO> bag = (Set<ComkerCrewDPO>) invocation.getArguments()[0];
+                ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[1];
+                List<ComkerUserJoinCrewDPO> list = user.getUserJoinCrewList();
+                for (ComkerUserJoinCrewDPO item : list) {
                     bag.add(item.getCrew());
                 }
                 return null;
             }
-        }).when(userDao).collectCrew(anySet(), any(ComkerUser.class));
+        }).when(userDao).collectCrew(anySet(), any(ComkerUserDPO.class));
 
         when(userDao.count(any(ComkerQuerySieve.class))).thenAnswer(new Answer<Integer>() {
             @Override
@@ -301,30 +301,30 @@ public class ComkerUserStorageUnitTest {
         });
 
         when(userDao.findAll(any(ComkerQuerySieve.class), any(ComkerQueryPager.class)))
-                .thenAnswer(new Answer<List<ComkerUser>>() {
+                .thenAnswer(new Answer<List<ComkerUserDPO>>() {
             @Override
-            public List<ComkerUser> answer(InvocationOnMock invocation) throws Throwable {
-                List<ComkerUser> result = new ArrayList<ComkerUser>();
-                for(Map.Entry<String,ComkerUser> userEntry:userMap.entrySet()) {
+            public List<ComkerUserDPO> answer(InvocationOnMock invocation) throws Throwable {
+                List<ComkerUserDPO> result = new ArrayList<ComkerUserDPO>();
+                for(Map.Entry<String,ComkerUserDPO> userEntry:userMap.entrySet()) {
                     result.add(userEntry.getValue());
                 }
                 return result;
             }
         });
 
-        when(userDao.get(anyString())).thenAnswer(new Answer<ComkerUser>() {
+        when(userDao.get(anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
                 return userMap.get(id);
             }
         });
 
-        when(userDao.getByUsername(anyString())).thenAnswer(new Answer<ComkerUser>() {
+        when(userDao.getByUsername(anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(Map.Entry<String, ComkerUser> userEntry:userMap.entrySet()) {
+                for(Map.Entry<String, ComkerUserDPO> userEntry:userMap.entrySet()) {
                     if (userEntry.getValue().getUsername().equals(id)) {
                         return userEntry.getValue();
                     }
@@ -333,11 +333,11 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        when(userDao.getByEmail(anyString())).thenAnswer(new Answer<ComkerUser>() {
+        when(userDao.getByEmail(anyString())).thenAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
                 String id = (String) invocation.getArguments()[0];
-                for(Map.Entry<String, ComkerUser> userEntry:userMap.entrySet()) {
+                for(Map.Entry<String, ComkerUserDPO> userEntry:userMap.entrySet()) {
                     if (userEntry.getValue().getEmail().equals(id)) {
                         return userEntry.getValue();
                     }
@@ -346,37 +346,37 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        doAnswer(new Answer<ComkerUser>() {
+        doAnswer(new Answer<ComkerUserDPO>() {
             @Override
-            public ComkerUser answer(InvocationOnMock invocation) throws Throwable {
-                ComkerUser user = (ComkerUser) invocation.getArguments()[0];
+            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
+                ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[0];
                 user.setId(UUID.randomUUID().toString());
                 userMap.put(user.getId(), user);
                 userIdx.add(user.getId());
                 return user;
             }
-        }).when(userDao).create(any(ComkerUser.class));
+        }).when(userDao).create(any(ComkerUserDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerUser user = (ComkerUser) invocation.getArguments()[0];
+                ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[0];
                 ComkerDataUtil.copyProperties(user, userMap.get(user.getId()));
                 return null;
             }
-        }).when(userDao).update(any(ComkerUser.class));
+        }).when(userDao).update(any(ComkerUserDPO.class));
 
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                ComkerUser user = (ComkerUser) invocation.getArguments()[0];
+                ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[0];
                 if (user != null) {
                     userMap.remove(user.getId());
                     userIdx.remove(user.getId());
                 }
                 return null;
             }
-        }).when(userDao).delete(any(ComkerUser.class));
+        }).when(userDao).delete(any(ComkerUserDPO.class));
     }
 
     @Test
@@ -406,7 +406,7 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_get_user_object_by_username() {
-        ComkerUser source = userMap.get(userIdx.get(1));
+        ComkerUserDPO source = userMap.get(userIdx.get(1));
         ComkerUserDTO result = userStorage.getByUsername(source.getUsername());
         verify(userDao).getByUsername(source.getUsername());
         assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
@@ -420,7 +420,7 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_get_user_object_by_email() {
-        ComkerUser source = userMap.get(userIdx.get(1));
+        ComkerUserDPO source = userMap.get(userIdx.get(1));
         ComkerUserDTO result = userStorage.getByEmail(source.getEmail());
         verify(userDao).getByEmail(source.getEmail());
         assertThat(Arrays.asList(result.getCrewIds()), hasItems(crewIdx.get(1), crewIdx.get(2)));
@@ -498,7 +498,7 @@ public class ComkerUserStorageUnitTest {
 
     @Test
     public void test_update_user_object_with_valid_crewIds() {
-        ComkerUser source = userMap.get(userIdx.get(1));
+        ComkerUserDPO source = userMap.get(userIdx.get(1));
 
         ComkerUserDTO param = new ComkerUserDTO(
                 "updated" + source.getEmail(),

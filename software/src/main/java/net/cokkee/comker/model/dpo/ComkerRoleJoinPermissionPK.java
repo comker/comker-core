@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
@@ -12,12 +13,12 @@ import net.cokkee.comker.model.error.ComkerExceptionExtension;
  * @author drupalex
  */
 @Embeddable
-public class ComkerRoleJoinPermissionPk implements Serializable {
+public class ComkerRoleJoinPermissionPK implements Serializable {
 
-    public ComkerRoleJoinPermissionPk() {
+    public ComkerRoleJoinPermissionPK() {
     }
 
-    public ComkerRoleJoinPermissionPk(ComkerRole role, ComkerPermission permission) {
+    public ComkerRoleJoinPermissionPK(ComkerRoleDPO role, ComkerPermissionDPO permission) {
         if (role == null || permission == null) {
             throw new ComkerInvalidParameterException(
                     "ComkerRoleJoinPermissionPk_role_or_permission_is_null",
@@ -29,26 +30,26 @@ public class ComkerRoleJoinPermissionPk implements Serializable {
         this.permission = permission;
     }
 
-    private ComkerRole role;
-    private ComkerPermission permission;
+    private ComkerRoleDPO role;
+    private ComkerPermissionDPO permission;
 
     @ManyToOne
     @JoinColumn(name="f_role_id")
-    public ComkerRole getRole() {
+    public ComkerRoleDPO getRole() {
         return role;
     }
 
-    public void setRole(ComkerRole role) {
+    public void setRole(ComkerRoleDPO role) {
         this.role = role;
     }
 
     @ManyToOne
     @JoinColumn(name="f_permission_id")
-    public ComkerPermission getPermission() {
+    public ComkerPermissionDPO getPermission() {
         return permission;
     }
 
-    public void setPermission(ComkerPermission permission) {
+    public void setPermission(ComkerPermissionDPO permission) {
         this.permission = permission;
     }
 
@@ -58,7 +59,7 @@ public class ComkerRoleJoinPermissionPk implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ComkerRoleJoinPermissionPk that = (ComkerRoleJoinPermissionPk) o;
+        ComkerRoleJoinPermissionPK that = (ComkerRoleJoinPermissionPK) o;
 
         if (role != null ? !role.equals(that.role) : that.role != null) return false;
         if (permission != null ? !permission.equals(that.permission) : that.permission != null)

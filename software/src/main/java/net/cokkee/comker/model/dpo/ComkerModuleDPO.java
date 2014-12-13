@@ -1,5 +1,6 @@
-package net.cokkee.comker.model.po;
+package net.cokkee.comker.model.dpo;
 
+import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,13 +18,13 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name = "comker_module",
         uniqueConstraints = @UniqueConstraint(columnNames = "f_code"))
-public class ComkerModule extends ComkerAbstractItem {
+public class ComkerModuleDPO extends ComkerAbstractDPO {
 
-    public ComkerModule() {
+    public ComkerModuleDPO() {
         super();
     }
 
-    public ComkerModule(String code, String name, String description) {
+    public ComkerModuleDPO(String code, String name, String description) {
         super();
         this.code = code;
         this.name = name;
