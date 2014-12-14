@@ -1,7 +1,7 @@
 package net.cokkee.comker.model.dto;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -24,16 +24,16 @@ public class ComkerNavNodeViewDTO extends ComkerNavNodeDTO {
         super(code, url, permissions, label, description);
     }
 
-    private Set<ComkerNavNodeViewDTO> children = new HashSet<ComkerNavNodeViewDTO>();
+    private List<ComkerNavNodeViewDTO> children = new ArrayList<ComkerNavNodeViewDTO>();
 
     private String treeId = null;
     private String treeIndent = null;
     
-    public Set<ComkerNavNodeViewDTO> getChildren() {
+    public List<ComkerNavNodeViewDTO> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<ComkerNavNodeViewDTO> children) {
+    public void setChildren(List<ComkerNavNodeViewDTO> children) {
         this.children = children;
     }
 

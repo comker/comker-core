@@ -27,6 +27,7 @@ software/src/main/java/net/cokkee/comker/api/impl/ComkerSpotResourceImpl.java -t
 software/src/main/java/net/cokkee/comker/api/impl/ComkerUserResourceImpl.java -text
 software/src/main/java/net/cokkee/comker/api/impl/ComkerWatchdogResourceImpl.java -text
 software/src/main/java/net/cokkee/comker/controller/ComkerAdmCrewController.java -text
+software/src/main/java/net/cokkee/comker/controller/ComkerAdmNavbarController.java -text
 software/src/main/java/net/cokkee/comker/controller/ComkerAdmPermissionController.java -text
 software/src/main/java/net/cokkee/comker/controller/ComkerAdmRoleController.java -text
 software/src/main/java/net/cokkee/comker/controller/ComkerAdmSpotController.java -text
@@ -224,6 +225,7 @@ software/src/test/java/net/cokkee/comker/controller/ComkerExceptionRaiser.java -
 software/src/test/java/net/cokkee/comker/test/integration/ComkerAdmRoleIntegrationTest.java -text
 software/src/test/java/net/cokkee/comker/test/integration/ComkerSecurityIntegrationTest.java -text
 software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmCrewControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmNavbarControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmPermissionControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmRoleControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmSpotControllerUnitTest.java -text
@@ -269,6 +271,7 @@ software/src/test/resources/test/integration/ComkerSecurityIntegrationTest.xml -
 software/src/test/resources/test/integration/applicationContextIntegrationTest.xml -text
 software/src/test/resources/test/integration/test.properties -text
 software/src/test/resources/test/unit/controller/ComkerAdmCrewControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerAdmNavbarControllerUnitTest.xml -text
 software/src/test/resources/test/unit/controller/ComkerAdmPermissionControllerUnitTest.xml -text
 software/src/test/resources/test/unit/controller/ComkerAdmRoleControllerUnitTest.xml -text
 software/src/test/resources/test/unit/controller/ComkerAdmSpotControllerUnitTest.xml -text

@@ -146,7 +146,7 @@ public class ComkerNavbarStorageImpl implements ComkerNavbarStorage {
                     new String[] {"children"});
 
             Set<ComkerNavbarNodeDPO> childrenDPO = nodeDPO.getChildren();
-            Set<ComkerNavNodeViewDTO> childrenDTO = nodeDTO.getChildren();
+            List<ComkerNavNodeViewDTO> childrenDTO = nodeDTO.getChildren();
             if (childrenDPO == null) continue;
 
             for(ComkerNavbarNodeDPO childDPO:childrenDPO) {
