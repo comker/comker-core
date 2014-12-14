@@ -2,5 +2,4 @@ software/.classpath
 software/.project
 software/.settings
 software/logs
-software/src/test/java/net/cokkee/comker/storage/ComkerRoleStorageConfig.java
 software/target
