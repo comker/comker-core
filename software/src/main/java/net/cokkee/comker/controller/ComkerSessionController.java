@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "session", description = "Session API")
+@Api(value = "comker_session", description = "Session API")
 @Controller
 @RequestMapping("/comker/session")
 public class ComkerSessionController {

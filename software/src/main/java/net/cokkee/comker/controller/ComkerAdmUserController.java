@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "admuser", description = "Administration User API")
+@Api(value = "comker_adm_user", description = "Administration User API")
 @Controller
 @RequestMapping("/comker/adm/user")
 public class ComkerAdmUserController {

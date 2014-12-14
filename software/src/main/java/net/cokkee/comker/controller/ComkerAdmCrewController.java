@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "admcrew", description = "Administration Crew API")
+@Api(value = "comker_adm_crew", description = "Administration Crew API")
 @Controller
 @RequestMapping("/comker/adm/crew")
 public class ComkerAdmCrewController {

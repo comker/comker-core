@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "admwatchdog", description = "Administration Watchdog API")
+@Api(value = "comker_adm_watchdog", description = "Administration Watchdog API")
 @Controller
 @RequestMapping("/comker/adm/watchdog")
 public class ComkerAdmWatchdogController {
