@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.dpo;
 
-import net.cokkee.comker.model.dpo.ComkerCrewDPO;
 import java.io.Serializable;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;

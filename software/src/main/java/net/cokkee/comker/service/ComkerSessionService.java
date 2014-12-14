@@ -11,7 +11,8 @@ public interface ComkerSessionService {
 
     ComkerQueryPager getPager(Class clazz);
 
+    @Deprecated
     ComkerQueryPager getPager(Class clazz, Integer start, Integer limit);
     
-    ComkerQuerySieve getFilter(Class clazz);
+    ComkerQuerySieve getSieve(Class clazz);
 }

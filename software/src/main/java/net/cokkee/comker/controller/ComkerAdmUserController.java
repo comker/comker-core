@@ -3,11 +3,10 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerUserStorage;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/comker/adm/user")
 public class ComkerAdmUserController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmUserController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -55,8 +50,28 @@ public class ComkerAdmUserController {
             @ApiParam(value = "The query that user's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = userStorage.count();
-        List collection = userStorage.findAll(sessionService.getPager(ComkerUserDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = userStorage.count();
+            collection = userStorage.findAll(
+                    sessionService.getPager(ComkerUserDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerUserDTO.class)
+                            .setCriterion("OR_EMAIL", q)
+                            .setCriterion("OR_USERNAME", q)
+                            .setCriterion("OR_FULLNAME", q);
+            
+            total = userStorage.count(sieve);
+            collection = userStorage.findAll(sieve,
+                    sessionService.getPager(ComkerUserDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerUserDTO.Pack(total, collection);
     }
     

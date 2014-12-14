@@ -3,11 +3,10 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerSpotStorage;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/comker/adm/spot")
 public class ComkerAdmSpotController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmSpotController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -55,8 +50,27 @@ public class ComkerAdmSpotController {
             @ApiParam(value = "The query that spot's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = spotStorage.count();
-        List collection = spotStorage.findAll(sessionService.getPager(ComkerSpotDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = spotStorage.count();
+            collection = spotStorage.findAll(
+                    sessionService.getPager(ComkerSpotDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerSpotDTO.class)
+                            .setCriterion("OR_CODE", q)
+                            .setCriterion("OR_NAME", q);
+            
+            total = spotStorage.count(sieve);
+            collection = spotStorage.findAll(sieve,
+                    sessionService.getPager(ComkerSpotDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerSpotDTO.Pack(total, collection);
     }
     

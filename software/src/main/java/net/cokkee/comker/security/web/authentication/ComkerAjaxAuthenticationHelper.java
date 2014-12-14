@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.util.ELRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
+import org.springframework.security.web.util.matcher.ELRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
  *
@@ -35,9 +35,9 @@ public class ComkerAjaxAuthenticationHelper implements InitializingBean {
 
     private RequestMatcher requestMatcher = null;
 
-	public void setRequestMatcher(RequestMatcher requestMatcher) {
-		this.requestMatcher = requestMatcher;
-	}
+    public void setRequestMatcher(RequestMatcher requestMatcher) {
+        this.requestMatcher = requestMatcher;
+    }
 
     private Gson gson = new Gson();
 

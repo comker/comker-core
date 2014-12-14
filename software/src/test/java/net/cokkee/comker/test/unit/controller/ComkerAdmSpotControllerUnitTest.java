@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import net.cokkee.comker.controller.ComkerAdmRoleController;
+import net.cokkee.comker.controller.ComkerAdmSpotController;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
-import net.cokkee.comker.model.dto.ComkerRoleDTO;
+import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import net.cokkee.comker.storage.ComkerRoleStorage;
+import net.cokkee.comker.storage.ComkerSpotStorage;
 import net.cokkee.comker.util.ComkerDataUtil;
 
 import org.junit.runner.RunWith;
@@ -49,12 +49,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmRoleControllerUnitTest.xml")
-public class ComkerAdmRoleControllerUnitTest {
+@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmSpotControllerUnitTest.xml")
+public class ComkerAdmSpotControllerUnitTest {
     
     @Autowired
     @InjectMocks
-    private ComkerAdmRoleController controller;
+    private ComkerAdmSpotController controller;
     
     @Autowired
     private WebApplicationContext wac;
@@ -63,7 +63,7 @@ public class ComkerAdmRoleControllerUnitTest {
     private ComkerSessionService sessionService;
     
     @Mock
-    private ComkerRoleStorage roleStorage;
+    private ComkerSpotStorage spotStorage;
     
     protected MockMvc mockMvc;
     
@@ -77,47 +77,47 @@ public class ComkerAdmRoleControllerUnitTest {
     }
     
     @Test
-    public void getRoleList_default() throws Exception {
+    public void getSpotList_default() throws Exception {
  
         ComkerQueryPager pager = new ComkerQueryPager();
         
-        Mockito.when(sessionService.getPager(ComkerRoleDTO.class)).thenReturn(pager);
+        Mockito.when(sessionService.getPager(ComkerSpotDTO.class)).thenReturn(pager);
         
-        List<ComkerRoleDTO> list = new ArrayList<ComkerRoleDTO>();
+        List<ComkerSpotDTO> list = new ArrayList<ComkerSpotDTO>();
         
         for(int i=0; i<4; i++) {
-            ComkerRoleDTO target = new ComkerRoleDTO(
-                    "ROLE_CODE_" + i,
-                    "Role name #" + i,
-                    "Role Description #" + i);
+            ComkerSpotDTO target = new ComkerSpotDTO(
+                    "SPOT_CODE_" + i,
+                    "Spot name #" + i,
+                    "Spot Description #" + i);
             target.setId(UUID.randomUUID().toString());
             switch(i) {
                 case 0:
-                    target.setPermissionIds(null);
+                    target.setModuleIds(null);
                     break;
                 case 1:
                 case 2:
-                    target.setPermissionIds(new String[] {
-                        "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
+                    target.setModuleIds(new String[] {
+                        "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
                     });
                     break;
                 case 3:
-                    target.setPermissionIds(new String[] {});
+                    target.setModuleIds(new String[] {});
                     break;
             }
             list.add(target);
         }
                 
-        Mockito.when(roleStorage.count()).thenReturn(list.size());
-        Mockito.when(roleStorage.findAll(pager)).thenReturn(list);
+        Mockito.when(spotStorage.count()).thenReturn(list.size());
+        Mockito.when(spotStorage.findAll(pager)).thenReturn(list);
  
-        ResultActions result = mockMvc.perform(get("/comker/adm/role"));
+        ResultActions result = mockMvc.perform(get("/comker/adm/spot"));
         
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
         
         for(int i=0; i<4; i++) {
-            ComkerRoleDTO t = list.get(i);
+            ComkerSpotDTO t = list.get(i);
             result
                 .andExpect(jsonPath("$.collection[" + i + "].id", Matchers.is(t.getId())))
                 .andExpect(jsonPath("$.collection[" + i + "].code", Matchers.is(t.getCode())))
@@ -126,37 +126,37 @@ public class ComkerAdmRoleControllerUnitTest {
         }
         
         result
-            .andExpect(jsonPath("$.collection[1].permissionIds", Matchers.hasSize(4)))
-            .andExpect(jsonPath("$.collection[1].permissionIds[0]", Matchers.is(list.get(1).getPermissionIds()[0])))
-            .andExpect(jsonPath("$.collection[1].permissionIds[3]", Matchers.is(list.get(1).getPermissionIds()[3])));
+            .andExpect(jsonPath("$.collection[1].moduleIds", Matchers.hasSize(4)))
+            .andExpect(jsonPath("$.collection[1].moduleIds[0]", Matchers.is(list.get(1).getModuleIds()[0])))
+            .andExpect(jsonPath("$.collection[1].moduleIds[3]", Matchers.is(list.get(1).getModuleIds()[3])));
         
-        result.andExpect(jsonPath("$.collection[3].permissionIds", Matchers.hasSize(0)));
+        result.andExpect(jsonPath("$.collection[3].moduleIds", Matchers.hasSize(0)));
         
-        Mockito.verify(sessionService, Mockito.times(1)).getPager(ComkerRoleDTO.class);
-        Mockito.verify(roleStorage, Mockito.times(1)).count();
-        Mockito.verify(roleStorage, Mockito.times(1)).findAll(pager);
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(sessionService, Mockito.times(1)).getPager(ComkerSpotDTO.class);
+        Mockito.verify(spotStorage, Mockito.times(1)).count();
+        Mockito.verify(spotStorage, Mockito.times(1)).findAll(pager);
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     
     @Test
-    public void getRoleList_with_sieve_and_pager() throws Exception {
+    public void getSpotList_with_sieve_and_pager() throws Exception {
  
         ComkerQueryPager pager = new ComkerQueryPager();
         ComkerQuerySieve sieve = new ComkerQuerySieve();
         
-        Mockito.when(sessionService.getPager(ComkerRoleDTO.class)).thenReturn(pager);
-        Mockito.when(sessionService.getSieve(ComkerRoleDTO.class)).thenReturn(sieve);
+        Mockito.when(sessionService.getPager(ComkerSpotDTO.class)).thenReturn(pager);
+        Mockito.when(sessionService.getSieve(ComkerSpotDTO.class)).thenReturn(sieve);
         
-        List<ComkerRoleDTO> list = new ArrayList<ComkerRoleDTO>();
+        List<ComkerSpotDTO> list = new ArrayList<ComkerSpotDTO>();
         
-        Mockito.when(roleStorage.count()).thenReturn(list.size());
-        Mockito.when(roleStorage.findAll(pager)).thenReturn(list);
+        Mockito.when(spotStorage.count()).thenReturn(list.size());
+        Mockito.when(spotStorage.findAll(pager)).thenReturn(list);
  
-        ResultActions result = mockMvc.perform(get("/comker/adm/role")
+        ResultActions result = mockMvc.perform(get("/comker/adm/spot")
                 .param("start", "1")
                 .param("limit", "10")
-                .param("q", "Role"));
+                .param("q", "Spot"));
         
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -167,98 +167,98 @@ public class ComkerAdmRoleControllerUnitTest {
         
         Assert.assertEquals(pager.getStart(), new Integer(1));
         Assert.assertEquals(pager.getLimit(), new Integer(10));
-        Assert.assertEquals(sieve.getCriterion("OR_CODE"), "Role");
-        Assert.assertEquals(sieve.getCriterion("OR_NAME"), "Role");
+        Assert.assertEquals(sieve.getCriterion("OR_CODE"), "Spot");
+        Assert.assertEquals(sieve.getCriterion("OR_NAME"), "Spot");
         
-        Mockito.verify(sessionService, Mockito.times(1)).getPager(ComkerRoleDTO.class);
-        Mockito.verify(sessionService, Mockito.times(1)).getSieve(ComkerRoleDTO.class);
-        Mockito.verify(roleStorage, Mockito.times(1)).count(sieve);
-        Mockito.verify(roleStorage, Mockito.times(1)).findAll(sieve, pager);
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(sessionService, Mockito.times(1)).getPager(ComkerSpotDTO.class);
+        Mockito.verify(sessionService, Mockito.times(1)).getSieve(ComkerSpotDTO.class);
+        Mockito.verify(spotStorage, Mockito.times(1)).count(sieve);
+        Mockito.verify(spotStorage, Mockito.times(1)).findAll(sieve, pager);
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     
     @Test
-    public void getRole_Found_ShouldReturnFoundRole() throws Exception {
+    public void getSpot_Found_ShouldReturnFoundSpot() throws Exception {
  
-        ComkerRoleDTO target = new ComkerRoleDTO(
-                "ROLE_CODE", 
-                "Role name", 
-                "Role Description");
+        ComkerSpotDTO target = new ComkerSpotDTO(
+                "SPOT_CODE", 
+                "Spot name", 
+                "Spot Description");
         target.setId(UUID.randomUUID().toString());
-        target.setPermissionIds(new String[] {
-            "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
+        target.setModuleIds(new String[] {
+            "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
         });
         
-        Mockito.when(roleStorage.get(target.getId())).thenReturn(target);
+        Mockito.when(spotStorage.get(target.getId())).thenReturn(target);
  
-        mockMvc.perform(get("/comker/adm/role/{id}", target.getId()))
+        mockMvc.perform(get("/comker/adm/spot/{id}", target.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
                 .andExpect(jsonPath("$.code", Matchers.is(target.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(target.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(target.getDescription())))
-                .andExpect(jsonPath("$.permissionIds", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$.permissionIds[0]", Matchers.is(target.getPermissionIds()[0])))
-                .andExpect(jsonPath("$.permissionIds[3]", Matchers.is(target.getPermissionIds()[3])))
+                .andExpect(jsonPath("$.moduleIds", Matchers.hasSize(4)))
+                .andExpect(jsonPath("$.moduleIds[0]", Matchers.is(target.getModuleIds()[0])))
+                .andExpect(jsonPath("$.moduleIds[3]", Matchers.is(target.getModuleIds()[3])))
                 .andReturn();
          
-        Mockito.verify(roleStorage, Mockito.times(1)).get(target.getId());
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(spotStorage, Mockito.times(1)).get(target.getId());
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     @Test
-    public void getRole_NotFound_ShouldReturnErrorInfo() throws Exception {
+    public void getSpot_NotFound_ShouldReturnErrorInfo() throws Exception {
         String id = UUID.randomUUID().toString();
-        Mockito.when(roleStorage.get(id)).thenThrow(
+        Mockito.when(spotStorage.get(id)).thenThrow(
                 new ComkerObjectNotFoundException(
-                    "role_with__id__not_found",
-                    new ComkerExceptionExtension("error.role_with__id__not_found", 
+                    "spot_with__id__not_found",
+                    new ComkerExceptionExtension("error.spot_with__id__not_found", 
                             new Object[] {id}, 
-                            MessageFormat.format("Role object with id:{0} not found", 
+                            MessageFormat.format("Spot object with id:{0} not found", 
                                     new Object[] {id}))));
         
-        mockMvc.perform(get("/comker/adm/role/{id}", id))
+        mockMvc.perform(get("/comker/adm/spot/{id}", id))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.clazz", Matchers.is("ComkerObjectNotFoundException")))
-                .andExpect(jsonPath("$.label", Matchers.is("role_with__id__not_found")))
+                .andExpect(jsonPath("$.label", Matchers.is("spot_with__id__not_found")))
                 //.andDo(print())
                 .andReturn();
         
-        Mockito.verify(roleStorage, Mockito.times(1)).get(id);
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(spotStorage, Mockito.times(1)).get(id);
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     @Test
-    public void createRole_ok() throws Exception {
-        final ComkerRoleDTO source = new ComkerRoleDTO(
-                "ROLE_1",
-                "Role 1",
-                "Description Role 1");
-        source.setPermissionIds(new String[] {
-            "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
+    public void createSpot_ok() throws Exception {
+        final ComkerSpotDTO source = new ComkerSpotDTO(
+                "SPOT_1",
+                "Spot 1",
+                "Description Spot 1");
+        source.setModuleIds(new String[] {
+            "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
         });
         
         final String targetId = UUID.randomUUID().toString();
         
-        Mockito.when(roleStorage.create(Mockito.any(ComkerRoleDTO.class)))
-                .thenAnswer(new Answer<ComkerRoleDTO>() {
+        Mockito.when(spotStorage.create(Mockito.any(ComkerSpotDTO.class)))
+                .thenAnswer(new Answer<ComkerSpotDTO>() {
                     @Override
-                    public ComkerRoleDTO answer(InvocationOnMock invocation) throws Throwable {
-                        ComkerRoleDTO input = (ComkerRoleDTO) invocation.getArguments()[0];
-                        ComkerRoleDTO target = new ComkerRoleDTO(
+                    public ComkerSpotDTO answer(InvocationOnMock invocation) throws Throwable {
+                        ComkerSpotDTO input = (ComkerSpotDTO) invocation.getArguments()[0];
+                        ComkerSpotDTO target = new ComkerSpotDTO(
                                 input.getCode(),
                                 input.getName(),
                                 input.getDescription());
                         target.setId(targetId);
-                        target.setPermissionIds(input.getPermissionIds());
+                        target.setModuleIds(input.getModuleIds());
                         return target;
                     }
                 });
         
-        mockMvc.perform(post("/comker/adm/role")
+        mockMvc.perform(post("/comker/adm/spot")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
@@ -267,52 +267,52 @@ public class ComkerAdmRoleControllerUnitTest {
                 .andExpect(jsonPath("$.code", Matchers.is(source.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(source.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(source.getDescription())))
-                .andExpect(jsonPath("$.permissionIds", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$.permissionIds[0]", Matchers.is(source.getPermissionIds()[0])))
-                .andExpect(jsonPath("$.permissionIds[3]", Matchers.is(source.getPermissionIds()[3])))
+                .andExpect(jsonPath("$.moduleIds", Matchers.hasSize(4)))
+                .andExpect(jsonPath("$.moduleIds[0]", Matchers.is(source.getModuleIds()[0])))
+                .andExpect(jsonPath("$.moduleIds[3]", Matchers.is(source.getModuleIds()[3])))
                 //.andDo(print())
                 .andReturn();
         
-        Mockito.verify(roleStorage, Mockito.times(1)).create(Mockito.any(ComkerRoleDTO.class));
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(spotStorage, Mockito.times(1)).create(Mockito.any(ComkerSpotDTO.class));
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     @Test
-    public void updateRole_ok() throws Exception {
-        final ComkerRoleDTO source = new ComkerRoleDTO(
-                "ROLE_1",
-                "Role 1",
-                "Description Role 1");
+    public void updateSpot_ok() throws Exception {
+        final ComkerSpotDTO source = new ComkerSpotDTO(
+                "SPOT_1",
+                "Spot 1",
+                "Description Spot 1");
         source.setId(UUID.randomUUID().toString());
-        source.setPermissionIds(new String[] {
-            "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
+        source.setModuleIds(new String[] {
+            "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
         });
         
-        final ComkerRoleDTO target = new ComkerRoleDTO(
+        final ComkerSpotDTO target = new ComkerSpotDTO(
                                 source.getCode(),
                                 source.getName(),
                                 source.getDescription());
         target.setId(source.getId());
-        target.setPermissionIds(new String[] {
-            "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
+        target.setModuleIds(new String[] {
+            "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
         });
  
         Mockito.doAnswer(new Answer() {
                     @Override
                     public Object answer(InvocationOnMock invocation) throws Throwable {
-                        ComkerRoleDTO input = (ComkerRoleDTO) invocation.getArguments()[0];
+                        ComkerSpotDTO input = (ComkerSpotDTO) invocation.getArguments()[0];
                         Assert.assertEquals(source.getId(), input.getId());
                         Assert.assertEquals(source.getCode(), input.getCode());
                         Assert.assertEquals(source.getName(), input.getName());
                         Assert.assertEquals(source.getDescription(), input.getDescription());
-                        Assert.assertArrayEquals(source.getPermissionIds(), input.getPermissionIds());
+                        Assert.assertArrayEquals(source.getModuleIds(), input.getModuleIds());
                         return null;
                     }
-                }).when(roleStorage).update(Mockito.any(ComkerRoleDTO.class));
+                }).when(spotStorage).update(Mockito.any(ComkerSpotDTO.class));
         
-        Mockito.when(roleStorage.get(source.getId())).thenReturn(target);
+        Mockito.when(spotStorage.get(source.getId())).thenReturn(target);
         
-        mockMvc.perform(put("/comker/adm/role/{id}", source.getId())
+        mockMvc.perform(put("/comker/adm/spot/{id}", source.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
@@ -321,46 +321,46 @@ public class ComkerAdmRoleControllerUnitTest {
                 .andExpect(jsonPath("$.code", Matchers.is(source.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(source.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(source.getDescription())))
-                .andExpect(jsonPath("$.permissionIds", Matchers.hasSize(4)))
-                .andExpect(jsonPath("$.permissionIds[0]", Matchers.is(source.getPermissionIds()[0])))
-                .andExpect(jsonPath("$.permissionIds[3]", Matchers.is(source.getPermissionIds()[3])))
+                .andExpect(jsonPath("$.moduleIds", Matchers.hasSize(4)))
+                .andExpect(jsonPath("$.moduleIds[0]", Matchers.is(source.getModuleIds()[0])))
+                .andExpect(jsonPath("$.moduleIds[3]", Matchers.is(source.getModuleIds()[3])))
                 //.andDo(print())
                 .andReturn();
         
-        Mockito.verify(roleStorage, Mockito.times(1)).update(Mockito.any(ComkerRoleDTO.class));
-        Mockito.verify(roleStorage, Mockito.times(1)).get(source.getId());
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(spotStorage, Mockito.times(1)).update(Mockito.any(ComkerSpotDTO.class));
+        Mockito.verify(spotStorage, Mockito.times(1)).get(source.getId());
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
     @Test
-    public void deleteRole_ok() throws Exception {
+    public void deleteSpot_ok() throws Exception {
  
-        final ComkerRoleDTO target = new ComkerRoleDTO(
-                "ROLE_CODE", 
-                "Role name", 
-                "Role Description");
+        final ComkerSpotDTO target = new ComkerSpotDTO(
+                "SPOT_CODE", 
+                "Spot name", 
+                "Spot Description");
         target.setId(UUID.randomUUID().toString());
-        target.setPermissionIds(new String[] {
-            "PERMISSION_1"
+        target.setModuleIds(new String[] {
+            "MODULE_1"
         });
         
-        Mockito.when(roleStorage.get(target.getId())).thenReturn(target);
-        Mockito.doNothing().when(roleStorage).delete(target.getId());
+        Mockito.when(spotStorage.get(target.getId())).thenReturn(target);
+        Mockito.doNothing().when(spotStorage).delete(target.getId());
  
-        mockMvc.perform(delete("/comker/adm/role/{id}", target.getId()))
+        mockMvc.perform(delete("/comker/adm/spot/{id}", target.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
                 .andExpect(jsonPath("$.code", Matchers.is(target.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(target.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(target.getDescription())))
-                .andExpect(jsonPath("$.permissionIds", Matchers.hasSize(1)))
-                .andExpect(jsonPath("$.permissionIds[0]", Matchers.is(target.getPermissionIds()[0])))
+                .andExpect(jsonPath("$.moduleIds", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.moduleIds[0]", Matchers.is(target.getModuleIds()[0])))
                 //.andDo(print())
                 .andReturn();
  
-        Mockito.verify(roleStorage, Mockito.times(1)).get(target.getId());
-        Mockito.verify(roleStorage, Mockito.times(1)).delete(target.getId());
-        Mockito.verifyNoMoreInteractions(roleStorage);
+        Mockito.verify(spotStorage, Mockito.times(1)).get(target.getId());
+        Mockito.verify(spotStorage, Mockito.times(1)).delete(target.getId());
+        Mockito.verifyNoMoreInteractions(spotStorage);
     }
 }

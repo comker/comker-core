@@ -165,12 +165,12 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     private void loadAggregationRefs(ComkerRoleDPO dbItem, ComkerRoleDTO poItem) {
         if (dbItem == null || poItem == null) return;
-        List<String> idsOfPermissionList = new ArrayList<String>();
+        List<String> permissionIds = new ArrayList<String>();
         List<ComkerRoleJoinPermissionDPO> list = dbItem.getRoleJoinPermissionList();
         for(ComkerRoleJoinPermissionDPO item:list) {
-            idsOfPermissionList.add(item.getPermission().getId());
+            permissionIds.add(item.getPermission().getId());
         }
-        poItem.setPermissionIds(idsOfPermissionList.toArray(new String[0]));
+        poItem.setPermissionIds(permissionIds.toArray(new String[0]));
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

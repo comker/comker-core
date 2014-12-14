@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.dpo;
 
-import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;

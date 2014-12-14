@@ -220,6 +220,7 @@ software/src/test/java/net/cokkee/comker/api/ComkerRoleResourceUnitTest.java -te
 software/src/test/java/net/cokkee/comker/api/ComkerSessionResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerSpotResourceUnitTest.java -text
 software/src/test/java/net/cokkee/comker/api/ComkerUserResourceUnitTest.java -text
+software/src/test/java/net/cokkee/comker/controller/ComkerExceptionRaiser.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerAbstractDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerCrewDaoUnitTest.java -text
 software/src/test/java/net/cokkee/comker/dao/ComkerModuleDaoUnitTest.java -text
@@ -240,7 +241,14 @@ software/src/test/java/net/cokkee/comker/storage/ComkerSpotStorageUnitTest.java 
 software/src/test/java/net/cokkee/comker/storage/ComkerUserStorageUnitTest.java -text
 software/src/test/java/net/cokkee/comker/test/integration/ComkerAdmRoleIntegrationTest.java -text
 software/src/test/java/net/cokkee/comker/test/integration/ComkerSecurityIntegrationTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmCrewControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmPermissionControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmRoleControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmSpotControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmUserControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerAdmWatchdogControllerUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerExceptionRaiserUnitTest.java -text
+software/src/test/java/net/cokkee/comker/test/unit/controller/ComkerSessionControllerUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerCrewValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerPermissionValidatorUnitTest.java -text
 software/src/test/java/net/cokkee/comker/validation/ComkerRoleValidatorUnitTest.java -text
@@ -274,5 +282,12 @@ software/src/test/resources/test/integration/ComkerAdmRoleIntegrationTest.xml -t
 software/src/test/resources/test/integration/ComkerSecurityIntegrationTest.xml -text
 software/src/test/resources/test/integration/applicationContextIntegrationTest.xml -text
 software/src/test/resources/test/integration/test.properties -text
+software/src/test/resources/test/unit/controller/ComkerAdmCrewControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerAdmPermissionControllerUnitTest.xml -text
 software/src/test/resources/test/unit/controller/ComkerAdmRoleControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerAdmSpotControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerAdmUserControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerAdmWatchdogControllerUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerExceptionRaiserUnitTest.xml -text
+software/src/test/resources/test/unit/controller/ComkerSessionControllerUnitTest.xml -text
 software/src/test/resources/test/unit/controller/applicationContextControllerUnitTest.xml -text

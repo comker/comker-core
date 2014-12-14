@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,7 +26,6 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
     private String name;
     private String description;
     private String[] permissionIds;
-    private List<String> idsOfPermissionList = new ArrayList<String>();
 
     public String getId() {
         return id;
@@ -68,14 +66,6 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
 
     public void setPermissionIds(String[] permissionIds) {
         this.permissionIds = permissionIds;
-    }
-
-    public List<String> getIdsOfPermissionList() {
-        return idsOfPermissionList;
-    }
-
-    public void setIdsOfPermissionList(List<String> idsOfPermissionList) {
-        this.idsOfPermissionList = idsOfPermissionList;
     }
 
     @XmlRootElement

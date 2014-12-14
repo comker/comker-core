@@ -3,6 +3,8 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
+import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.service.ComkerSessionService;
@@ -21,10 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/comker/adm/watchdog")
 public class ComkerAdmWatchdogController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmWatchdogController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -55,8 +53,28 @@ public class ComkerAdmWatchdogController {
             @ApiParam(value = "The query that watchdog's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = watchdogStorage.count();
-        List collection = watchdogStorage.findAll(sessionService.getPager(ComkerWatchdogDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = watchdogStorage.count();
+            collection = watchdogStorage.findAll(
+                    sessionService.getPager(ComkerWatchdogDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerWatchdogDTO.class)
+                            .setCriterion("OR_USERNAME", q)
+                            .setCriterion("OR_METHOD_NAME", q)
+                            .setCriterion("OR_COMMENT", q);
+            
+            total = watchdogStorage.count(sieve);
+            collection = watchdogStorage.findAll(sieve,
+                    sessionService.getPager(ComkerWatchdogDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerWatchdogDTO.Pack(total, collection);
     }
     

@@ -1,7 +1,5 @@
 package net.cokkee.comker.model.dpo;
 
-import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
-import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import javax.persistence.AssociationOverride;
 import javax.persistence.AssociationOverrides;
 import javax.persistence.EmbeddedId;

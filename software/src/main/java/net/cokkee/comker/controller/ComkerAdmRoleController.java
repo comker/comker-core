@@ -3,12 +3,12 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerRoleStorage;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "admrole", description = "Administration Role API")
+@Api(value = "comker_adm_role", description = "Administration Role API")
 @Controller
 @RequestMapping("/comker/adm/role")
 public class ComkerAdmRoleController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmRoleController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -46,7 +42,8 @@ public class ComkerAdmRoleController {
             value = "List all of roles",
             notes = "Returns list of roles",
             response = ComkerRoleDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO.Pack getRoleList(
             @ApiParam(value = "The begin position to get Roles", required = false)
             @RequestParam(value="start", required=false) Integer start,
@@ -55,8 +52,27 @@ public class ComkerAdmRoleController {
             @ApiParam(value = "The query that role's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = roleStorage.count();
-        List collection = roleStorage.findAll(sessionService.getPager(ComkerRoleDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = roleStorage.count();
+            collection = roleStorage.findAll(
+                    sessionService.getPager(ComkerRoleDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerRoleDTO.class)
+                            .setCriterion("OR_CODE", q)
+                            .setCriterion("OR_NAME", q);
+            
+            total = roleStorage.count(sieve);
+            collection = roleStorage.findAll(sieve,
+                    sessionService.getPager(ComkerRoleDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerRoleDTO.Pack(total, collection);
     }
     
@@ -66,7 +82,8 @@ public class ComkerAdmRoleController {
             response = ComkerRoleDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Role not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO getRole(
             @ApiParam(value = "ID of role that needs to be fetched", required = true) 
             @PathVariable String id) {
@@ -79,8 +96,8 @@ public class ComkerAdmRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.POST, value = "", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO createRole(
             @ApiParam(value = "Role object that needs to be added to the store", required = true)
             @RequestBody ComkerRoleDTO item) {
@@ -94,8 +111,8 @@ public class ComkerAdmRoleController {
             @ApiResponse(code = 404, message = "Role not found"),
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO updateRole(
             @ApiParam(value = "ID of role that needs to be updated", required = true)
             @PathVariable String id, 
@@ -113,7 +130,8 @@ public class ComkerAdmRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Role not found"),
             @ApiResponse(code = 409, message = "Conflict on database updating")})
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO deleteRole(
             @ApiParam(value = "ID of role that needs to be deleted", required = true)
             @PathVariable String id) {

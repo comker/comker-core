@@ -3,11 +3,10 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerPermissionStorage;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/comker/adm/permission")
 public class ComkerAdmPermissionController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmPermissionController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -55,8 +50,26 @@ public class ComkerAdmPermissionController {
             @ApiParam(value = "The query that permission's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = permissionStorage.count();
-        List collection = permissionStorage.findAll(sessionService.getPager(ComkerPermissionDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = permissionStorage.count();
+            collection = permissionStorage.findAll(
+                    sessionService.getPager(ComkerPermissionDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerPermissionDTO.class)
+                            .setCriterion("OR_AUTHORITY", q);
+            
+            total = permissionStorage.count(sieve);
+            collection = permissionStorage.findAll(sieve,
+                    sessionService.getPager(ComkerPermissionDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerPermissionDTO.Pack(total, collection);
     }
     

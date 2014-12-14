@@ -3,11 +3,10 @@ package net.cokkee.comker.controller;
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
+import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerCrewStorage;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/comker/adm/crew")
 public class ComkerAdmCrewController {
-
-    private static final Logger log = LoggerFactory.getLogger(ComkerAdmCrewController.class);
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     private ComkerSessionService sessionService = null;
 
@@ -55,8 +50,26 @@ public class ComkerAdmCrewController {
             @ApiParam(value = "The query that crew's name should be matched", required = false)
             @RequestParam(value="q", required=false) String q) {
 
-        Integer total = crewStorage.count();
-        List collection = crewStorage.findAll(sessionService.getPager(ComkerCrewDTO.class, start, limit));
+        Integer total;
+        List collection;
+        
+        if (q == null) {
+            total = crewStorage.count();
+            collection = crewStorage.findAll(
+                    sessionService.getPager(ComkerCrewDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        } else {
+            ComkerQuerySieve sieve = sessionService.getSieve(ComkerCrewDTO.class)
+                            .setCriterion("OR_NAME", q);
+            
+            total = crewStorage.count(sieve);
+            collection = crewStorage.findAll(sieve,
+                    sessionService.getPager(ComkerCrewDTO.class)
+                            .updateStart(start)
+                            .updateLimit(limit));
+        }
+        
         return new ComkerCrewDTO.Pack(total, collection);
     }
     

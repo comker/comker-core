@@ -12,7 +12,7 @@ import net.cokkee.comker.service.ComkerSessionService;
  */
 public class ComkerSessionServiceImpl implements ComkerSessionService {
 
-    private Map<Class,ComkerQueryPager> pagers = new HashMap<Class, ComkerQueryPager>();
+    private final Map<Class,ComkerQueryPager> pagers = new HashMap<Class, ComkerQueryPager>();
 
     @Override
     public ComkerQueryPager getPager(Class clazz) {
@@ -28,6 +28,7 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
     }
 
     @Override
+    @Deprecated
     public ComkerQueryPager getPager(Class clazz, Integer start, Integer limit) {
         ComkerQueryPager pager = getPager(clazz);
         if (start != null) pager.setStart(start);
@@ -37,18 +38,18 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
 
     //----------------------------------------------------------------------
 
-    private final Map<Class, ComkerQuerySieve> filters = new HashMap<Class, ComkerQuerySieve>();
+    private final Map<Class, ComkerQuerySieve> sieves = new HashMap<Class, ComkerQuerySieve>();
 
     @Override
-    public ComkerQuerySieve getFilter(Class clazz) {
+    public ComkerQuerySieve getSieve(Class clazz) {
         if (clazz == null) return null;
 
-        ComkerQuerySieve filter = filters.get(clazz);
-        if (filter == null) {
-            filter = new ComkerQuerySieve();
-            filters.put(clazz, filter);
+        ComkerQuerySieve sieve = sieves.get(clazz);
+        if (sieve == null) {
+            sieve = new ComkerQuerySieve();
+            sieves.put(clazz, sieve);
         }
 
-        return filter;
+        return sieve;
     }
 }
