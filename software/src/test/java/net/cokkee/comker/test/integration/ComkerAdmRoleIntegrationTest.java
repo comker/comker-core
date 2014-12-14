@@ -79,7 +79,7 @@ public class ComkerAdmRoleIntegrationTest {
     //@Test
     public void getRole_Found_ShouldReturnFoundRole() throws Exception {
  
-        MvcResult result = mockMvc.perform(get("/adm/role/"))
+        MvcResult result = mockMvc.perform(get("/comker/adm/role/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.total", Matchers.is(4)))
 //                .andExpect(jsonPath("$.collection", Matchers.is(roleObject.getCode())))
@@ -96,7 +96,7 @@ public class ComkerAdmRoleIntegrationTest {
     @Test
     public void getRole_Found_ShouldReturnFoundRole_notFound() throws Exception {
  
-        MvcResult result = mockMvc.perform(get("/adm/role/abcdef-unknown"))
+        MvcResult result = mockMvc.perform(get("/comker/adm/role/abcdef-unknown"))
                 //.andExpect(status().isOk())
                 //.andExpect(jsonPath("$.total", Matchers.is(4)))
 //                .andExpect(jsonPath("$.collection", Matchers.is(roleObject.getCode())))

@@ -120,6 +120,7 @@
         <property name="loginFormUrl" value="/comker/#auth/login"/>
     </bean>
 
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
     <bean id="comkerAjaxFormLoginFilter"
             class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">

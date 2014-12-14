@@ -32,7 +32,7 @@
 
     <bean id="comkerExceptionTransformer"
             class="net.cokkee.comker.service.impl.ComkerExceptionTransformerImpl">
-        <property name="localeMessageService" ref="comkerLocaleMessageService"/>
+        <property name="localizationService" ref="comkerLocalizationService"/>
     </bean>
     
     <bean id="comkerJaxbProvider"
@@ -79,8 +79,8 @@
 		</cxf:inFaultInterceptors>
 	</cxf:bus>
 
-    <bean id="comkerLocaleMessageService"
-            class="net.cokkee.comker.service.impl.ComkerLocaleMessageServiceImpl">
+    <bean id="comkerLocalizationService"
+            class="net.cokkee.comker.service.impl.ComkerLocalizationServiceImpl">
         <property name="messageSource" ref="comkerMessageSource"/>
     </bean>
 

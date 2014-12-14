@@ -10,7 +10,7 @@ import net.cokkee.comker.model.error.ComkerExceptionResponse;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.error.ComkerFieldError;
 import net.cokkee.comker.service.ComkerExceptionTransformer;
-import net.cokkee.comker.service.ComkerLocaleMessageService;
+import net.cokkee.comker.service.ComkerLocalizationService;
 import net.cokkee.comker.util.ComkerDataUtil;
 
 import org.slf4j.Logger;
@@ -21,10 +21,10 @@ public class ComkerExceptionTransformerImpl implements ComkerExceptionTransforme
 
     private static final Logger log = LoggerFactory.getLogger(ComkerExceptionTransformerImpl.class);
 
-    private ComkerLocaleMessageService localeMessageService = null;
+    private ComkerLocalizationService localizationService = null;
 
-    public void setLocaleMessageService(ComkerLocaleMessageService localeMessageService) {
-        this.localeMessageService = localeMessageService;
+    public void setLocalizationService(ComkerLocalizationService localizationService) {
+        this.localizationService = localizationService;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ComkerExceptionTransformerImpl implements ComkerExceptionTransforme
             ComkerExceptionExtension ext = exception.getExtension();
             
             if (ext != null) {
-                resp.setMessage(localeMessageService.getMessage(
+                resp.setMessage(localizationService.getMessage(
                         ext.getCode(), ext.getArguments(), ext.getDefaultMessage()));
             }
             

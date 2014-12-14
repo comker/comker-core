@@ -129,7 +129,7 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
-    <bean id="comkerAuditEntityDao" class="net.cokkee.comker.dao.impl.ComkerAuditEntityDaoHibernate">
+    <bean id="comkerVersionDao" class="net.cokkee.comker.dao.impl.ComkerVersionDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
     
