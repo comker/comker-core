@@ -15,7 +15,7 @@
     <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/interceptor-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
-    <import resource="classpath:META-INF/bootstrap/comker/manager-context.xml" />
+    <import resource="classpath:META-INF/bootstrap/comker/storage-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
 
 </beans>
