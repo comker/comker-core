@@ -20,7 +20,7 @@ import org.springframework.core.task.TaskExecutor;
  */
 public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerWatchdogInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerWatchdogInterceptor.class);
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

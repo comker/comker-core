@@ -2,8 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:util="http://www.springframework.org/schema/util"
-  xmlns:cxf="http://cxf.apache.org/core"
-  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="
         http://www.springframework.org/schema/beans
@@ -11,44 +9,13 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/util
-        http://www.springframework.org/schema/util/spring-util.xsd
-        http://cxf.apache.org/core
-        http://cxf.apache.org/schemas/core.xsd
-        http://cxf.apache.org/jaxrs
-        http://cxf.apache.org/schemas/jaxrs.xsd">
+        http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <import resource="classpath:META-INF/cxf/cxf.xml" />
-    
     <import resource="classpath:META-INF/bootstrap/comker/orm-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/dao-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/interceptor-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/service-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/manager-context.xml" />
-    <import resource="classpath:META-INF/bootstrap/comker/resource-context.xml" />
     <import resource="classpath:META-INF/bootstrap/comker/security-context.xml" />
-    <import resource="classpath:META-INF/bootstrap/comker/cxf-context.xml" />
 
-    <context:component-scan base-package="net.cokkee.comker" />
-
-    <jaxrs:server id="comkerApiService" address="/comker/api">
-        <jaxrs:serviceBeans>
-            <ref bean="comkerAuthResource" />
-            <ref bean="comkerUserResource" />
-            <ref bean="comkerCrewResource" />
-            <ref bean="comkerSpotResource" />
-            <ref bean="comkerRoleResource" />
-            <ref bean="comkerPermissionResource" />
-            <ref bean="comkerNavbarResource" />
-            <ref bean="comkerSessionResource" />
-            <ref bean="comkerWatchdogResource" />
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="comkerJaxbProvider" />
-            <ref bean="comkerJsonProvider" />
-            <ref bean="comkerExceptionMapper" />
-        </jaxrs:providers>
-        <jaxrs:features>
-            <cxf:logging/>
-        </jaxrs:features>
-    </jaxrs:server>
 </beans>
