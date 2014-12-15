@@ -28,14 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ComkerUserDaoHibernate extends ComkerAbstractDaoHibernate
         implements ComkerUserDao {
 
-    private ComkerCrewDao crewDao = null;
-
-    public void setCrewDao(ComkerCrewDao crewDao) {
-        this.crewDao = crewDao;
-    }
-
-    //----------------------------------------------------------------------
-
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count(ComkerQuerySieve sieve) {

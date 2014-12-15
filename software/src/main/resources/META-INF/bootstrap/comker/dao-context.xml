@@ -11,7 +11,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerUserDaoHibernate" />
@@ -19,7 +18,6 @@
 
     <bean id="comkerUserDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerUserDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
-        <property name="crewDao" ref="comkerCrewDaoHibernate"/>
     </bean>
 
 
@@ -29,7 +27,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerSpotDaoHibernate" />
@@ -46,7 +43,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerModuleDaoHibernate" />
@@ -63,7 +59,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerSettingDaoHibernate" />
@@ -82,7 +77,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerCrewDaoHibernate" />
@@ -90,7 +84,6 @@
 
     <bean id="comkerCrewDaoHibernate" class="net.cokkee.comker.dao.impl.ComkerCrewDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
-        <property name="roleDao" ref="comkerRoleDaoHibernate"/>
     </bean>
 
 
@@ -100,7 +93,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerRoleDaoHibernate" />
@@ -117,7 +109,6 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <idref bean="comkerWatchdogPointcutAdvisor" />
             </list>
         </property>
         <property name="target" ref="comkerPermissionDaoHibernate" />

@@ -10,7 +10,6 @@ import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
-import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.storage.ComkerCrewStorage;

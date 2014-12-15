@@ -8,6 +8,7 @@ import net.cokkee.comker.storage.ComkerUserStorage;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ public class ComkerAdmUserController {
     private ComkerUserStorage userStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerUserStorage")
     public void setUserStorage(ComkerUserStorage userStorage) {
         this.userStorage = userStorage;
     }

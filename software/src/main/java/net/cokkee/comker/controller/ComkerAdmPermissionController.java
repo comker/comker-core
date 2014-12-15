@@ -8,6 +8,7 @@ import net.cokkee.comker.storage.ComkerPermissionStorage;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ public class ComkerAdmPermissionController {
     private ComkerPermissionStorage permissionStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerPermissionStorage")
     public void setPermissionStorage(ComkerPermissionStorage permissionStorage) {
         this.permissionStorage = permissionStorage;
     }

@@ -8,6 +8,7 @@ import net.cokkee.comker.storage.ComkerCrewStorage;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ public class ComkerAdmCrewController {
     private ComkerCrewStorage crewStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerCrewStorage")
     public void setCrewStorage(ComkerCrewStorage crewStorage) {
         this.crewStorage = crewStorage;
     }

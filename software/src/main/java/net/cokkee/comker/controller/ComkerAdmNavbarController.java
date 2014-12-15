@@ -6,6 +6,7 @@ import net.cokkee.comker.model.dto.ComkerNavNodeViewDTO;
 import net.cokkee.comker.storage.ComkerNavbarStorage;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class ComkerAdmNavbarController {
     private ComkerNavbarStorage navbarStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerNavbarStorage")
     public void setNavbarStorage(ComkerNavbarStorage navbarStorage) {
         this.navbarStorage = navbarStorage;
     }

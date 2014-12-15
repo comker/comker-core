@@ -8,7 +8,19 @@
             http://www.springframework.org/schema/aop
             http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <bean id="comkerUserStorage"
+    <bean id="comkerUserStorage" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.storage.ComkerUserStorage</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerUserStorageImpl" />
+    </bean>
+
+    <bean id="comkerUserStorageImpl"
             class="net.cokkee.comker.storage.impl.ComkerUserStorageImpl">
         <property name="userValidator" ref="comkerUserValidator" />
         <property name="userDao" ref="comkerUserDao" />
@@ -17,7 +29,19 @@
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
 
-    <bean id="comkerCrewStorage"
+    <bean id="comkerCrewStorage" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.storage.ComkerCrewStorage</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerCrewStorageImpl" />
+    </bean>
+
+    <bean id="comkerCrewStorageImpl"
             class="net.cokkee.comker.storage.impl.ComkerCrewStorageImpl">
         <property name="crewValidator" ref="comkerCrewValidator" />
         <property name="crewDao" ref="comkerCrewDao" />
@@ -26,7 +50,19 @@
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
 
-    <bean id="comkerSpotStorage"
+    <bean id="comkerSpotStorage" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.storage.ComkerSpotStorage</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerSpotStorageImpl" />
+    </bean>
+    
+    <bean id="comkerSpotStorageImpl"
             class="net.cokkee.comker.storage.impl.ComkerSpotStorageImpl">
         <property name="spotValidator" ref="comkerSpotValidator" />
         <property name="spotDao" ref="comkerSpotDao" />
@@ -34,7 +70,19 @@
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
 
-    <bean id="comkerRoleStorage"
+    <bean id="comkerRoleStorage" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.storage.ComkerRoleStorage</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerRoleStorageImpl" />
+    </bean>
+    
+    <bean id="comkerRoleStorageImpl"
             class="net.cokkee.comker.storage.impl.ComkerRoleStorageImpl">
         <property name="roleValidator" ref="comkerRoleValidator" />
         <property name="roleDao" ref="comkerRoleDao" />
@@ -42,12 +90,26 @@
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
 
-    <bean id="comkerPermissionStorage"
+    <bean id="comkerPermissionStorage" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="proxyInterfaces">
+            <value>net.cokkee.comker.storage.ComkerPermissionStorage</value>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="comkerWatchdogPointcutAdvisor" />
+            </list>
+        </property>
+        <property name="target" ref="comkerPermissionStorageImpl" />
+    </bean>
+    
+    <bean id="comkerPermissionStorageImpl"
             class="net.cokkee.comker.storage.impl.ComkerPermissionStorageImpl">
         <property name="permissionValidator" ref="comkerPermissionValidator" />
         <property name="permissionDao" ref="comkerPermissionDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
+    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
     <bean id="comkerNavbarStorage"
             class="net.cokkee.comker.storage.impl.ComkerNavbarStorageImpl">
@@ -59,6 +121,8 @@
         <property name="watchdogDao" ref="comkerWatchdogDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
     <bean id="comkerSpotValidator"
             class="net.cokkee.comker.validation.ComkerSpotValidator">

@@ -8,6 +8,7 @@ import net.cokkee.comker.storage.ComkerRoleStorage;
 import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class ComkerAdmRoleController {
     private ComkerRoleStorage roleStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerRoleStorage")
     public void setRoleStorage(ComkerRoleStorage roleStorage) {
         this.roleStorage = roleStorage;
     }

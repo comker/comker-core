@@ -2,18 +2,14 @@ package net.cokkee.comker.controller;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
-import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.dto.ComkerRoleDTO;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.service.ComkerSessionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +30,7 @@ public class ComkerAdmWatchdogController {
     private ComkerWatchdogStorage watchdogStorage = null;
 
     @Autowired(required = false)
+    @Qualifier(value = "comkerWatchdogStorage")
     public void setWatchdogStorage(ComkerWatchdogStorage watchdogStorage) {
         this.watchdogStorage = watchdogStorage;
     }
