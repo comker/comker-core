@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -54,6 +55,21 @@ public class ComkerExceptionRaiserUnitTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.clazz", Matchers.is("ComkerObjectNotFoundException")))
                 .andExpect(jsonPath("$.label", Matchers.is("role_with__id__not_found")));
+        //result.andDo(print());
+    }
+    
+    @Test
+    public void throwComkerValidationFailedException() throws Exception {
+ 
+        ResultActions result = mockMvc.perform(get("/comker/exception/validationfailed"));
+        
+        result.andExpect(status().isNotAcceptable())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.fieldErrors", Matchers.hasSize(1)))
+                .andExpect(jsonPath("$.fieldErrors[0].code", Matchers.is("msg.__field__should_be_not_null")))
+                .andExpect(jsonPath("$.fieldErrors[0].arguments[0]", Matchers.is("msg.field_code")))
+                .andExpect(jsonPath("$.fieldErrors[0].defaultMessage", Matchers.is("Code value should not be null")))
+                .andExpect(jsonPath("$.clazz", Matchers.is("ComkerValidationFailedException")));
         //result.andDo(print());
     }
 }
