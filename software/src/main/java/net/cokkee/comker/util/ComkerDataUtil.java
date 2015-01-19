@@ -189,9 +189,9 @@ public class ComkerDataUtil {
         Gson gson = new Gson();
         return gson.fromJson(json, clazz);
     }
-
-    //--------------------------------------------------------------------------
     
+    //--------------------------------------------------------------------------
+
     public static String convertObjectToXStream(Object entity) {
         XStream xstream = new XStream(new DomDriver());
         return xstream.toXML(entity);

@@ -1,24 +1,17 @@
 package net.cokkee.comker.model.dpo;
 
-import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
-import java.util.LinkedList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
  * @author drupalex
  */
-@XmlRootElement
 @Entity
 @Table(name = "comker_permission",
         uniqueConstraints = @UniqueConstraint(columnNames = "f_authority"))

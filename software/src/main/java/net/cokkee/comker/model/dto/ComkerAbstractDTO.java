@@ -8,9 +8,6 @@ import net.cokkee.comker.model.ComkerObject;
  */
 public abstract class ComkerAbstractDTO  extends ComkerObject {
 
-    public static final String NULL = "--null--";
-    public static final String EMPTY = "";
-
     public static abstract class Filter {
 
         public Filter() {

@@ -51,8 +51,6 @@ public class ComkerUserDPO extends ComkerAbstractDPO {
     private List<ComkerUserJoinCrewDPO> userJoinCrewList =
             new LinkedList<ComkerUserJoinCrewDPO>();
 
-    private Set<String> idsOfCrewList = new HashSet<String>();
-
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -117,14 +115,5 @@ public class ComkerUserDPO extends ComkerAbstractDPO {
 
     public void setUserJoinCrewList(List<ComkerUserJoinCrewDPO> list) {
         this.userJoinCrewList = list;
-    }
-
-    @Transient
-    public Set<String> getIdsOfCrewList() {
-        return idsOfCrewList;
-    }
-
-    public void setIdsOfCrewList(Set<String> crewIdList) {
-        this.idsOfCrewList = crewIdList;
     }
 }

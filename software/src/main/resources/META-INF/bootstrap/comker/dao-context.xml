@@ -131,5 +131,9 @@
     <bean id="comkerWatchdogDao" class="net.cokkee.comker.dao.impl.ComkerWatchdogDaoHibernate">
         <property name="sessionFactory" ref="comkerSessionFactory"/>
     </bean>
+    
+    <bean id="comkerRegistrationDao" class="net.cokkee.comker.dao.impl.ComkerRegistrationDaoHibernate">
+        <property name="sessionFactory" ref="comkerSessionFactory"/>
+    </bean>
 
 </beans>

@@ -11,6 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ComkerObject implements Serializable {
 
+    public static final String NULL = "--null--";
+    public static final String EMPTY = "";
+    
     public ComkerObject() {
         super();
     }

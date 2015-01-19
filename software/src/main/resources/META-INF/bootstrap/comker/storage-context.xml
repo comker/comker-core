@@ -121,6 +121,14 @@
         <property name="watchdogDao" ref="comkerWatchdogDao" />
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
+    
+    <bean id="comkerRegistrationStorage"
+            class="net.cokkee.comker.storage.impl.ComkerRegistrationStorageImpl">
+        <property name="registrationValidator" ref="comkerRegistrationValidator" />
+        <property name="registrationDao" ref="comkerRegistrationDao" />
+        <property name="userDao" ref="comkerUserDao" />
+        <property name="localizationService" ref="comkerLocalizationService" />
+    </bean>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -152,5 +160,10 @@
     <bean id="comkerPermissionValidator"
             class="net.cokkee.comker.validation.ComkerPermissionValidator">
         <property name="permissionDao" ref="comkerPermissionDao" />
+    </bean>
+    
+    <bean id="comkerRegistrationValidator"
+            class="net.cokkee.comker.validation.ComkerRegistrationValidator">
+        <property name="userDao" ref="comkerUserDao" />
     </bean>
 </beans>

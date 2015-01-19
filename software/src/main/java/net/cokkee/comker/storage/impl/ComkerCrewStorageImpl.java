@@ -106,13 +106,13 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerCrewDTO get(String id) {
-        ComkerCrewDPO dbItem = getNotNull(id);
+        ComkerCrewDPO dpoItem = getNotNull(id);
 
-        ComkerCrewDTO poItem = new ComkerCrewDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
+        ComkerCrewDTO dtoItem = new ComkerCrewDTO();
+        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
+        loadAggregationRefs(dpoItem, dtoItem);
 
-        return poItem;
+        return dtoItem;
     }
 
     @Override

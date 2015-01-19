@@ -66,4 +66,14 @@
                 <activatedProfile>debug</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-jetty:run (mem)</actionName>
+            <displayName>jetty:run (mem)</displayName>
+            <goals>
+                <goal>jetty:run</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>debug</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

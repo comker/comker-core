@@ -50,8 +50,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.util.Log4jConfigurer;
-import org.springframework.web.util.Log4jWebConfigurer;
 
 /**
  *
@@ -89,16 +87,6 @@ public class ComkerSecurityIntegrationTest {
     SessionFactory comkerSessionFactory;
 
     protected MockMvc mockMvc;
-
-    /*
-    static {
-        try {
-            Log4jConfigurer.initLogging("file:src/main/webapp/WEB-INF/log4j.xml");
-        } catch (FileNotFoundException ex) {
-            System.err.println("Cannot Initialize log4j");
-        }
-    }
-    */
 
     @Before
     public void init() {
