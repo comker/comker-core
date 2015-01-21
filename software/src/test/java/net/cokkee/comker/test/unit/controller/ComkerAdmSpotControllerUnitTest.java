@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.cokkee.comker.controller.ComkerAdmCrewController;
 
 import net.cokkee.comker.controller.ComkerAdmSpotController;
 import net.cokkee.comker.exception.ComkerObjectNotFoundException;
@@ -28,8 +29,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,6 +43,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -49,7 +56,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmSpotControllerUnitTest.xml")
+@ContextConfiguration(
+        classes = {
+            ComkerAdmSpotControllerUnitTest.ServletConfig.class
+        }
+)
 public class ComkerAdmSpotControllerUnitTest {
     
     @Autowired
@@ -209,29 +220,6 @@ public class ComkerAdmSpotControllerUnitTest {
     }
     
     @Test
-    public void getSpot_NotFound_ShouldReturnErrorInfo() throws Exception {
-        String id = UUID.randomUUID().toString();
-        Mockito.when(spotStorage.get(id)).thenThrow(
-                new ComkerObjectNotFoundException(
-                    "spot_with__id__not_found",
-                    new ComkerExceptionExtension("error.spot_with__id__not_found", 
-                            new Object[] {id}, 
-                            MessageFormat.format("Spot object with id:{0} not found", 
-                                    new Object[] {id}))));
-        
-        mockMvc.perform(get("/comker/adm/spot/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.clazz", Matchers.is("ComkerObjectNotFoundException")))
-                .andExpect(jsonPath("$.label", Matchers.is("spot_with__id__not_found")))
-                //.andDo(print())
-                .andReturn();
-        
-        Mockito.verify(spotStorage, Mockito.times(1)).get(id);
-        Mockito.verifyNoMoreInteractions(spotStorage);
-    }
-    
-    @Test
     public void createSpot_ok() throws Exception {
         final ComkerSpotDTO source = new ComkerSpotDTO(
                 "SPOT_1",
@@ -362,5 +350,25 @@ public class ComkerAdmSpotControllerUnitTest {
         Mockito.verify(spotStorage, Mockito.times(1)).get(target.getId());
         Mockito.verify(spotStorage, Mockito.times(1)).delete(target.getId());
         Mockito.verifyNoMoreInteractions(spotStorage);
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    @Configuration
+    @EnableWebMvc
+    @ComponentScan(
+            basePackageClasses = { 
+                ComkerAdmSpotController.class
+            }
+    )
+    public static class ServletConfig extends WebMvcConfigurerAdapter {
+
+        private static final Logger logger = LoggerFactory.getLogger(ServletConfig.class);
+
+        public ServletConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ServletConfig.class.getSimpleName() + " is invoked");
+            }
+        }
     }
 }

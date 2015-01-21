@@ -2,14 +2,29 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+        xsi:schemaLocation="
+                http://java.sun.com/xml/ns/javaee 
+                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         version="2.5">
 
-    <display-name>Comker Application</display-name>
+    <display-name>Comker Core Application</display-name>
     
     <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
+  
+    <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>WEB-INF/application-context.xml</param-value>
+        <param-value>
+            net.cokkee.comker.webapp.config.ComkerCoreContextConfig
+            net.cokkee.comker.webapp.config.ComkerCoreSharingConfig
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>production</param-value>
     </context-param>
 
     <context-param>
@@ -20,7 +35,7 @@
     <listener>
         <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
     </listener>
-    
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -55,11 +70,12 @@
     -->
     
     <filter>
-        <filter-name>ApiOriginFilter</filter-name>
-        <filter-class>net.cokkee.comker.util.ComkerAddHeaderFilter</filter-class>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>net.cokkee.comker.base.web.filter.ComkerBaseCORSFilter</filter-class>
     </filter>
+
     <filter-mapping>
-        <filter-name>ApiOriginFilter</filter-name>
+        <filter-name>CORSFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -67,15 +83,23 @@
         <servlet-name>MVCServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
+            <param-name>spring.profiles.active</param-name>
+            <param-value>production</param-value>
+        </init-param>
+        <init-param>
+            <param-name>contextClass</param-name>
+            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+        </init-param>
+        <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:META-INF/bootstrap/comker/controller-context.xml</param-value>
+            <param-value>net.cokkee.comker.core.config.ComkerCoreServletConfig</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>MVCServlet</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/ws/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

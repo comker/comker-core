@@ -76,4 +76,14 @@
                 <activatedProfile>debug</activatedProfile>
             </activatedProfiles>
         </action>
+        <action>
+            <actionName>CUSTOM-compile - swagger</actionName>
+            <displayName>compile - swagger</displayName>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>swagger</activatedProfile>
+            </activatedProfiles>
+        </action>
     </actions>

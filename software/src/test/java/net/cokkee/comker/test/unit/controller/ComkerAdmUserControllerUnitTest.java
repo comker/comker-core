@@ -1,15 +1,12 @@
 package net.cokkee.comker.test.unit.controller;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import net.cokkee.comker.controller.ComkerAdmUserController;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.storage.ComkerUserStorage;
@@ -28,8 +25,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,9 +39,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -49,7 +51,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmUserControllerUnitTest.xml")
+@ContextConfiguration(
+        classes = {
+            ComkerAdmUserControllerUnitTest.ServletConfig.class
+        }
+)
 public class ComkerAdmUserControllerUnitTest {
     
     @Autowired
@@ -214,29 +220,6 @@ public class ComkerAdmUserControllerUnitTest {
     }
     
     @Test
-    public void getUser_NotFound_ShouldReturnErrorInfo() throws Exception {
-        String id = UUID.randomUUID().toString();
-        Mockito.when(userStorage.get(id)).thenThrow(
-                new ComkerObjectNotFoundException(
-                    "user_with__id__not_found",
-                    new ComkerExceptionExtension("error.user_with__id__not_found", 
-                            new Object[] {id}, 
-                            MessageFormat.format("User object with id:{0} not found", 
-                                    new Object[] {id}))));
-        
-        mockMvc.perform(get("/comker/adm/user/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.clazz", Matchers.is("ComkerObjectNotFoundException")))
-                .andExpect(jsonPath("$.label", Matchers.is("user_with__id__not_found")))
-                //.andDo(print())
-                .andReturn();
-        
-        Mockito.verify(userStorage, Mockito.times(1)).get(id);
-        Mockito.verifyNoMoreInteractions(userStorage);
-    }
-    
-    @Test
     public void createUser_ok() throws Exception {
         final ComkerUserDTO source = new ComkerUserDTO(
                 "user@comker.com",
@@ -376,5 +359,25 @@ public class ComkerAdmUserControllerUnitTest {
         Mockito.verify(userStorage, Mockito.times(1)).get(target.getId());
         Mockito.verify(userStorage, Mockito.times(1)).delete(target.getId());
         Mockito.verifyNoMoreInteractions(userStorage);
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    @Configuration
+    @EnableWebMvc
+    @ComponentScan(
+            basePackageClasses = { 
+                ComkerAdmUserController.class
+            }
+    )
+    public static class ServletConfig extends WebMvcConfigurerAdapter {
+
+        private static final Logger logger = LoggerFactory.getLogger(ServletConfig.class);
+
+        public ServletConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ServletConfig.class.getSimpleName() + " is invoked");
+            }
+        }
     }
 }

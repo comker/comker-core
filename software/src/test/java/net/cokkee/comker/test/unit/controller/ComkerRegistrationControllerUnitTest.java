@@ -1,5 +1,6 @@
 package net.cokkee.comker.test.unit.controller;
 
+import net.cokkee.comker.controller.ComkerAdmUserController;
 import net.cokkee.comker.controller.ComkerRegistrationController;
 import net.cokkee.comker.exception.ComkerValidationFailedException;
 import net.cokkee.comker.model.dto.ComkerRegistrationDTO;
@@ -20,8 +21,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,6 +35,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -41,7 +48,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerRegistrationControllerUnitTest.xml")
+@ContextConfiguration(
+        classes = {
+            ComkerRegistrationControllerUnitTest.ServletConfig.class
+        }
+)
 public class ComkerRegistrationControllerUnitTest {
     
     @Autowired
@@ -109,7 +120,6 @@ public class ComkerRegistrationControllerUnitTest {
         Mockito.verifyNoMoreInteractions(registrationStorage);
     }
     
-    @Test
     public void doRegistration_email_already_exists() throws Exception {
         ComkerRegistrationDTO data = new ComkerRegistrationDTO()
                 .setEmail("pnhung177@gmail.com")
@@ -188,5 +198,25 @@ public class ComkerRegistrationControllerUnitTest {
         
         Mockito.verify(registrationStorage, Mockito.times(1)).confirm(code);
         Mockito.verifyNoMoreInteractions(registrationStorage);
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    @Configuration
+    @EnableWebMvc
+    @ComponentScan(
+            basePackageClasses = { 
+                ComkerRegistrationController.class
+            }
+    )
+    public static class ServletConfig extends WebMvcConfigurerAdapter {
+
+        private static final Logger logger = LoggerFactory.getLogger(ServletConfig.class);
+
+        public ServletConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ServletConfig.class.getSimpleName() + " is invoked");
+            }
+        }
     }
 }

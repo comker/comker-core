@@ -1,19 +1,18 @@
 package net.cokkee.comker.test.unit.controller;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import net.cokkee.comker.controller.ComkerAdmCrewController;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.dto.ComkerCrewDTO;
 import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.storage.ComkerCrewStorage;
 import net.cokkee.comker.util.ComkerDataUtil;
+
 import org.junit.runner.RunWith;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,19 +27,24 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -49,7 +53,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmCrewControllerUnitTest.xml")
+@ContextConfiguration(
+        classes = {
+            ComkerAdmCrewControllerUnitTest.ServletConfig.class
+        }
+)
 public class ComkerAdmCrewControllerUnitTest {
     
     @Autowired
@@ -210,29 +218,6 @@ public class ComkerAdmCrewControllerUnitTest {
     }
     
     @Test
-    public void getCrew_NotFound_ShouldReturnErrorInfo() throws Exception {
-        String id = UUID.randomUUID().toString();
-        Mockito.when(crewStorage.get(id)).thenThrow(
-                new ComkerObjectNotFoundException(
-                    "crew_with__id__not_found",
-                    new ComkerExceptionExtension("error.crew_with__id__not_found", 
-                            new Object[] {id}, 
-                            MessageFormat.format("Crew object with id:{0} not found", 
-                                    new Object[] {id}))));
-        
-        mockMvc.perform(get("/comker/adm/crew/{id}", id))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.clazz", Matchers.is("ComkerObjectNotFoundException")))
-                .andExpect(jsonPath("$.label", Matchers.is("crew_with__id__not_found")))
-                //.andDo(print())
-                .andReturn();
-        
-        Mockito.verify(crewStorage, Mockito.times(1)).get(id);
-        Mockito.verifyNoMoreInteractions(crewStorage);
-    }
-    
-    @Test
     public void createCrew_ok() throws Exception {
         final ComkerCrewDTO source = new ComkerCrewDTO(
                 "Crew 1",
@@ -332,5 +317,25 @@ public class ComkerAdmCrewControllerUnitTest {
         Mockito.verify(crewStorage, Mockito.times(1)).get(target.getId());
         Mockito.verify(crewStorage, Mockito.times(1)).delete(target.getId());
         Mockito.verifyNoMoreInteractions(crewStorage);
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    @Configuration
+    @EnableWebMvc
+    @ComponentScan(
+            basePackageClasses = { 
+                ComkerAdmCrewController.class
+            }
+    )
+    public static class ServletConfig extends WebMvcConfigurerAdapter {
+
+        private static final Logger logger = LoggerFactory.getLogger(ServletConfig.class);
+
+        public ServletConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ServletConfig.class.getSimpleName() + " is invoked");
+            }
+        }
     }
 }

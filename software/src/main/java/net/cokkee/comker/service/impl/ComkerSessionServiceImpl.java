@@ -27,15 +27,6 @@ public class ComkerSessionServiceImpl implements ComkerSessionService {
         return pager;
     }
 
-    @Override
-    @Deprecated
-    public ComkerQueryPager getPager(Class clazz, Integer start, Integer limit) {
-        ComkerQueryPager pager = getPager(clazz);
-        if (start != null) pager.setStart(start);
-        if (limit != null) pager.setLimit(limit);
-        return pager;
-    }
-
     //----------------------------------------------------------------------
 
     private final Map<Class, ComkerQuerySieve> sieves = new HashMap<Class, ComkerQuerySieve>();

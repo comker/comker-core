@@ -17,13 +17,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.hamcrest.Matchers;
-        
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -35,6 +39,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  *
@@ -42,7 +48,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:/test/unit/controller/ComkerAdmPermissionControllerUnitTest.xml")
+@ContextConfiguration(
+        classes = {
+            ComkerAdmPermissionControllerUnitTest.ServletConfig.class
+        }
+)
 public class ComkerAdmPermissionControllerUnitTest {
     
     @Autowired
@@ -142,5 +152,25 @@ public class ComkerAdmPermissionControllerUnitTest {
         Mockito.verify(permissionStorage, Mockito.times(1)).count(sieve);
         Mockito.verify(permissionStorage, Mockito.times(1)).findAll(sieve, pager);
         Mockito.verifyNoMoreInteractions(permissionStorage);
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    @Configuration
+    @EnableWebMvc
+    @ComponentScan(
+            basePackageClasses = { 
+                ComkerAdmPermissionController.class
+            }
+    )
+    public static class ServletConfig extends WebMvcConfigurerAdapter {
+
+        private static final Logger logger = LoggerFactory.getLogger(ServletConfig.class);
+
+        public ServletConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ServletConfig.class.getSimpleName() + " is invoked");
+            }
+        }
     }
 }

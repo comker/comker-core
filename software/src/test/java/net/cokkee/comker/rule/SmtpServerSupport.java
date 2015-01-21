@@ -11,6 +11,8 @@ public interface SmtpServerSupport {
 
     /**
      * the SMTP port.
+     * 
+     * @return 
      */
     int getPort();
 

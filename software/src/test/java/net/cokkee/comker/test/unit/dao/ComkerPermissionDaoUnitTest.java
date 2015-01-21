@@ -3,21 +3,32 @@ package net.cokkee.comker.test.unit.dao;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
+import javax.sql.DataSource;
+
 import net.cokkee.comker.dao.ComkerPermissionDao;
+import net.cokkee.comker.dao.impl.ComkerPermissionDaoHibernate;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
+
 import org.hamcrest.CoreMatchers;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.Assert;
 
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +38,21 @@ import org.springframework.transaction.annotation.Transactional;
  * @author drupalex
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/test/unit/dao/ComkerPermissionDaoUnitTest.xml"})
+@ContextConfiguration(
+        classes = {
+            ComkerPermissionDaoUnitTest.GeneralConfig.class,
+            ComkerPermissionDaoUnitTest.ContextConfig.class
+        }
+)
 @Transactional
-public class ComkerPermissionDaoUnitTest {
+public class ComkerPermissionDaoUnitTest extends ComkerAbstractDaoUnitTest {
 
     @Autowired
+    @Qualifier("comkerSessionFactory")
     private SessionFactory testSessionFactory = null;
 
     @Autowired
+    @Qualifier("comkerPermissionDao")
     private ComkerPermissionDao testPermissionDao = null;
 
     private List<String> permissionIdx = new ArrayList<String>();
@@ -127,5 +145,37 @@ public class ComkerPermissionDaoUnitTest {
         testPermissionDao.save(item);
 
         Assert.assertTrue(testPermissionDao.count(null) == currentCount + 1);
+    }
+    
+    @Configuration
+    public static class ContextConfig {
+        
+        private static final Logger logger = LoggerFactory.getLogger(ContextConfig.class);
+    
+        public ContextConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ContextConfig.class.getSimpleName() + " is invoked");
+            }
+        }
+        
+        @Bean
+        public ComkerPermissionDao comkerPermissionDao(
+                @Qualifier("comkerSessionFactory") SessionFactory sessionFactory) {
+            ComkerPermissionDaoHibernate bean = new ComkerPermissionDaoHibernate();
+            bean.setSessionFactory(sessionFactory);
+            return bean;
+        }
+        
+        @Bean
+        public AnnotationSessionFactoryBean comkerSessionFactory(
+                @Qualifier("comkerDataSource") DataSource dataSource,
+                @Qualifier("comkerHibernateProperties") Properties hibernateProperties) {
+            AnnotationSessionFactoryBean asfb = new AnnotationSessionFactoryBean();
+            asfb.setAnnotatedClasses(
+                    net.cokkee.comker.model.dpo.ComkerPermissionDPO.class);
+            asfb.setDataSource(dataSource);
+            asfb.setHibernateProperties(hibernateProperties);
+            return asfb;
+        }
     }
 }

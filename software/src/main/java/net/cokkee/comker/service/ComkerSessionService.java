@@ -1,5 +1,7 @@
 package net.cokkee.comker.service;
 
+import java.io.Serializable;
+
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 
@@ -7,12 +9,9 @@ import net.cokkee.comker.model.ComkerQuerySieve;
  *
  * @author drupalex
  */
-public interface ComkerSessionService {
+public interface ComkerSessionService extends Serializable {
 
     ComkerQueryPager getPager(Class clazz);
-
-    @Deprecated
-    ComkerQueryPager getPager(Class clazz, Integer start, Integer limit);
     
     ComkerQuerySieve getSieve(Class clazz);
 }

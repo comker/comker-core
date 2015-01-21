@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Queue;
+import javax.sql.DataSource;
+
 import net.cokkee.comker.dao.ComkerNavbarDao;
-
+import net.cokkee.comker.dao.impl.ComkerNavbarDaoHibernate;
 import net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO;
-import org.hamcrest.CoreMatchers;
 
+import org.hamcrest.CoreMatchers;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,8 +20,14 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,14 +37,21 @@ import org.springframework.transaction.annotation.Transactional;
  * @author drupalex
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/test/unit/dao/ComkerNavbarDaoUnitTest.xml"})
+@ContextConfiguration(
+        classes = {
+            ComkerNavbarDaoUnitTest.GeneralConfig.class,
+            ComkerNavbarDaoUnitTest.ContextConfig.class
+        }
+)
 @Transactional
-public class ComkerNavbarDaoUnitTest {
+public class ComkerNavbarDaoUnitTest extends ComkerAbstractDaoUnitTest {
 
     @Autowired
+    @Qualifier("comkerSessionFactory")
     private SessionFactory testSessionFactory = null;
 
     @Autowired
+    @Qualifier("comkerNavbarDao")
     private ComkerNavbarDao testNavbarDao = null;
     
     @Before
@@ -273,5 +289,37 @@ public class ComkerNavbarDaoUnitTest {
         result.put("total", count);
 
         return result;
+    }
+    
+    @Configuration
+    public static class ContextConfig {
+        
+        private static final Logger logger = LoggerFactory.getLogger(ContextConfig.class);
+    
+        public ContextConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ContextConfig.class.getSimpleName() + " is invoked");
+            }
+        }
+        
+        @Bean
+        public ComkerNavbarDao comkerNavbarDao(
+                @Qualifier("comkerSessionFactory") SessionFactory sessionFactory) {
+            ComkerNavbarDaoHibernate bean = new ComkerNavbarDaoHibernate();
+            bean.setSessionFactory(sessionFactory);
+            return bean;
+        }
+        
+        @Bean
+        public AnnotationSessionFactoryBean comkerSessionFactory(
+                @Qualifier("comkerDataSource") DataSource dataSource,
+                @Qualifier("comkerHibernateProperties") Properties hibernateProperties) {
+            AnnotationSessionFactoryBean asfb = new AnnotationSessionFactoryBean();
+            asfb.setAnnotatedClasses(
+                    net.cokkee.comker.model.dpo.ComkerNavbarNodeDPO.class);
+            asfb.setDataSource(dataSource);
+            asfb.setHibernateProperties(hibernateProperties);
+            return asfb;
+        }
     }
 }

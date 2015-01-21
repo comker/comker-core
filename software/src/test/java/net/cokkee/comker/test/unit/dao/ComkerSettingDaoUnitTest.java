@@ -1,28 +1,33 @@
 package net.cokkee.comker.test.unit.dao;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Properties;
+import javax.sql.DataSource;
+
 import net.cokkee.comker.dao.ComkerSettingDao;
-import net.cokkee.comker.model.ComkerQueryPager;
+import net.cokkee.comker.dao.impl.ComkerSettingDaoHibernate;
 import net.cokkee.comker.model.dpo.ComkerSettingEntryDPO;
 import net.cokkee.comker.model.dpo.ComkerSettingEntryPK;
 import net.cokkee.comker.model.dpo.ComkerSettingKeyDPO;
 import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import net.cokkee.comker.model.dpo.ComkerUserDPO;
-import org.hamcrest.CoreMatchers;
-import org.hibernate.Criteria;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.junit.Assert;
 
 import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,14 +37,21 @@ import org.springframework.transaction.annotation.Transactional;
  * @author drupalex
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/test/unit/dao/ComkerSettingDaoUnitTest.xml"})
+@ContextConfiguration(
+        classes = {
+            ComkerSettingDaoUnitTest.GeneralConfig.class,
+            ComkerSettingDaoUnitTest.ContextConfig.class
+        }
+)
 @Transactional
-public class ComkerSettingDaoUnitTest {
+public class ComkerSettingDaoUnitTest extends ComkerAbstractDaoUnitTest {
 
     @Autowired
+    @Qualifier("comkerSessionFactory")
     private SessionFactory testSessionFactory = null;
 
     @Autowired
+    @Qualifier("comkerSettingDao")
     private ComkerSettingDao testSettingDao = null;
     
     @Before
@@ -138,5 +150,55 @@ public class ComkerSettingDaoUnitTest {
         }
         item.setValue(defaultValue);
         session.saveOrUpdate(item);
+    }
+    
+    @Configuration
+    public static class ContextConfig {
+        
+        private static final Logger logger = LoggerFactory.getLogger(ContextConfig.class);
+    
+        public ContextConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ContextConfig.class.getSimpleName() + " is invoked");
+            }
+        }
+        
+        @Bean
+        public ComkerSettingDao comkerSettingDao(
+                @Qualifier("comkerSessionFactory") SessionFactory sessionFactory) {
+            ComkerSettingDaoHibernate bean = new ComkerSettingDaoHibernate();
+            bean.setSessionFactory(sessionFactory);
+            return bean;
+        }
+        
+        @Bean
+        public AnnotationSessionFactoryBean comkerSessionFactory(
+                @Qualifier("comkerDataSource") DataSource dataSource,
+                @Qualifier("comkerHibernateProperties") Properties hibernateProperties) {
+            AnnotationSessionFactoryBean asfb = new AnnotationSessionFactoryBean();
+            asfb.setAnnotatedClasses(
+                    net.cokkee.comker.model.dpo.ComkerPermissionDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerRoleDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionPK.class,
+                    net.cokkee.comker.model.dpo.ComkerModuleDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerSpotDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerSpotJoinModulePK.class,
+                    net.cokkee.comker.model.dpo.ComkerCrewDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerCrewJoinGlobalRoleDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerCrewJoinGlobalRolePK.class,
+                    net.cokkee.comker.model.dpo.ComkerCrewJoinRoleWithSpotDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerCrewJoinRoleWithSpotPK.class,
+                    net.cokkee.comker.model.dpo.ComkerUserDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerUserJoinCrewPK.class,
+                    net.cokkee.comker.model.dpo.ComkerSettingEntryDPO.class,
+                    net.cokkee.comker.model.dpo.ComkerSettingEntryPK.class,
+                    net.cokkee.comker.model.dpo.ComkerSettingKeyDPO.class);
+            asfb.setDataSource(dataSource);
+            asfb.setHibernateProperties(hibernateProperties);
+            return asfb;
+        }
     }
 }
