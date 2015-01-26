@@ -129,14 +129,14 @@ public class ComkerInitializationServiceImpl extends ComkerInitializationCommonI
         ComkerUserDPO userAdmin = getOrCreateUser(
                 "admin@cokkee.net",
                 "admin",
-                passwordEncoder.encodePassword("dobietday", null),
+                passwordEncoder.encode("dobietday"),
                 "Administrator");
         userDao.addCrew(userAdmin, crewAdmins);
 
         ComkerUserDPO userGuest = getOrCreateUser(
                 "guest@cokkee.net",
                 "guest",
-                passwordEncoder.encodePassword("nopassword", null),
+                passwordEncoder.encode("nopassword"),
                 "Guest");
         userDao.addCrew(userGuest, crewGuests);
 

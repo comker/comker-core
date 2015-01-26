@@ -83,6 +83,6 @@
     </bean>
 
     <bean id="comkerPasswordEncoder"
-            class="org.springframework.security.authentication.encoding.Md5PasswordEncoder">
+            class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
     </bean>
 </beans>

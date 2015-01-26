@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "comker_adm_permission", description = "Administration Permission API")
+@Api(value = "Permission", description = "Administration Permission API")
 @Controller
 @RequestMapping("/comker/adm/permission")
 public class ComkerAdmPermissionController {

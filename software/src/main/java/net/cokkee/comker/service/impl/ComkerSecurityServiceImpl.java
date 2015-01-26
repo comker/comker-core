@@ -16,11 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -154,7 +154,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
         ComkerUserDetails oldUserDetails = getUserDetails();
         if (oldUserDetails == null) return;
 
-        String oldEncodedPassword = passwordEncoder.encodePassword(oldPassword, null);
+        String oldEncodedPassword = passwordEncoder.encode(oldPassword);
 
         if (!oldEncodedPassword.equals(oldUserDetails.getPassword())) {
             throw new ComkerForbiddenAccessException(
@@ -163,7 +163,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
                             null, "The new password does not match the old password."));
         }
 
-        String newEncodedPassword = passwordEncoder.encodePassword(newPassword, null);
+        String newEncodedPassword = passwordEncoder.encode(newPassword);
         ComkerUserDetails newUserDetails = new ComkerUserDetails(oldUserDetails, newEncodedPassword);
 
         UsernamePasswordAuthenticationToken newToken =

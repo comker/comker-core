@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "comker_adm_user", description = "Administration User API")
+@Api(value = "User", description = "Administration User API")
 @Controller
 @RequestMapping("/comker/adm/user")
 public class ComkerAdmUserController {
@@ -53,7 +53,7 @@ public class ComkerAdmUserController {
             @RequestParam(value="q", required=false) String q) {
 
         Integer total;
-        List collection;
+        List<ComkerUserDTO> collection;
         
         if (q == null) {
             total = userStorage.count();
@@ -72,6 +72,9 @@ public class ComkerAdmUserController {
                     sessionService.getPager(ComkerUserDTO.class)
                             .updateStart(start)
                             .updateLimit(limit));
+            for(ComkerUserDTO user:collection) {
+                user.setPassword(null);
+            }
         }
         
         return new ComkerUserDTO.Pack(total, collection);
@@ -87,7 +90,9 @@ public class ComkerAdmUserController {
     public @ResponseBody ComkerUserDTO getUser(
             @ApiParam(value = "ID of user that needs to be fetched", required = true) 
             @PathVariable String id) {
-        return userStorage.get(id);
+        ComkerUserDTO user = userStorage.get(id);
+        user.setPassword(null);
+        return user;
     }
 
     @ApiOperation(

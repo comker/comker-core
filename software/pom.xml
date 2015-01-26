@@ -260,6 +260,12 @@
             <version>3.1.7</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>15.0</version>
+        </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
@@ -365,12 +371,6 @@
             <version>${swagger.version}</version>
             <scope>compile</scope>
         </dependency>
-        
-        <dependency>
-            <groupId>com.mangofactory</groupId>
-            <artifactId>swagger-springmvc</artifactId>
-            <version>0.9.3</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -411,77 +411,10 @@
                     <skipTests>false</skipTests>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.github.kongchen</groupId>
-                <artifactId>swagger-maven-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <apiSources>
-                        <apiSource>
-                            <!--Required parameters BEGIN-->
-                            <locations>net.cokkee.comker.controller</locations>
-                            <apiVersion>1.0.0</apiVersion>
-                            <basePath>http://localhost:7777/comker-app/ws/comker/adm</basePath>
-                            <!--Required parameters END-->
-
-                            <!---Optional General parameters BEGIN-->
-                            <apiInfo>
-                                <title>Comker Core API</title>
-                                <description>Comker Core Module API</description>
-                                <termsOfServiceUrl>http://www.github.com/comker/comker-core</termsOfServiceUrl>
-                                <contact>comker#gmail$com</contact>
-                                <license>Apache 2.0</license>
-                                <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
-                            </apiInfo>
-                            <!---Optional General parameters END-->
-
-                            <!---Document generation parameters BEGIN-->
-                            <outputTemplate>${basedir}/src/main/swagger/templates/strapdown.html.mustache</outputTemplate>
-                            <mustacheFileRoot>${basedir}/src/main/swagger/templates/</mustacheFileRoot>
-                            <outputPath>${basedir}/target/classes/META-INF/resources/comker/core/document.html</outputPath>
-                            <!---Document generation parameters END-->
-
-                            <!---Swagger JSON parameters BEGIN-->
-                            <swaggerDirectory>${basedir}/target/classes/META-INF/resources/comker/core/api-docs</swaggerDirectory>
-                            <swaggerUIDocBasePath>http://localhost:7777/comker-app/comker/core/api-docs</swaggerUIDocBasePath>
-                            <useOutputFlatStructure>false</useOutputFlatStructure>
-                            <!---Swagger JSON parameters END-->
-                        </apiSource>
-                    </apiSources>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <profile>
-            <id>standalone</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <finalName>${artifact.name}</finalName>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-war-plugin</artifactId>
-                        <version>2.4</version>
-                        <configuration>
-                            <warName>${artifact.name}</warName>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
         <profile>
             <id>debug</id>
             <activation>
@@ -489,16 +422,9 @@
             </activation>
             <dependencies>
                 <dependency>
-                    <groupId>com.wordnik</groupId>
-                    <artifactId>swagger-core_2.10</artifactId>
-                    <version>${swagger.version}</version>
-                    <scope>compile</scope>
-                </dependency>
-                <dependency>
-                    <groupId>com.wordnik</groupId>
-                    <artifactId>swagger-jaxrs_2.10</artifactId>
-                    <version>${swagger.version}</version>
-                    <scope>compile</scope>
+                    <groupId>net.cokkee.comker</groupId>
+                    <artifactId>comker-swagger</artifactId>
+                    <version>1.0.0</version>
                 </dependency>
             </dependencies>
             <build>
@@ -519,7 +445,6 @@
                             <httpConnector>
                                 <port>7777</port>
                             </httpConnector>
-                            <jettyXml>src/main/etc/jetty.xml</jettyXml>
                         </configuration>
                     </plugin>
                 </plugins>

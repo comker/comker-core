@@ -20,7 +20,7 @@ import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -78,9 +78,9 @@ public abstract class ComkerInitializationCommonImpl
     }
 
 
-    protected MessageDigestPasswordEncoder passwordEncoder = null;
+    protected PasswordEncoder passwordEncoder = null;
 
-    public void setPasswordEncoder(MessageDigestPasswordEncoder passwordEncoder) {
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

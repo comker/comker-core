@@ -1,8 +1,12 @@
-package net.cokkee.comker.core.config;
+package net.cokkee.comker.core.config.demo;
 
+import java.util.LinkedList;
 import java.util.Properties;
 import javax.sql.DataSource;
 import net.cokkee.comker.base.ComkerBaseConstant;
+import net.cokkee.comker.base.config.ComkerBaseContextConfig;
+import net.cokkee.comker.base.service.ComkerBaseInitializationService;
+import net.cokkee.comker.core.config.ComkerCoreContextConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -23,21 +28,38 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author drupalex
  */
 @Configuration
+@Import({
+    ComkerBaseContextConfig.class,
+    ComkerCoreContextConfig.class
+})
 @EnableTransactionManagement
-@PropertySource("WEB-INF/jdbc.properties")
-public class ComkerCoreSharingConfig {
+@PropertySource("file:src/main/webapp/WEB-INF/jdbc.properties")
+@Profile(ComkerBaseConstant.PROFILE_DEMO)
+public class ComkerCoreContextDemoConfig {
     
-    private static final Logger logger = LoggerFactory.getLogger(ComkerCoreSharingConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(ComkerCoreContextDemoConfig.class);
     
-    public ComkerCoreSharingConfig() {
+    public ComkerCoreContextDemoConfig() {
         if (logger.isDebugEnabled()) {
-            logger.debug("==@ " + ComkerCoreSharingConfig.class.getSimpleName() + " is invoked");
+            logger.debug("==@ " + ComkerCoreContextDemoConfig.class.getSimpleName() + " is invoked");
         }
     }
  
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
             return new PropertySourcesPlaceholderConfigurer();
+    }
+    
+    @Bean
+    public LinkedList<ComkerBaseInitializationService> comkerInitializationServiceList(
+            @Qualifier("comkerInitializationService") 
+                    ComkerBaseInitializationService comkerInitializationService,
+            @Qualifier("comkerInitializationSampleData") 
+                    ComkerBaseInitializationService comkerInitializationSampleData) {
+        LinkedList<ComkerBaseInitializationService> list = new LinkedList<ComkerBaseInitializationService>();
+        list.add(comkerInitializationService);
+        list.add(comkerInitializationSampleData);
+        return list;
     }
     
     @Bean

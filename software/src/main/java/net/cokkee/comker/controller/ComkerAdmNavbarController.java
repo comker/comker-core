@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "comker_adm_navbar", description = "Administration Navbar API")
+@Api(value = "Navbar", description = "Administration Navbar API")
 @Controller
 @RequestMapping("/comker/adm/navbar")
 public class ComkerAdmNavbarController {

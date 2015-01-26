@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerUserDao;
@@ -26,10 +27,15 @@ import net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerUserValidator;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  *
@@ -69,7 +75,15 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
     }
+    
+    private PasswordEncoder passwordEncoder = null;
 
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    //--------------------------------------------------------------------------
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Integer count() {
@@ -211,27 +225,35 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
     public ComkerUserDTO create(ComkerUserDTO item) {
         invokeValidator(userValidator, item);
 
-        ComkerUserDPO dbItem = new ComkerUserDPO();
-        ComkerDataUtil.copyProperties(item, dbItem);
-        saveAggregationRefs(item, dbItem);
-        dbItem = userDao.create(dbItem);
+        ComkerUserDPO userDPO = new ComkerUserDPO();
+        ComkerDataUtil.copyPropertiesExcludes(item, userDPO, new String[] {"password"});
+        if (!ComkerDataUtil.isStringEmpty(item.getPassword())) {
+            userDPO.setPassword(passwordEncoder.encode(item.getPassword()));
+        }
+        saveAggregationRefs(item, userDPO);
+        userDPO = userDao.create(userDPO);
         
         ComkerUserDTO poItem = new ComkerUserDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
+        ComkerDataUtil.copyProperties(userDPO, poItem);
+        loadAggregationRefs(userDPO, poItem);
         return poItem;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void update(ComkerUserDTO item) {
-        ComkerUserDPO dbItem = getNotNull(item.getId());
+        ComkerUserDPO userDPO = getNotNull(item.getId());
 
         invokeValidator(userValidator, item);
 
-        ComkerDataUtil.copyProperties(item, dbItem);
-        saveAggregationRefs(item, dbItem);
-        userDao.update(dbItem);
+        ComkerDataUtil.copyPropertiesExcludes(item, userDPO, new String[] {"password"});
+        
+        if (!ComkerDataUtil.isStringEmpty(item.getPassword())) {
+            userDPO.setPassword(passwordEncoder.encode(item.getPassword()));
+        }
+        
+        saveAggregationRefs(item, userDPO);
+        userDao.update(userDPO);
     }
 
     @Override

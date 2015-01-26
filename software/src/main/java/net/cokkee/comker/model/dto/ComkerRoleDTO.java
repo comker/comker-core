@@ -21,6 +21,7 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
         this.name = name;
         this.description = description;
     }
+    
     private String id;
     private String code;
     private String name;

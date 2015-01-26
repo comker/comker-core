@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Api(value = "comker_adm_spot", description = "Administration Spot API")
+@Api(value = "Site", description = "Administration Site API")
 @Controller
 @RequestMapping("/comker/adm/spot")
 public class ComkerAdmSpotController {

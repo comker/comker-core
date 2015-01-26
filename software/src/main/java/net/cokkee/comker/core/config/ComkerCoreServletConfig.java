@@ -14,6 +14,7 @@ import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.service.impl.ComkerExceptionTransformerImpl;
 import net.cokkee.comker.service.impl.ComkerLocalizationServiceImpl;
+import net.cokkee.comker.service.impl.ComkerSessionServiceImpl;
 import net.cokkee.comker.storage.ComkerCrewStorage;
 import net.cokkee.comker.storage.ComkerPermissionStorage;
 import net.cokkee.comker.storage.ComkerRegistrationStorage;
@@ -29,6 +30,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -46,6 +49,12 @@ public class ComkerCoreServletConfig {
         }
     }
 
+    @Bean
+    @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
+    public ComkerSessionService comkerSessionService() {
+        return new ComkerSessionServiceImpl();
+    }
+    
     @Bean
     public ComkerSessionController comkerSessionController(
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,

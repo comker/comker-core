@@ -77,8 +77,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
@@ -100,24 +100,6 @@ public class ComkerCoreContextConfig {
     
     //--------------------------------------------------------------------------
     
-//    @Bean
-//    public ComkerBootstrapPublisher comkerBootstrapPublisher() {
-//        ComkerBootstrapPublisher bean = new ComkerBootstrapPublisher();
-//        return bean;
-//    }
-//
-//    @Bean
-//    public ComkerBootstrapInitializer comkerBootstrapInitializer(
-//            @Qualifier("comkerInitializationService") 
-//                    ComkerInitializationService defaultInitializationService,
-//            @Qualifier("comkerInitializationServiceList") 
-//                    LinkedList<ComkerInitializationService> initializationServices) {
-//        ComkerBootstrapInitializer bean = new ComkerBootstrapInitializer();
-//        bean.setDefaultInitializationService(defaultInitializationService);
-//        bean.setInitializationServices(initializationServices);
-//        return bean;
-//    }
-    
     @Bean
     public ComkerInitializationService comkerInitializationService(
             @Qualifier("comkerUserDao") ComkerUserDao comkerUserDao,
@@ -127,7 +109,7 @@ public class ComkerCoreContextConfig {
             @Qualifier("comkerRoleDao") ComkerRoleDao comkerRoleDao,
             @Qualifier("comkerPermissionDao") ComkerPermissionDao comkerPermissionDao,
             @Qualifier("comkerNavbarDao") ComkerNavbarDao comkerNavbarDao,
-            @Qualifier("comkerPasswordEncoder") MessageDigestPasswordEncoder comkerPasswordEncoder) {
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
         ComkerInitializationServiceImpl bean = new ComkerInitializationServiceImpl();
         bean.setUserDao(comkerUserDao);
         bean.setSpotDao(comkerSpotDao);
@@ -149,7 +131,7 @@ public class ComkerCoreContextConfig {
             @Qualifier("comkerRoleDao") ComkerRoleDao comkerRoleDao,
             @Qualifier("comkerPermissionDao") ComkerPermissionDao comkerPermissionDao,
             @Qualifier("comkerNavbarDao") ComkerNavbarDao comkerNavbarDao,
-            @Qualifier("comkerPasswordEncoder") MessageDigestPasswordEncoder comkerPasswordEncoder) {
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
         ComkerInitializationSampleData bean = new ComkerInitializationSampleData();
         bean.setUserDao(comkerUserDao);
         bean.setSpotDao(comkerSpotDao);
@@ -163,25 +145,10 @@ public class ComkerCoreContextConfig {
     }
     
     @Bean
-    public LinkedList<ComkerInitializationService> comkerInitializationServiceList(
-            @Qualifier("comkerInitializationSampleData") 
-                    ComkerInitializationService comkerInitializationSampleData) {
-        LinkedList<ComkerInitializationService> list = new LinkedList<ComkerInitializationService>();
-        list.add(comkerInitializationSampleData);
-        return list;
-    }
-    
-    @Bean
-    @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
-    public ComkerSessionService comkerSessionService() {
-        return new ComkerSessionServiceImpl();
-    }
-    
-    @Bean
     public ComkerSecurityService comkerSecurityService(
             @Qualifier("comkerSecurityContextHolder") ComkerSecurityContextHolder comkerSecurityContextHolder,
             @Qualifier("comkerUserStorage") ComkerUserStorage comkerUserStorage,
-            @Qualifier("comkerPasswordEncoder") MessageDigestPasswordEncoder comkerPasswordEncoder) {
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
         ComkerSecurityServiceImpl bean = new ComkerSecurityServiceImpl();
         bean.setsecurityContextHolder(comkerSecurityContextHolder);
         bean.setUserStorage(comkerUserStorage);
@@ -190,8 +157,8 @@ public class ComkerCoreContextConfig {
     }
     
     @Bean
-    public MessageDigestPasswordEncoder comkerPasswordEncoder() {
-        return new Md5PasswordEncoder();
+    public PasswordEncoder comkerPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
     
     @Bean

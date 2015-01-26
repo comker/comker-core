@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.RedirectView;
 
-@Api(value = "comker_registration", description = "Registration API")
+@Api(value = "Registration", description = "Registration API")
 @Controller
 @RequestMapping("/comker/registration")
 public class ComkerRegistrationController {

@@ -7,7 +7,7 @@
                 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         version="2.5">
 
-    <display-name>Comker Core Application</display-name>
+    <display-name>Comker Core Module Demo</display-name>
     
     <context-param>
         <param-name>contextClass</param-name>
@@ -17,14 +17,13 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            net.cokkee.comker.webapp.config.ComkerCoreContextConfig
-            net.cokkee.comker.webapp.config.ComkerCoreSharingConfig
+            net.cokkee.comker.core.config.demo.ComkerCoreContextDemoConfig
         </param-value>
     </context-param>
 
     <context-param>
-        <param-name>spring.profiles.default</param-name>
-        <param-value>production</param-value>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>production,demo</param-value>
     </context-param>
 
     <context-param>
@@ -83,16 +82,15 @@
         <servlet-name>MVCServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
-            <param-name>spring.profiles.active</param-name>
-            <param-value>production</param-value>
-        </init-param>
-        <init-param>
             <param-name>contextClass</param-name>
             <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
         </init-param>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>net.cokkee.comker.core.config.ComkerCoreServletConfig</param-value>
+            <param-value>
+                net.cokkee.comker.core.config.demo.ComkerCoreServletDemoConfig
+                net.cokkee.comker.swagger.config.ComkerSwaggerSpringConfig
+            </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

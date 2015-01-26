@@ -46,13 +46,27 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  *
  * @author drupalex
  */
-@RunWith(MockitoJUnitRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+        classes = {
+            ComkerUserStorageUnitTest.ContextConfig.class
+        }
+)
 public class ComkerUserStorageUnitTest {
 
     private List<String> userIdx = new ArrayList<String>();
@@ -73,6 +87,10 @@ public class ComkerUserStorageUnitTest {
     @InjectMocks
     private ComkerUserValidator userValidator;
 
+    @Autowired
+    @Qualifier(value = "comkerPasswordEncoder")
+    private PasswordEncoder passwordEncoder;
+    
     @Mock
     private ComkerUserDao userDao;
 
@@ -90,6 +108,7 @@ public class ComkerUserStorageUnitTest {
         MockitoAnnotations.initMocks(this);
 
         userStorage.setUserValidator(userValidator);
+        userStorage.setPasswordEncoder(passwordEncoder);
         
         /*
          * Demo data for spotDao
@@ -537,5 +556,22 @@ public class ComkerUserStorageUnitTest {
     @Test(expected = ComkerObjectNotFoundException.class)
     public void test_delete_user_object_by_invalid_id() {
         userStorage.delete("user-not-found");
+    }
+    
+    @Configuration
+    public static class ContextConfig {
+        
+        private static final Logger logger = LoggerFactory.getLogger(ContextConfig.class);
+    
+        public ContextConfig() {
+            if (logger.isDebugEnabled()) {
+                logger.debug("==@ " + ContextConfig.class.getSimpleName() + " is invoked");
+            }
+        }
+        
+        @Bean
+        public PasswordEncoder comkerPasswordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
     }
 }

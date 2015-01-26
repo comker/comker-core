@@ -38,52 +38,52 @@ public class ComkerInitializationSampleData extends ComkerInitializationCommonIm
         ComkerRoleDPO roleMgr = getManagerRole();
         ComkerRoleDPO roleMbr = getMemberRole();
 
-        ComkerSpotDPO spotBnho = getOrCreateSpot("BUOCNHO_COM", "Buocnho Training & Technology", "");
+        ComkerSpotDPO spotBnho = getOrCreateSpot("SAMPLE_SPOT_1", "Sample Spot/Site #1", "");
         initDefaultSpot(spotBnho);
 
         ComkerUserDPO userBnho0 = getOrCreateUser(
-                "manager@buocnho.com",
-                "BNA00000",
-                passwordEncoder.encodePassword("dobietday", null),
-                "Buocnho Manager");
+                "manager@site1.cokkee.net",
+                "SPOT100000",
+                passwordEncoder.encode("dobietday"),
+                "Sample One Manager");
         initDefaultUser(userBnho0, spotBnho, roleMgr);
 
         ComkerUserDPO userBnho1 = getOrCreateUser(
-                "member1@buocnho.com",
-                "BNA00001",
-                passwordEncoder.encodePassword("nopassword", null),
-                "Buocnho Member One");
+                "member1@site1.cokkee.net",
+                "SPOT100001",
+                passwordEncoder.encode("nopassword"),
+                "Sample One Member One");
         initDefaultUser(userBnho1, spotBnho, roleMbr);
 
         ComkerUserDPO userBnho2 = getOrCreateUser(
-                "member2@buocnho.com",
-                "BNA00002",
-                passwordEncoder.encodePassword("nopassword", null),
-                "Buocnho Member Two");
+                "member2@site1.cokkee.net",
+                "SPOT100002",
+                passwordEncoder.encode("nopassword"),
+                "Sample One Member Two");
         initDefaultUser(userBnho2, spotBnho, roleMbr);
 
-        ComkerSpotDPO spotPctu = getOrCreateSpot("PCTU_EDU_VN", "Đại học Phan Châu Trinh - Hội An", "");
+        ComkerSpotDPO spotPctu = getOrCreateSpot("SAMPLE_SPOT_2", "Sample Spot/Site #2", "");
         initDefaultSpot(spotPctu);
 
         ComkerUserDPO userPctu0 = getOrCreateUser(
-                "manager@pctu.edu.vn",
-                "PCT00000",
-                passwordEncoder.encodePassword("dobietday", null),
-                "Pctu Manager");
+                "manager@site2.cokkee.net",
+                "SPOT200000",
+                passwordEncoder.encode("dobietday"),
+                "Sample Two Manager");
         initDefaultUser(userPctu0, spotPctu, roleMgr);
 
         ComkerUserDPO userPctu1 = getOrCreateUser(
-                "member1@pctu.edu.vn",
-                "PCT00001",
-                passwordEncoder.encodePassword("nopassword", null),
-                "Pctu Member One");
+                "member1@site2.cokkee.net",
+                "SPOT200001",
+                passwordEncoder.encode("nopassword"),
+                "Sample Two Member One");
         initDefaultUser(userPctu1, spotPctu, roleMbr);
 
         ComkerUserDPO userPctu2 = getOrCreateUser(
-                "member2@pctu.edu.vn",
-                "PCT00002",
-                passwordEncoder.encodePassword("nopassword", null),
-                "Pctu Member Two");
+                "member2@site2.cokkee.net",
+                "SPOT200002",
+                passwordEncoder.encode("nopassword"),
+                "Sample Two Member Two");
         initDefaultUser(userPctu2, spotPctu, roleMbr);
     }
 }

@@ -38,7 +38,7 @@ public class ComkerDataUtil {
     //--------------------------------------------------------------------------
 
     public static final String CODE_PATTERN =
-            "^[A-Z0-9_\\-]{1,32}$";
+            "^[A-Za-z0-9_\\-]{1,32}$";
 
     public static boolean verifyCode(String code) {
         if (code == null) return false;
@@ -207,5 +207,11 @@ public class ComkerDataUtil {
     public static String convertObjectToString(Object value) {
         if (value == null) return null;
         return value.toString();
+    }
+    
+    //--------------------------------------------------------------------------
+    
+    public static boolean isStringEmpty(String s) {
+        return (s == null || s.length() == 0 || s.trim().length() == 0);
     }
 }
