@@ -10,7 +10,7 @@ import net.cokkee.comker.controller.ComkerRegistrationController;
 import net.cokkee.comker.controller.ComkerSessionController;
 import net.cokkee.comker.service.ComkerExceptionTransformer;
 import net.cokkee.comker.service.ComkerLocalizationService;
-import net.cokkee.comker.service.ComkerSecurityService;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.service.impl.ComkerExceptionTransformerImpl;
 import net.cokkee.comker.service.impl.ComkerLocalizationServiceImpl;
@@ -58,9 +58,10 @@ public class ComkerCoreServletConfig {
     @Bean
     public ComkerSessionController comkerSessionController(
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
-            @Qualifier("comkerSecurityService") ComkerSecurityService comkerSecurityService) {
+            @Qualifier("comkerSecurityContextReader") ComkerSecurityContextReader comkerSecurityContextReader) {
         ComkerSessionController controller = new ComkerSessionController();
-        controller.setSecurityService(comkerSecurityService);
+        controller.setSessionService(comkerSessionService);
+        controller.setSecurityContextReader(comkerSecurityContextReader);
         return controller;
     }
     
@@ -69,6 +70,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerRegistrationStorage") ComkerRegistrationStorage comkerRegistrationStorage) {
         ComkerRegistrationController controller = new ComkerRegistrationController();
+        controller.setSessionService(comkerSessionService);
         controller.setRegistrationStorage(comkerRegistrationStorage);
         return controller;
     }
@@ -78,6 +80,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerUserStorage") ComkerUserStorage comkerUserStorage) {
         ComkerAdmUserController controller = new ComkerAdmUserController();
+        controller.setSessionService(comkerSessionService);
         controller.setUserStorage(comkerUserStorage);
         return controller;
     }
@@ -87,6 +90,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerCrewStorage") ComkerCrewStorage comkerCrewStorage) {
         ComkerAdmCrewController controller = new ComkerAdmCrewController();
+        controller.setSessionService(comkerSessionService);
         controller.setCrewStorage(comkerCrewStorage);
         return controller;
     }
@@ -96,6 +100,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerSpotStorage") ComkerSpotStorage comkerSpotStorage) {
         ComkerAdmSpotController controller = new ComkerAdmSpotController();
+        controller.setSessionService(comkerSessionService);
         controller.setSpotStorage(comkerSpotStorage);
         return controller;
     }
@@ -105,6 +110,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerRoleStorage") ComkerRoleStorage comkerRoleStorage) {
         ComkerAdmRoleController controller = new ComkerAdmRoleController();
+        controller.setSessionService(comkerSessionService);
         controller.setRoleStorage(comkerRoleStorage);
         return controller;
     }
@@ -114,6 +120,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerPermissionStorage") ComkerPermissionStorage comkerPermissionStorage) {
         ComkerAdmPermissionController controller = new ComkerAdmPermissionController();
+        controller.setSessionService(comkerSessionService);
         controller.setPermissionStorage(comkerPermissionStorage);
         return controller;
     }
@@ -123,6 +130,7 @@ public class ComkerCoreServletConfig {
             @Qualifier("comkerSessionService") ComkerSessionService comkerSessionService,
             @Qualifier("comkerWatchdogStorage") ComkerWatchdogStorage comkerWatchdogStorage) {
         ComkerAdmWatchdogController controller = new ComkerAdmWatchdogController();
+        controller.setSessionService(comkerSessionService);
         controller.setWatchdogStorage(comkerWatchdogStorage);
         return controller;
     }

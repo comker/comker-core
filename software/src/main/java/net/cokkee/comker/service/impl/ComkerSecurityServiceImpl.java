@@ -5,21 +5,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import net.cokkee.comker.exception.ComkerForbiddenAccessException;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.storage.ComkerUserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,7 +33,6 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     private ComkerUserStorage userStorage = null;
 
-    @Qualifier(value = "comkerUserStorage")
     public void setUserStorage(ComkerUserStorage userStorage) {
         this.userStorage = userStorage;
     }
@@ -45,6 +41,12 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     public void setsecurityContextHolder(ComkerSecurityContextHolder securityContextHolder) {
         this.securityContextHolder = securityContextHolder;
+    }
+    
+    private ComkerSecurityContextReader securityContextReader = null;
+
+    public void setsecurityContextReader(ComkerSecurityContextReader securityContextReader) {
+        this.securityContextReader = securityContextReader;
     }
 
     private UserCache userCache = null;
@@ -61,24 +63,6 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     //--------------------------------------------------------------------------
 
-    @Override
-    public String getUsername() {
-        ComkerUserDetails userDetails = getUserDetails();
-        if (userDetails == null) return null;
-        return userDetails.getUsername();
-    }
-
-    @Override
-    public ComkerUserDetails getUserDetails() {
-        SecurityContext context = securityContextHolder.getContext();
-        if (context == null) return null;
-        Authentication authentication = context.getAuthentication();
-        if (authentication == null) return null;
-        Object user = authentication.getPrincipal();
-        if (user instanceof ComkerUserDetails) return (ComkerUserDetails) user;
-        return null;
-    }
-    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerUserDetails loadUserDetails(String username)
@@ -133,7 +117,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     @Override
     public void reloadUserDetails(String spotCode) {
-        ComkerUserDetails oldUserDetails = getUserDetails();
+        ComkerUserDetails oldUserDetails = securityContextReader.getUserDetails();
         if (oldUserDetails == null) return;
 
         ComkerUserDetails userDetails = loadUserDetails(oldUserDetails.getUsername(), spotCode);
@@ -153,7 +137,7 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     @Override
     public void changePassword(String oldPassword, String newPassword) {
-        ComkerUserDetails oldUserDetails = getUserDetails();
+        ComkerUserDetails oldUserDetails = securityContextReader.getUserDetails();
         if (oldUserDetails == null) return;
 
         String oldEncodedPassword = passwordEncoder.encode(oldPassword);

@@ -4,10 +4,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.cokkee.comker.base.util.ComkerBaseDataUtil;
 import net.cokkee.comker.dao.ComkerWatchdogDao;
 import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 import net.cokkee.comker.model.dto.ComkerAbstractDTO;
-import net.cokkee.comker.service.ComkerSecurityService;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerToolboxService;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -32,41 +33,26 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
     private ComkerWatchdogDao watchdogDao = null;
 
-    public ComkerWatchdogDao getWatchdogDao() {
-        return watchdogDao;
-    }
-
     public void setWatchdogDao(ComkerWatchdogDao watchdogDao) {
         this.watchdogDao = watchdogDao;
     }
 
+    
     private TaskExecutor taskExecutor = null;
-
-    public TaskExecutor getTaskExecutor() {
-        return taskExecutor;
-    }
 
     public void setTaskExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
 
 
-    private ComkerSecurityService securityService = null;
+    private ComkerSecurityContextReader securityContextReader = null;
 
-    public ComkerSecurityService getSecurityService() {
-        return securityService;
-    }
-
-    public void setSecurityService(ComkerSecurityService securityService) {
-        this.securityService = securityService;
+    public void setSecurityContextReader(ComkerSecurityContextReader securityContextReader) {
+        this.securityContextReader = securityContextReader;
     }
 
 
     private ComkerToolboxService toolboxService = null;
-
-    public ComkerToolboxService getToolboxService() {
-        return toolboxService;
-    }
 
     public void setToolboxService(ComkerToolboxService toolboxService) {
         this.toolboxService = toolboxService;
@@ -80,12 +66,12 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
         Object result = null;
 
         ComkerWatchdogDPO item = new ComkerWatchdogDPO();
-        item.setHitTime(getToolboxService().getTime());
+        item.setHitTime(toolboxService.getTime());
         
         try {
-            long start = getToolboxService().getTimeInMillis();
+            long start = toolboxService.getTimeInMillis();
             result = invocation.proceed();
-            long end = getToolboxService().getTimeInMillis();
+            long end = toolboxService.getTimeInMillis();
             item.setHitDuration(end - start);
 
             item.setHitState(ComkerWatchdogDPO.HIT_STATE_SUCCESS);
@@ -98,7 +84,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
             }
             throw e;
         } finally {
-            getTaskExecutor().execute(new WriteWatchdogTask(invocation, item));
+            this.taskExecutor.execute(new WriteWatchdogTask(invocation, item));
         }
 
         return result;
@@ -123,7 +109,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
                 }
                 extractUserInfo(item);
                 extractMethodInfo(method, item);
-                getWatchdogDao().create(item);
+                watchdogDao.create(item);
             } catch (RuntimeException e) {
                 if (log.isErrorEnabled()) {
                     log.error(MessageFormat.format(
@@ -135,7 +121,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
         @Transactional(propagation = Propagation.REQUIRED)
         private void extractUserInfo(ComkerWatchdogDPO item) {
-            item.setUsername(getSecurityService().getUsername());
+            item.setUsername(securityContextReader.getUsername());
         }
         
         @Transactional(propagation = Propagation.REQUIRED)
@@ -145,18 +131,22 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
             Object[] params = invocation.getArguments();
 
             watchLog.setMethodName(MessageFormat.format("{0}.{1}", new Object[] {className, methodName}));
-
-            List<Object> objs = new ArrayList<Object>();
-            for(int i=0; (params!=null) && (i<params.length); i++) {
-                if (params[i] instanceof ComkerAbstractDTO ||
-                        params[i] instanceof String ||
-                        params[i] instanceof Integer) {
-                    objs.add(params[i]);
-                } else {
-                    objs.add("__unknown__");
+            
+            if (true) {
+                watchLog.setMethodArgs(ComkerBaseDataUtil.convertObjectToJson(params));
+            } else {
+                List<Object> objs = new ArrayList<Object>();
+                for(int i=0; (params!=null) && (i<params.length); i++) {
+                    if (params[i] instanceof ComkerAbstractDTO ||
+                            params[i] instanceof String ||
+                            params[i] instanceof Integer) {
+                        objs.add(params[i]);
+                    } else {
+                        objs.add("__unknown__");
+                    }
                 }
+                watchLog.setMethodArgs(ComkerBaseDataUtil.convertObjectToJson(objs));
             }
-            watchLog.setMethodArgs(getToolboxService().convertEntityToJson(objs));
 
             if (methodName.matches(".*(create|update).*")) {
                 if (log.isDebugEnabled()) {

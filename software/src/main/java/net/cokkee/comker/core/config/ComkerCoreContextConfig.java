@@ -24,11 +24,13 @@ import net.cokkee.comker.dao.impl.ComkerWatchdogDaoHibernate;
 import net.cokkee.comker.interceptor.ComkerWatchdogInterceptor;
 import net.cokkee.comker.service.ComkerInitializationService;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.service.impl.ComkerInitializationSampleData;
 import net.cokkee.comker.service.impl.ComkerInitializationServiceImpl;
 import net.cokkee.comker.service.impl.ComkerSecurityContextHolderImpl;
+import net.cokkee.comker.service.impl.ComkerSecurityContextReaderImpl;
 import net.cokkee.comker.service.impl.ComkerSecurityServiceImpl;
 import net.cokkee.comker.service.impl.ComkerToolboxServiceImpl;
 import net.cokkee.comker.storage.ComkerCrewStorage;
@@ -138,13 +140,15 @@ public class ComkerCoreContextConfig {
     
     @Bean
     public ComkerSecurityService comkerSecurityService(
+            @Qualifier("comkerUserStorageImpl") ComkerUserStorage comkerUserStorage,
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder,
             @Qualifier("comkerSecurityContextHolder") ComkerSecurityContextHolder comkerSecurityContextHolder,
-            @Qualifier("comkerUserStorage") ComkerUserStorage comkerUserStorage,
-            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
+            @Qualifier("comkerSecurityContextReader") ComkerSecurityContextReader comkerSecurityContextReader) {
         ComkerSecurityServiceImpl bean = new ComkerSecurityServiceImpl();
-        bean.setsecurityContextHolder(comkerSecurityContextHolder);
         bean.setUserStorage(comkerUserStorage);
         bean.setPasswordEncoder(comkerPasswordEncoder);
+        bean.setsecurityContextHolder(comkerSecurityContextHolder);
+        bean.setsecurityContextReader(comkerSecurityContextReader);
         return bean;
     }
     
@@ -156,6 +160,14 @@ public class ComkerCoreContextConfig {
     @Bean
     public ComkerSecurityContextHolder comkerSecurityContextHolder() {
         return new ComkerSecurityContextHolderImpl();
+    }
+    
+    @Bean
+    public ComkerSecurityContextReader comkerSecurityContextReader(
+            @Qualifier("comkerSecurityContextHolder") ComkerSecurityContextHolder comkerSecurityContextHolder) {
+        ComkerSecurityContextReaderImpl bean = new ComkerSecurityContextReaderImpl();
+        bean.setsecurityContextHolder(comkerSecurityContextHolder);
+        return bean;
     }
     
     @Bean
@@ -178,7 +190,20 @@ public class ComkerCoreContextConfig {
     }
     
     @Bean
-    public ComkerUserStorage comkerUserStorage(
+    public ProxyFactoryBean comkerUserStorage(
+            @Qualifier("comkerUserStorageImpl") ComkerUserStorage comkerUserStorageImpl) 
+            throws ClassNotFoundException {
+        ProxyFactoryBean bean = new ProxyFactoryBean();
+        bean.setProxyInterfaces(new Class[] {
+            net.cokkee.comker.storage.ComkerUserStorage.class
+        });
+        bean.setInterceptorNames("comkerCoreWatchdogPointcutAdvisor");
+        bean.setTarget(comkerUserStorageImpl);
+        return bean;
+    }
+    
+    @Bean
+    public ComkerUserStorageImpl comkerUserStorageImpl(
             @Qualifier("comkerUserValidator") ComkerUserValidator comkerUserValidator,
             @Qualifier("comkerUserDao") ComkerUserDao comkerUserDao,
             @Qualifier("comkerCrewDao") ComkerCrewDao comkerCrewDao,
@@ -394,12 +419,12 @@ public class ComkerCoreContextConfig {
     public ComkerWatchdogInterceptor comkerWatchdogInterceptor(
             @Qualifier("comkerTaskExecutor") TaskExecutor comkerTaskExecutor,
             @Qualifier("comkerWatchdogDao") ComkerWatchdogDao comkerWatchdogDao,
-            @Qualifier("comkerSecurityService") ComkerSecurityService comkerSecurityService,
+            @Qualifier("comkerSecurityContextReader") ComkerSecurityContextReader comkerSecurityContextReader,
             @Qualifier("comkerToolboxService") ComkerToolboxService comkerToolboxService) {
         ComkerWatchdogInterceptor bean = new ComkerWatchdogInterceptor();
         bean.setTaskExecutor(comkerTaskExecutor);
         bean.setWatchdogDao(comkerWatchdogDao);
-        bean.setSecurityService(comkerSecurityService);
+        bean.setSecurityContextReader(comkerSecurityContextReader);
         bean.setToolboxService(comkerToolboxService);
         return bean;
     }

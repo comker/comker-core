@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import net.cokkee.comker.controller.ComkerSessionController;
 import net.cokkee.comker.model.ComkerUserDetails;
-import net.cokkee.comker.service.ComkerSecurityService;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerSessionService;
 
 import org.junit.runner.RunWith;
@@ -66,7 +66,7 @@ public class ComkerSessionControllerUnitTest {
     private ComkerSessionService sessionService;
     
     @Mock
-    private ComkerSecurityService securityService;
+    private ComkerSecurityContextReader securityContextReader;
     
     protected MockMvc mockMvc;
     
@@ -84,7 +84,7 @@ public class ComkerSessionControllerUnitTest {
  
         long time1 = Calendar.getInstance().getTime().getTime();
 
-        Mockito.when(securityService.getUserDetails()).thenAnswer(new Answer<ComkerUserDetails>() {
+        Mockito.when(securityContextReader.getUserDetails()).thenAnswer(new Answer<ComkerUserDetails>() {
 
             @Override
             public ComkerUserDetails answer(InvocationOnMock invocation) throws Throwable {
@@ -109,8 +109,8 @@ public class ComkerSessionControllerUnitTest {
                 .andExpect(jsonPath("$.permissions", Matchers.hasSize(2)));
         //result.andDo(print());
  
-        Mockito.verify(securityService, Mockito.times(1)).getUserDetails();
-        Mockito.verifyNoMoreInteractions(securityService);
+        Mockito.verify(securityContextReader, Mockito.times(1)).getUserDetails();
+        Mockito.verifyNoMoreInteractions(securityContextReader);
     }
     
     //--------------------------------------------------------------------------

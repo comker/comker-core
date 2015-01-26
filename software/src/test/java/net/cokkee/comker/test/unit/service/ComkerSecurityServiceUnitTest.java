@@ -12,6 +12,7 @@ import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
 import net.cokkee.comker.service.impl.ComkerSecurityServiceImpl;
 import net.cokkee.comker.storage.ComkerUserStorage;
+
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.junit.Before;
@@ -23,14 +24,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,89 +58,6 @@ public class ComkerSecurityServiceUnitTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-    public void getUsername_ok() {
-        Mockito.when(securityContextHolder.getContext()).thenAnswer(new Answer<SecurityContext>() {
-            @Override
-            public SecurityContext answer(InvocationOnMock invocation) throws Throwable {
-                ComkerUserDetails user = new ComkerUserDetails(
-                        "pnhung177",
-                        "nopassword",
-                        "PERSONAL",
-                        new HashSet<String>(Arrays.asList(new String[] {}))
-                );
-                SecurityContext ctx = new SecurityContextImpl();
-                ctx.setAuthentication(new UsernamePasswordAuthenticationToken(
-                        user, user.getPassword(), user.getAuthorities()));
-                return ctx;
-            }
-        });
-
-        String username = securityService.getUsername();
-        Assert.assertEquals("pnhung177", username);
-    }
-    
-    @Test
-    public void getUsername_with_null_SecurityContext() {
-        Mockito.when(securityContextHolder.getContext()).thenReturn(null);
-        String username = securityService.getUsername();
-        Assert.assertNull(username);
-    }
-    
-    @Test
-    public void getUsername_with_null_Authentication() {
-        Mockito.when(securityContextHolder.getContext()).thenAnswer(new Answer<SecurityContext>() {
-            @Override
-            public SecurityContext answer(InvocationOnMock invocation) throws Throwable {
-                SecurityContext ctx = new SecurityContextImpl();
-                ctx.setAuthentication(null);
-                return ctx;
-            }
-        });
-
-        String username = securityService.getUsername();
-        Assert.assertNull(username);
-    }
-    
-    @Test
-    public void getUserDetails_ok() {
-        Mockito.when(securityContextHolder.getContext()).thenAnswer(new Answer<SecurityContext>() {
-            @Override
-            public SecurityContext answer(InvocationOnMock invocation) throws Throwable {
-                ComkerUserDetails user = new ComkerUserDetails(
-                        "username",
-                        "password",
-                        "SPOT_01",
-                        new HashSet<String>(Arrays.asList(new String[] {}))
-                );
-                SecurityContext ctx = new SecurityContextImpl();
-                ctx.setAuthentication(new UsernamePasswordAuthenticationToken(
-                        user, user.getPassword(), user.getAuthorities()));
-                return ctx;
-            }
-        });
-
-        ComkerUserDetails userDetails = securityService.getUserDetails();
-        Assert.assertNotNull(userDetails);
-        Assert.assertEquals("username", userDetails.getUsername());
-        Assert.assertEquals("password", userDetails.getPassword());
-    }
-
-    @Test
-    public void getUserDetails_but_not_found() {
-        Mockito.when(securityContextHolder.getContext()).thenAnswer(new Answer<SecurityContext>() {
-            @Override
-            public SecurityContext answer(InvocationOnMock invocation) throws Throwable {
-                SecurityContext ctx = new SecurityContextImpl();
-                ctx.setAuthentication(null);
-                return ctx;
-            }
-        });
-
-        ComkerUserDetails userDetails = securityService.getUserDetails();
-        Assert.assertNull(userDetails);
-    }
-    
     @Test
     public void loadUserDetails_with_valid_username() {
         ComkerUserDTO user = new ComkerUserDTO("pnhung177@gmail.com", 

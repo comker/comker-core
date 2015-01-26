@@ -10,10 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 public interface ComkerSecurityService {
 
-    String getUsername();
-    
-    ComkerUserDetails getUserDetails();
-
     ComkerUserDetails loadUserDetails(String username)
             throws UsernameNotFoundException, DataAccessException;
     

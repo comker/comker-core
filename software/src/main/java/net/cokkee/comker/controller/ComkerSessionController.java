@@ -4,7 +4,7 @@ import com.wordnik.swagger.annotations.*;
 import java.util.Calendar;
 import net.cokkee.comker.model.ComkerSessionInfo;
 import net.cokkee.comker.model.ComkerUserDetails;
-import net.cokkee.comker.service.ComkerSecurityService;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +24,11 @@ public class ComkerSessionController {
         this.sessionService = sessionService;
     }
 
-    private ComkerSecurityService securityService = null;
+    private ComkerSecurityContextReader securityContextReader = null;
 
     @Autowired(required = false)
-    public void setSecurityService(ComkerSecurityService securityService) {
-        this.securityService = securityService;
+    public void setSecurityContextReader(ComkerSecurityContextReader securityContextReader) {
+        this.securityContextReader = securityContextReader;
     }
     
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,7 +44,7 @@ public class ComkerSessionController {
 
         item.setTimestamp(Calendar.getInstance().getTime());
         
-        ComkerUserDetails userDetails = securityService.getUserDetails();
+        ComkerUserDetails userDetails = securityContextReader.getUserDetails();
         if (userDetails != null) {
             item.setPermissions(userDetails.getPermissions());
         }
