@@ -22,12 +22,23 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
         this.description = description;
     }
     
+    public ComkerRoleDTO(String id, String code, String name, String description) {
+        this(code, name, description);
+        this.id = id;
+    }
+    
+    public ComkerRoleDTO(String id, String code, String name, String description, Boolean global) {
+        this(id, code, name, description);
+        this.global = global;
+    }
+    
     private String id;
     private String code;
     private String name;
     private String description;
     private String[] permissionIds;
-
+    private Boolean global = Boolean.TRUE;
+    
     public String getId() {
         return id;
     }
@@ -69,6 +80,14 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
         this.permissionIds = permissionIds;
     }
 
+    public Boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(Boolean global) {
+        this.global = global;
+    }
+    
     @XmlRootElement
     public static class Filter extends ComkerAbstractDTO.Filter {
         public Filter() {

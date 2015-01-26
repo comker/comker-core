@@ -1,7 +1,5 @@
 package net.cokkee.comker.service.impl;
 
-import java.util.List;
-
 import net.cokkee.comker.service.*;
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerNavbarDao;
@@ -249,10 +247,10 @@ public abstract class ComkerInitializationCommonImpl
     //==========================================================================
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    protected ComkerRoleDPO getOrCreateRole(String code, String name, String description) {
+    protected ComkerRoleDPO getOrCreateRole(String code, String name, String description, Boolean global) {
         ComkerRoleDPO item = roleDao.getByCode(code);
         if (item == null) {
-            item = new ComkerRoleDPO(code, name, description);
+            item = new ComkerRoleDPO(code, name, description, global);
             roleDao.create(item);
         }
         return item;
@@ -260,22 +258,22 @@ public abstract class ComkerInitializationCommonImpl
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerRoleDPO getAdministratorRole() {
-        return getOrCreateRole("Administrator", "Quản trị hệ thống", "Quản quản trị hệ thống");
+        return getOrCreateRole("Administrator", "Quản trị hệ thống", "Quản quản trị hệ thống", Boolean.TRUE);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerRoleDPO getManagerRole() {
-        return getOrCreateRole("Manager", "Quản lý Spot", "Quản lý vùng hoạt động");
+        return getOrCreateRole("Manager", "Quản lý Spot", "Quản lý vùng hoạt động", Boolean.FALSE);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerRoleDPO getMemberRole() {
-        return getOrCreateRole("Member", "Thành viên Spot", "Thành viên vùng hoạt động");
+        return getOrCreateRole("Member", "Thành viên Spot", "Thành viên vùng hoạt động", Boolean.FALSE);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     protected ComkerRoleDPO getGuestRole() {
-        return getOrCreateRole("Guest", "Thành viên tự do", "Thành viên không thuộc vùng hoạt động");
+        return getOrCreateRole("Guest", "Thành viên tự do", "Thành viên không thuộc vùng hoạt động", Boolean.TRUE);
     }
 
     //==========================================================================

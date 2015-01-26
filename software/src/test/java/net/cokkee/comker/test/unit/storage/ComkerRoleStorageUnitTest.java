@@ -293,17 +293,16 @@ public class ComkerRoleStorageUnitTest {
 
     @Test(expected = ComkerObjectNotFoundException.class)
     public void test_update_role_object_with_invalid_id() {
-        ComkerRoleDTO param = new ComkerRoleDTO("SOMETHING", "Something - modified", null);
-        param.setId("role-not-found");
+        ComkerRoleDTO param = new ComkerRoleDTO("role-not-found", "SOMETHING", "Something - modified", null);
         roleStorage.update(param);
     }
 
     @Test
     public void test_update_role_object_with_duplicated_both_id_and_code() {
         ComkerRoleDTO param = new ComkerRoleDTO(
+                roleIdx.get(2).getId(),
                 roleIdx.get(2).getCode(),
                 roleIdx.get(2).getName() + " - modified", null);
-        param.setId(roleIdx.get(2).getId());
         roleStorage.update(param);
         ComkerRoleDTO result = roleStorage.get(roleIdx.get(2).getId());
         assertEquals(result.getName(), param.getName());
@@ -312,17 +311,20 @@ public class ComkerRoleStorageUnitTest {
     @Test(expected = ComkerValidationFailedException.class)
     public void test_update_role_object_with_duplicated_code() {
         ComkerRoleDTO param = new ComkerRoleDTO(
+                roleIdx.get(1).getId(),
                 roleIdx.get(2).getCode(),
                 roleIdx.get(1).getName() + " - modified", null);
-        param.setId(roleIdx.get(1).getId());
         roleStorage.update(param);
     }
 
     @Test
     public void test_update_role_object_with_null_permissionIds() {
         ComkerRoleDPO source = roleIdx.get(1);
-        ComkerRoleDTO param = new ComkerRoleDTO(source.getCode(), source.getName() + " - modified", null);
-        param.setId(source.getId());
+        ComkerRoleDTO param = new ComkerRoleDTO(
+                source.getId(),
+                source.getCode(), 
+                source.getName() + " - modified", 
+                null);
         roleStorage.update(param);
         assertEquals(source.getCode(), param.getCode());
         assertEquals(source.getName(), param.getName());
@@ -333,9 +335,11 @@ public class ComkerRoleStorageUnitTest {
     public void test_update_role_object_with_valid_permissionIds() {
         ComkerRoleDPO source = roleIdx.get(1);
 
-        ComkerRoleDTO param = new ComkerRoleDTO(source.getCode(),
-                source.getName() + " - modified", source.getDescription() + " - modified");
-        param.setId(source.getId());
+        ComkerRoleDTO param = new ComkerRoleDTO(
+                source.getId(),
+                source.getCode(),
+                source.getName() + " - modified", 
+                source.getDescription() + " - modified");
         param.setPermissionIds(new String[] {
             permissionIdx.get(2).getId(),
             permissionIdx.get(5).getId(),
@@ -356,10 +360,10 @@ public class ComkerRoleStorageUnitTest {
     @Test(expected=ComkerValidationFailedException.class)
     public void test_update_role_object_with_invalid_permissionIds() {
         ComkerRoleDTO param = new ComkerRoleDTO(
+                roleIdx.get(1).getId(),
                 roleIdx.get(1).getCode(), 
                 roleIdx.get(1).getName() + " - modified",
                 "Role 01 description");
-        param.setId(roleIdx.get(1).getId());
         param.setPermissionIds(new String[] {
             permissionIdx.get(1).getId(),
             permissionIdx.get(2).getId(), "permission-not-found"});

@@ -30,11 +30,17 @@ public class ComkerRoleDPO extends ComkerAbstractDPO {
         this.name = name;
         this.description = description;
     }
+    
+    public ComkerRoleDPO(String code, String name, String description, Boolean global) {
+        this(code, name, description);
+        this.global = global;
+    }
 
     private String id;
     private String code;
     private String name;
     private String description;
+    private Boolean global = Boolean.TRUE;
     private List<ComkerRoleJoinPermissionDPO> roleJoinPermissionList =
             new LinkedList<ComkerRoleJoinPermissionDPO>();
 
@@ -75,6 +81,15 @@ public class ComkerRoleDPO extends ComkerAbstractDPO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "f_global", nullable = false)
+    public Boolean isGlobal() {
+        return global;
+    }
+
+    public void setGlobal(Boolean global) {
+        this.global = global;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.role", cascade=CascadeType.ALL, orphanRemoval=true)

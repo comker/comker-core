@@ -36,6 +36,7 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
     public Integer count(ComkerQuerySieve sieve) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRoleDPO.class);
+        applyCriteria(c, sieve);
         c.setProjection(Projections.rowCount());
         return ((Long) c.uniqueResult()).intValue();
     }
@@ -45,10 +46,21 @@ public class ComkerRoleDaoHibernate extends ComkerAbstractDaoHibernate
     public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         Session session = this.getSessionFactory().getCurrentSession();
         Criteria c = session.createCriteria(ComkerRoleDPO.class);
+        applyCriteria(c, sieve);
         ComkerQueryPager.apply(c, pager);
         return c.list();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    private void applyCriteria(Criteria c, ComkerQuerySieve sieve) {
+        if (sieve == null) return;
+        if(Boolean.FALSE.equals(sieve.getCriterion(FIELD_GLOBAL))) {
+            c.add(Restrictions.eq(FIELD_GLOBAL, Boolean.FALSE));
+        } else if(Boolean.TRUE.equals(sieve.getCriterion(FIELD_GLOBAL))) {
+            c.add(Restrictions.eq(FIELD_GLOBAL, Boolean.TRUE));
+        }
+    }
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerRoleDPO findWhere(Map<String, Object> params) {

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Api(value = "Role", description = "Administration Role API")
 @Controller
-@RequestMapping("/comker/adm/role")
+@RequestMapping("/comker/adm")
 public class ComkerAdmRoleController {
 
     private ComkerSessionService sessionService = null;
@@ -41,10 +41,74 @@ public class ComkerAdmRoleController {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @ApiOperation(
+            value = "List all of global roles",
+            notes = "Returns list of global roles",
+            response = ComkerRoleDTO.Pack.class)
+    @RequestMapping(method = RequestMethod.GET, value = "/globalroles", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ComkerRoleDTO.Pack getGlobalRoleList(
+            @ApiParam(value = "The begin position to get Global Roles", required = false)
+            @RequestParam(value="start", required=false) Integer start,
+            @ApiParam(value = "How many Global Roles do you want to get?", required = false)
+            @RequestParam(value="limit", required=false) Integer limit,
+            @ApiParam(value = "The query that role's name should be matched", required = false)
+            @RequestParam(value="q", required=false) String q) {
+
+        Integer total;
+        List collection;
+        
+        ComkerQuerySieve sieve = (new ComkerQuerySieve()).setCriterion("global", Boolean.TRUE);
+        
+        if (q != null) {
+            sieve.setCriterion("OR_CODE", q).setCriterion("OR_NAME", q);
+        }
+        
+        total = roleStorage.count(sieve);
+        collection = roleStorage.findAll(sieve,
+                sessionService.getPager(ComkerRoleDTO.class)
+                        .updateStart(start)
+                        .updateLimit(limit));
+        
+        return new ComkerRoleDTO.Pack(total, collection);
+    }
+    
+    @ApiOperation(
+            value = "List all of scoped roles",
+            notes = "Returns list of scoped roles",
+            response = ComkerRoleDTO.Pack.class)
+    @RequestMapping(method = RequestMethod.GET, value = "/scopedroles", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ComkerRoleDTO.Pack getScopedRoleList(
+            @ApiParam(value = "The begin position to get Global Roles", required = false)
+            @RequestParam(value="start", required=false) Integer start,
+            @ApiParam(value = "How many Global Roles do you want to get?", required = false)
+            @RequestParam(value="limit", required=false) Integer limit,
+            @ApiParam(value = "The query that role's name should be matched", required = false)
+            @RequestParam(value="q", required=false) String q) {
+
+        Integer total;
+        List collection;
+        
+        ComkerQuerySieve sieve = (new ComkerQuerySieve()).setCriterion("global", Boolean.FALSE);
+        
+        if (q != null) {
+            sieve.setCriterion("OR_CODE", q).setCriterion("OR_NAME", q);
+        }
+        
+        total = roleStorage.count(sieve);
+        collection = roleStorage.findAll(sieve,
+                sessionService.getPager(ComkerRoleDTO.class)
+                        .updateStart(start)
+                        .updateLimit(limit));
+        
+        return new ComkerRoleDTO.Pack(total, collection);
+    }
+    
+    @ApiOperation(
             value = "List all of roles",
             notes = "Returns list of roles",
             response = ComkerRoleDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", 
+    @RequestMapping(method = RequestMethod.GET, value = "/role", 
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO.Pack getRoleList(
             @ApiParam(value = "The begin position to get Roles", required = false)
@@ -84,7 +148,7 @@ public class ComkerAdmRoleController {
             response = ComkerRoleDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Role not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+    @RequestMapping(method = RequestMethod.GET, value = "/role/{id}", 
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO getRole(
             @ApiParam(value = "ID of role that needs to be fetched", required = true) 
@@ -97,7 +161,7 @@ public class ComkerAdmRoleController {
             response = ComkerRoleDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
-    @RequestMapping(method = RequestMethod.POST, value = "", 
+    @RequestMapping(method = RequestMethod.POST, value = "/role", 
             consumes = MediaType.APPLICATION_JSON_VALUE, 
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO createRole(
@@ -112,7 +176,7 @@ public class ComkerAdmRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Role not found"),
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
-    @RequestMapping(method = RequestMethod.PUT, value = "/{id}", 
+    @RequestMapping(method = RequestMethod.PUT, value = "/role/{id}", 
             consumes = MediaType.APPLICATION_JSON_VALUE, 
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO updateRole(
@@ -132,7 +196,7 @@ public class ComkerAdmRoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Role not found"),
             @ApiResponse(code = 409, message = "Conflict on database updating")})
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/role/{id}", 
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO deleteRole(
             @ApiParam(value = "ID of role that needs to be deleted", required = true)

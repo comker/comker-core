@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
         implements ComkerRoleStorage {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerRoleStorageImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerRoleStorageImpl.class);
 
     private ComkerRoleValidator roleValidator = null;
 

@@ -97,10 +97,10 @@ public class ComkerAdmRoleControllerUnitTest {
         
         for(int i=0; i<4; i++) {
             ComkerRoleDTO target = new ComkerRoleDTO(
+                    UUID.randomUUID().toString(),
                     "ROLE_CODE_" + i,
                     "Role name #" + i,
                     "Role Description #" + i);
-            target.setId(UUID.randomUUID().toString());
             switch(i) {
                 case 0:
                     target.setPermissionIds(null);
@@ -192,10 +192,10 @@ public class ComkerAdmRoleControllerUnitTest {
     public void getRole_Found_ShouldReturnFoundRole() throws Exception {
  
         ComkerRoleDTO target = new ComkerRoleDTO(
+                UUID.randomUUID().toString(),
                 "ROLE_CODE", 
                 "Role name", 
                 "Role Description");
-        target.setId(UUID.randomUUID().toString());
         target.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
@@ -259,10 +259,10 @@ public class ComkerAdmRoleControllerUnitTest {
                     public ComkerRoleDTO answer(InvocationOnMock invocation) throws Throwable {
                         ComkerRoleDTO input = (ComkerRoleDTO) invocation.getArguments()[0];
                         ComkerRoleDTO target = new ComkerRoleDTO(
+                                targetId,
                                 input.getCode(),
                                 input.getName(),
                                 input.getDescription());
-                        target.setId(targetId);
                         target.setPermissionIds(input.getPermissionIds());
                         return target;
                     }
@@ -290,19 +290,19 @@ public class ComkerAdmRoleControllerUnitTest {
     @Test
     public void updateRole_ok() throws Exception {
         final ComkerRoleDTO source = new ComkerRoleDTO(
+                UUID.randomUUID().toString(),
                 "ROLE_1",
                 "Role 1",
                 "Description Role 1");
-        source.setId(UUID.randomUUID().toString());
         source.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
         
         final ComkerRoleDTO target = new ComkerRoleDTO(
-                                source.getCode(),
-                                source.getName(),
-                                source.getDescription());
-        target.setId(source.getId());
+                source.getId(),
+                source.getCode(),
+                source.getName(),
+                source.getDescription());
         target.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
@@ -346,10 +346,10 @@ public class ComkerAdmRoleControllerUnitTest {
     public void deleteRole_ok() throws Exception {
  
         final ComkerRoleDTO target = new ComkerRoleDTO(
+                UUID.randomUUID().toString(),
                 "ROLE_CODE", 
                 "Role name", 
                 "Role Description");
-        target.setId(UUID.randomUUID().toString());
         target.setPermissionIds(new String[] {
             "PERMISSION_1"
         });
