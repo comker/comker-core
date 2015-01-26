@@ -36,11 +36,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author drupalex
  */
+@Service
 public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         implements ComkerUserStorage {
 

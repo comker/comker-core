@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerWatchdogStorageImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerWatchdogStorageImpl.class);
     
     private ComkerWatchdogDao watchdogDao = null;
 
@@ -65,11 +65,11 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerWatchdogDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerWatchdogDTO> poList = new ArrayList<ComkerWatchdogDTO>();
-        List dbList = getWatchdogDao().findAll(sieve, pager);
-        for(Object dbItem:dbList) {
+        List<ComkerWatchdogDPO> dbList = getWatchdogDao().findAll(sieve, pager);
+        for(ComkerWatchdogDPO dbItem:dbList) {
             ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
             ComkerDataUtil.copyProperties(dbItem, poItem);
-            loadAggregationRefs((ComkerWatchdogDPO)dbItem, poItem);
+            loadAggregationRefs(dbItem, poItem);
             poList.add(poItem);
         }
         return poList;

@@ -3,16 +3,22 @@ package net.cokkee.comker.interceptor;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.cokkee.comker.dao.ComkerWatchdogDao;
-import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
+import net.cokkee.comker.model.dto.ComkerAbstractDTO;
 import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.service.ComkerToolboxService;
+
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -100,8 +106,8 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
     private class WriteWatchdogTask implements Runnable {
 
-        private MethodInvocation method;
-        private ComkerWatchdogDPO item;
+        private final MethodInvocation method;
+        private final ComkerWatchdogDPO item;
 
         public WriteWatchdogTask(MethodInvocation method, ComkerWatchdogDPO item) {
             this.method = method;
@@ -109,6 +115,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
         }
 
         @Override
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         public void run() {
             try {
                 if (log.isDebugEnabled()) {
@@ -126,10 +133,12 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
             }
         }
 
+        @Transactional(propagation = Propagation.REQUIRED)
         private void extractUserInfo(ComkerWatchdogDPO item) {
             item.setUsername(getSecurityService().getUsername());
         }
         
+        @Transactional(propagation = Propagation.REQUIRED)
         private void extractMethodInfo(MethodInvocation invocation, ComkerWatchdogDPO watchLog) {
             String className = invocation.getMethod().getDeclaringClass().getName();
             String methodName = invocation.getMethod().getName();
@@ -139,7 +148,7 @@ public class ComkerWatchdogInterceptor implements MethodInterceptor {
 
             List<Object> objs = new ArrayList<Object>();
             for(int i=0; (params!=null) && (i<params.length); i++) {
-                if (params[i] instanceof ComkerAbstractDPO ||
+                if (params[i] instanceof ComkerAbstractDTO ||
                         params[i] instanceof String ||
                         params[i] instanceof Integer) {
                     objs.add(params[i]);

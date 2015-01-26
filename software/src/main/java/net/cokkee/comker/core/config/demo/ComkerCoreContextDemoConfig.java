@@ -21,6 +21,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -60,6 +61,15 @@ public class ComkerCoreContextDemoConfig {
         list.add(comkerInitializationService);
         list.add(comkerInitializationSampleData);
         return list;
+    }
+    
+    @Bean
+    public ThreadPoolTaskExecutor comkerTaskExecutor() {
+        ThreadPoolTaskExecutor bean = new ThreadPoolTaskExecutor();
+        bean.setCorePoolSize(5);
+        bean.setMaxPoolSize(100);
+        bean.setQueueCapacity(3000);
+        return bean;
     }
     
     @Bean

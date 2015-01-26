@@ -14,6 +14,8 @@ import net.cokkee.comker.service.ComkerSecurityService;
 import net.cokkee.comker.storage.ComkerUserStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,9 +34,9 @@ public class ComkerSecurityServiceImpl implements ComkerSecurityService {
 
     private final Logger log = LoggerFactory.getLogger(ComkerSecurityServiceImpl.class);
 
-
     private ComkerUserStorage userStorage = null;
 
+    @Qualifier(value = "comkerUserStorage")
     public void setUserStorage(ComkerUserStorage userStorage) {
         this.userStorage = userStorage;
     }
