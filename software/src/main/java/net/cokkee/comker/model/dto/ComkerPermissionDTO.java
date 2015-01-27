@@ -18,7 +18,12 @@ public class ComkerPermissionDTO extends ComkerAbstractDTO {
         super();
         this.authority = authority;
     }
-
+    
+    public ComkerPermissionDTO(String id, String authority) {
+        this(authority);
+        this.id = id;
+    }
+    
     private String id;
     private String authority;
 
@@ -36,16 +41,6 @@ public class ComkerPermissionDTO extends ComkerAbstractDTO {
 
     public void setAuthority(String authority) {
         this.authority = authority;
-    }
-
-    @XmlRootElement
-    public static class Filter extends ComkerAbstractDTO.Filter {
-        public Filter() {
-            super();
-        }
-        public Filter(String queryString) {
-            super(queryString);
-        }
     }
     
     @XmlRootElement

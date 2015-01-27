@@ -2,14 +2,16 @@ package net.cokkee.comker.controller;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
+
 import net.cokkee.comker.base.ComkerBaseConstant;
-import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerPermissionStorage;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.service.ComkerSessionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +46,8 @@ public class ComkerAdmPermissionController {
             value = "List all of permissions",
             notes = "Returns list of permissions",
             response = ComkerPermissionDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerPermissionDTO.Pack getPermissionList(
             @ApiParam(value = "The begin position to get Permissions", required = false)
             @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
@@ -82,7 +85,8 @@ public class ComkerAdmPermissionController {
             response = ComkerPermissionDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Permission not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerPermissionDTO getPermission(
             @ApiParam(value = "ID of permission that needs to be fetched", required = true) 
             @PathVariable String id) {

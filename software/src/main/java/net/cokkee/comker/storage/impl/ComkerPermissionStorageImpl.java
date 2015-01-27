@@ -10,7 +10,6 @@ import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerPermissionDTO;
 import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
-import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerPermissionValidator;
 
 import org.springframework.transaction.annotation.Propagation;
@@ -59,11 +58,12 @@ public class ComkerPermissionStorageImpl extends ComkerAbstractStorageImpl
     @Override
     public List findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerPermissionDTO> polist = new ArrayList<ComkerPermissionDTO>();
-        List dblist = permissionDao.findAll(sieve, pager);
-        for(Object dbitem:dblist) {
-            ComkerPermissionDTO poitem = new ComkerPermissionDTO();
-            ComkerDataUtil.copyProperties(dbitem, poitem);
-            polist.add(poitem);
+        List<ComkerPermissionDPO> dblist = permissionDao.findAll(sieve, pager);
+        for(ComkerPermissionDPO dbItem:dblist) {
+            ComkerPermissionDTO poItem = new ComkerPermissionDTO(
+                dbItem.getId(),
+                dbItem.getAuthority());
+            polist.add(poItem);
         }
         return polist;
     }
@@ -71,17 +71,19 @@ public class ComkerPermissionStorageImpl extends ComkerAbstractStorageImpl
     @Override
     public ComkerPermissionDTO get(String id) {
         ComkerPermissionDPO dbItem = permissionDao.get(id);
-        ComkerPermissionDTO poitem = new ComkerPermissionDTO();
-        ComkerDataUtil.copyProperties(dbItem, poitem);
-        return poitem;
+        ComkerPermissionDTO poItem = new ComkerPermissionDTO(
+                dbItem.getId(),
+                dbItem.getAuthority());
+        return poItem;
     }
 
     @Override
     public ComkerPermissionDTO getByAuthority(String authority) {
         ComkerPermissionDPO dbItem = permissionDao.getByAuthority(authority);
-        ComkerPermissionDTO poitem = new ComkerPermissionDTO();
-        ComkerDataUtil.copyProperties(dbItem, poitem);
-        return poitem;
+        ComkerPermissionDTO poItem = new ComkerPermissionDTO(
+                dbItem.getId(),
+                dbItem.getAuthority());
+        return poItem;
     }
 
     @Override
@@ -89,12 +91,13 @@ public class ComkerPermissionStorageImpl extends ComkerAbstractStorageImpl
     public ComkerPermissionDTO create(ComkerPermissionDTO item) {
         invokeValidator(permissionValidator, item);
 
-        ComkerPermissionDPO dbItem = new ComkerPermissionDPO();
-        ComkerDataUtil.copyProperties(item, dbItem);
+        ComkerPermissionDPO dbItem = new ComkerPermissionDPO(
+            item.getAuthority());
         dbItem = permissionDao.save(dbItem);
 
-        ComkerPermissionDTO poItem = new ComkerPermissionDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
+        ComkerPermissionDTO poItem = new ComkerPermissionDTO(
+                dbItem.getId(),
+                dbItem.getAuthority());
         return poItem;
     }
 }

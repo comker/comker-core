@@ -25,6 +25,11 @@ public class ComkerPermissionDPO extends ComkerAbstractDPO {
         super();
         this.authority = authority;
     }
+    
+    public ComkerPermissionDPO update(String authority) {
+        this.authority = authority;
+        return this;
+    }
 
     private String id;
     private String authority;
