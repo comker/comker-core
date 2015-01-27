@@ -275,14 +275,14 @@ public class ComkerCrewStorageUnitTest {
             }
         });
 
-        doAnswer(new Answer<ComkerCrewDPO>() {
+        doAnswer(new Answer<String>() {
             @Override
-            public ComkerCrewDPO answer(InvocationOnMock invocation) throws Throwable {
+            public String answer(InvocationOnMock invocation) throws Throwable {
                 ComkerCrewDPO crew = (ComkerCrewDPO) invocation.getArguments()[0];
                 crew.setId(UUID.randomUUID().toString());
                 crewMap.put(crew.getId(), crew);
                 crewIdx.add(crew.getId());
-                return crew;
+                return crew.getId();
             }
         }).when(crewDao).create(any(ComkerCrewDPO.class));
 
@@ -384,8 +384,9 @@ public class ComkerCrewStorageUnitTest {
         spotAndRoles.add(new ComkerKeyAndValueSet(spotIdx.get(1), new String[]{roleIdx.get(4), roleIdx.get(6)}));
         param.setScopedRoleIds(spotAndRoles.toArray(new ComkerKeyAndValueSet[0]));
 
-        ComkerCrewDTO result = crewStorage.create(param);
-
+        String resultId = crewStorage.create(param);
+        ComkerCrewDTO result = crewStorage.get(resultId);
+        
         assertNotNull(result);
         assertNotNull(result.getId());
         assertEquals(result.getName(), param.getName());

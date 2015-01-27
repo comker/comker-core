@@ -49,11 +49,18 @@
     <bean id="comkerSecurityContextHolder"
             class="net.cokkee.comker.service.impl.ComkerSecurityContextHolderImpl">
     </bean>
+    
+    <bean id="comkerSecurityContextReader"
+            class="net.cokkee.comker.service.impl.ComkerSecurityContextReaderImpl">
+        <property name="securityContextHolder" ref="comkerSecurityContextHolder"/>
+    </bean>
 
     <bean id="comkerSecurityService"
             class="net.cokkee.comker.service.impl.ComkerSecurityServiceImpl">
         <property name="securityContextHolder" ref="comkerSecurityContextHolder"/>
+        <property name="securityContextReader" ref="comkerSecurityContextReader"/>
         <property name="userStorage" ref="comkerUserStorage"/>
+        <property name="passwordEncoder" ref="comkerPasswordEncoder"/>
     </bean>
 
     <bean id="comkerSessionService"

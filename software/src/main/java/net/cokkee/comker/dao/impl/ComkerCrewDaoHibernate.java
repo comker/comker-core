@@ -218,18 +218,16 @@ public class ComkerCrewDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerCrewDPO create(ComkerCrewDPO item) {
+    public String create(ComkerCrewDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
-        session.save(item);
-        return item;
+        return String.valueOf(session.save(item));
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerCrewDPO update(ComkerCrewDPO item) {
+    public void update(ComkerCrewDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
-        return item;
     }
 
     @Override

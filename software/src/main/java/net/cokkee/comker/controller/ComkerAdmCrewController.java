@@ -99,7 +99,7 @@ public class ComkerAdmCrewController {
     public @ResponseBody ComkerCrewDTO createCrew(
             @ApiParam(value = "Crew object that needs to be added to the store", required = true)
             @RequestBody ComkerCrewDTO item) {
-        return crewStorage.create(item);
+        return crewStorage.get(crewStorage.create(item));
     }
     
     @ApiOperation(

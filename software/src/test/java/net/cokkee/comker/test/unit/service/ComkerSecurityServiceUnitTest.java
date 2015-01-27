@@ -10,6 +10,8 @@ import java.util.UUID;
 import net.cokkee.comker.model.ComkerUserDetails;
 import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
+import net.cokkee.comker.service.ComkerSecurityContextReader;
+import net.cokkee.comker.service.impl.ComkerSecurityContextReaderImpl;
 import net.cokkee.comker.service.impl.ComkerSecurityServiceImpl;
 import net.cokkee.comker.storage.ComkerUserStorage;
 
@@ -52,10 +54,14 @@ public class ComkerSecurityServiceUnitTest {
 
     @Mock
     private ComkerSecurityContextHolder securityContextHolder;
+    
+    @InjectMocks
+    private ComkerSecurityContextReaderImpl securityContextReader;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        securityService.setsecurityContextReader(securityContextReader);
     }
 
     @Test

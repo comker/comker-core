@@ -23,7 +23,7 @@
             class="net.cokkee.comker.interceptor.ComkerWatchdogInterceptor">
         <property name="watchdogDao" ref="comkerWatchdogDao" />
         <property name="taskExecutor" ref="comkerTaskExecutor" />
-        <property name="securityService" ref="comkerSecurityService" />
+        <property name="securityContextReader" ref="comkerSecurityContextReader" />
         <property name="toolboxService" ref="comkerToolboxService" />
     </bean>
 

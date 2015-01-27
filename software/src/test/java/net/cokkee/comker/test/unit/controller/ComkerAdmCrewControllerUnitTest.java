@@ -223,33 +223,36 @@ public class ComkerAdmCrewControllerUnitTest {
                 "Crew 1",
                 "Description Crew 1");
         
-        final String targetId = UUID.randomUUID().toString();
+        final ComkerCrewDTO target = new ComkerCrewDTO(
+                                source.getName(),
+                                source.getDescription());
+        target.setId(UUID.randomUUID().toString());
         
         Mockito.when(crewStorage.create(Mockito.any(ComkerCrewDTO.class)))
-                .thenAnswer(new Answer<ComkerCrewDTO>() {
+                .thenAnswer(new Answer<String>() {
                     @Override
-                    public ComkerCrewDTO answer(InvocationOnMock invocation) throws Throwable {
+                    public String answer(InvocationOnMock invocation) throws Throwable {
                         ComkerCrewDTO input = (ComkerCrewDTO) invocation.getArguments()[0];
-                        ComkerCrewDTO target = new ComkerCrewDTO(
-                                input.getName(),
-                                input.getDescription());
-                        target.setId(targetId);
-                        return target;
+                        
+                        return target.getId();
                     }
                 });
+        
+        Mockito.when(crewStorage.get(target.getId())).thenReturn(target);
         
         mockMvc.perform(post("/comker/adm/crew")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", Matchers.is(targetId)))
-                .andExpect(jsonPath("$.name", Matchers.is(source.getName())))
-                .andExpect(jsonPath("$.description", Matchers.is(source.getDescription())))
+                .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
+                .andExpect(jsonPath("$.name", Matchers.is(target.getName())))
+                .andExpect(jsonPath("$.description", Matchers.is(target.getDescription())))
                 //.andDo(print())
                 .andReturn();
         
         Mockito.verify(crewStorage, Mockito.times(1)).create(Mockito.any(ComkerCrewDTO.class));
+        Mockito.verify(crewStorage, Mockito.times(1)).get(target.getId());
         Mockito.verifyNoMoreInteractions(crewStorage);
     }
     
@@ -266,15 +269,15 @@ public class ComkerAdmCrewControllerUnitTest {
         target.setId(source.getId());
  
         Mockito.doAnswer(new Answer() {
-                    @Override
-                    public Object answer(InvocationOnMock invocation) throws Throwable {
-                        ComkerCrewDTO input = (ComkerCrewDTO) invocation.getArguments()[0];
-                        Assert.assertEquals(source.getId(), input.getId());
-                        Assert.assertEquals(source.getName(), input.getName());
-                        Assert.assertEquals(source.getDescription(), input.getDescription());
-                        return null;
-                    }
-                }).when(crewStorage).update(Mockito.any(ComkerCrewDTO.class));
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                ComkerCrewDTO input = (ComkerCrewDTO) invocation.getArguments()[0];
+                Assert.assertEquals(source.getId(), input.getId());
+                Assert.assertEquals(source.getName(), input.getName());
+                Assert.assertEquals(source.getDescription(), input.getDescription());
+                return null;
+            }
+        }).when(crewStorage).update(Mockito.any(ComkerCrewDTO.class));
         
         Mockito.when(crewStorage.get(source.getId())).thenReturn(target);
         

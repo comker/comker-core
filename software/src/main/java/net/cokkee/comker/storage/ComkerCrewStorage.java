@@ -31,7 +31,7 @@ public interface ComkerCrewStorage {
 
     Map<String,Set<String>> getSpotCodeWithAuthorities(String id);
 
-    ComkerCrewDTO create(ComkerCrewDTO item);
+    String create(ComkerCrewDTO item);
 
     void update(ComkerCrewDTO item);
 

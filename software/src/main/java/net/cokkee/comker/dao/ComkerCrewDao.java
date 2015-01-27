@@ -36,9 +36,9 @@ public interface ComkerCrewDao extends ComkerAbstractDao {
 
     ComkerCrewDPO getBySpotWithRole(ComkerSpotDPO spot, ComkerRoleDPO role);
 
-    ComkerCrewDPO create(ComkerCrewDPO item);
+    String create(ComkerCrewDPO item);
 
-    ComkerCrewDPO update(ComkerCrewDPO item);
+    void update(ComkerCrewDPO item);
 
     void delete(ComkerCrewDPO item);
 
