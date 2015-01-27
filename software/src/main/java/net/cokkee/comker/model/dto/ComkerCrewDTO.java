@@ -21,6 +21,11 @@ public class ComkerCrewDTO extends ComkerAbstractDTO {
         this.description = description;
     }
     
+    public ComkerCrewDTO(String id, String name, String description) {
+        this(name, description);
+        this.id = id;
+    }
+    
     private String id;
     private String name;
     private String description;

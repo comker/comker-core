@@ -1,6 +1,5 @@
 package net.cokkee.comker.model.dpo;
 
-import net.cokkee.comker.model.dpo.ComkerAbstractDPO;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -29,6 +28,12 @@ public class ComkerCrewDPO extends ComkerAbstractDPO {
         super();
         this.name = name;
         this.description = description;
+    }
+    
+    public ComkerCrewDPO update(String name, String description) {
+        this.name = name;
+        this.description = description;
+        return this;
     }
     
     private String id;

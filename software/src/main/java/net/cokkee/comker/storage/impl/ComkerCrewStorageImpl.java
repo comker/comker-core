@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
@@ -25,10 +26,11 @@ import net.cokkee.comker.model.dpo.ComkerRoleDPO;
 import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
 import net.cokkee.comker.model.struct.ComkerKeyAndValueSet;
-import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerCrewValidator;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,15 +94,17 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerCrewDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
-        List<ComkerCrewDTO> poList = new ArrayList<ComkerCrewDTO>();
-        List dbList = crewDao.findAll(sieve, pager);
-        for(Object dbItem:dbList) {
-            ComkerCrewDTO poItem = new ComkerCrewDTO();
-            ComkerDataUtil.copyProperties(dbItem, poItem);
-            loadAggregationRefs((ComkerCrewDPO)dbItem, poItem);
-            poList.add(poItem);
+        List<ComkerCrewDTO> dtoList = new ArrayList<ComkerCrewDTO>();
+        List<ComkerCrewDPO> dpoList = crewDao.findAll(sieve, pager);
+        for(ComkerCrewDPO dpoItem:dpoList) {
+            ComkerCrewDTO ptoItem = new ComkerCrewDTO(
+                    dpoItem.getId(),
+                    dpoItem.getName(),
+                    dpoItem.getDescription());
+            loadAggregationRefs(dpoItem, ptoItem);
+            dtoList.add(ptoItem);
         }
-        return poList;
+        return dtoList;
     }
 
     @Override
@@ -108,8 +112,10 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     public ComkerCrewDTO get(String id) {
         ComkerCrewDPO dpoItem = getNotNull(id);
 
-        ComkerCrewDTO dtoItem = new ComkerCrewDTO();
-        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
+        ComkerCrewDTO dtoItem = new ComkerCrewDTO(
+                dpoItem.getId(),
+                dpoItem.getName(),
+                dpoItem.getDescription());
         loadAggregationRefs(dpoItem, dtoItem);
 
         return dtoItem;
@@ -206,8 +212,9 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
     public String create(ComkerCrewDTO item) {
         invokeValidator(crewValidator, item);
 
-        ComkerCrewDPO dbItem = new ComkerCrewDPO();
-        ComkerDataUtil.copyProperties(item, dbItem);
+        ComkerCrewDPO dbItem = new ComkerCrewDPO(
+                item.getName(),
+                item.getDescription());
         saveAggregationRefs(item, dbItem);
         return crewDao.create(dbItem);
     }
@@ -219,7 +226,7 @@ public class ComkerCrewStorageImpl extends ComkerAbstractStorageImpl
 
         invokeValidator(crewValidator, item);
         
-        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem.update(item.getName(), item.getDescription());
         saveAggregationRefs(item, dbItem);
         crewDao.update(dbItem);
     }

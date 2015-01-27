@@ -18,7 +18,6 @@ import net.cokkee.comker.model.dpo.ComkerPermissionDPO;
 import net.cokkee.comker.model.dpo.ComkerRoleDPO;
 import net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
-import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerRoleValidator;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
