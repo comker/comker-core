@@ -34,14 +34,8 @@ public class ComkerWatchdogDPO extends ComkerAbstractDPO {
         super();
     }
 
-    public ComkerWatchdogDPO(String username, String methodName) {
-        this.username = username;
-        this.methodName = methodName;
-    }
-
-
     public ComkerWatchdogDPO(String username, String methodName, String methodArgs,
-            Date hitTime, Long hitDuration, Integer hitState) {
+            Date hitTime, Long hitDuration, Integer hitState, String comment) {
         this();
         this.username = username;
         this.methodName = methodName;
@@ -49,6 +43,19 @@ public class ComkerWatchdogDPO extends ComkerAbstractDPO {
         this.hitTime = hitTime;
         this.hitDuration = hitDuration;
         this.hitState = hitState;
+        this.comment = comment;
+    }
+    
+    public ComkerWatchdogDPO update(String username, String methodName, String methodArgs,
+            Date hitTime, Long hitDuration, Integer hitState, String comment) {
+        this.username = username;
+        this.methodName = methodName;
+        this.methodArgs = methodArgs;
+        this.hitTime = hitTime;
+        this.hitDuration = hitDuration;
+        this.hitState = hitState;
+        this.comment = comment;
+        return this;
     }
 
     @Id

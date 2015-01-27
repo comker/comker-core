@@ -22,9 +22,9 @@ public interface ComkerWatchdogDao extends ComkerAbstractDao {
 
     ComkerWatchdogDPO get(String id);
 
-    ComkerWatchdogDPO create(ComkerWatchdogDPO item);
+    String create(ComkerWatchdogDPO item);
 
-    ComkerWatchdogDPO update(ComkerWatchdogDPO item);
+    void update(ComkerWatchdogDPO item);
 
     void delete(ComkerWatchdogDPO item);
 }

@@ -9,6 +9,7 @@ import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,8 @@ public class ComkerAdmWatchdogController {
             value = "List all of watchdogs",
             notes = "Returns list of watchdogs",
             response = ComkerWatchdogDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerWatchdogDTO.Pack getWatchdogList(
             @ApiParam(value = "The begin position to get Watchdogs", required = false)
             @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
@@ -82,7 +84,8 @@ public class ComkerAdmWatchdogController {
             response = ComkerWatchdogDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Watchdog not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerWatchdogDTO getWatchdog(
             @ApiParam(value = "ID of watchdog that needs to be fetched", required = true) 
             @PathVariable String id) {

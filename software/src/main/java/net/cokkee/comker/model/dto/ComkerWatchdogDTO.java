@@ -25,6 +25,29 @@ public class ComkerWatchdogDTO extends ComkerAbstractDTO {
 
     private String comment;
 
+    public ComkerWatchdogDTO() {
+        super();
+    }
+
+    public ComkerWatchdogDTO(String username, String methodName, String methodArgs, 
+            Date hitTime, Long hitDuration, Integer hitState, String comment) {
+        this();
+        this.username = username;
+        this.methodName = methodName;
+        this.methodArgs = methodArgs;
+        this.hitTime = hitTime;
+        this.hitDuration = hitDuration;
+        this.hitState = hitState;
+        this.comment = comment;
+    }
+    
+    public ComkerWatchdogDTO(String id, String username, 
+            String methodName, String methodArgs, 
+            Date hitTime, Long hitDuration, Integer hitState, String comment) {
+        this(username, methodName, methodArgs, hitTime, hitDuration, hitState, comment);
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
@@ -87,16 +110,6 @@ public class ComkerWatchdogDTO extends ComkerAbstractDTO {
 
     public void setComment(String text) {
         this.comment = text;
-    }
-
-    @XmlRootElement
-    public static class Filter extends ComkerAbstractDTO.Filter {
-        public Filter() {
-            super();
-        }
-        public Filter(String queryString) {
-            super(queryString);
-        }
     }
     
     @XmlRootElement

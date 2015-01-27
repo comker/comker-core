@@ -9,7 +9,6 @@ import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
 import net.cokkee.comker.model.dpo.ComkerWatchdogDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
-import net.cokkee.comker.util.ComkerDataUtil;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -67,8 +66,15 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
         List<ComkerWatchdogDTO> poList = new ArrayList<ComkerWatchdogDTO>();
         List<ComkerWatchdogDPO> dbList = getWatchdogDao().findAll(sieve, pager);
         for(ComkerWatchdogDPO dbItem:dbList) {
-            ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
-            ComkerDataUtil.copyProperties(dbItem, poItem);
+            ComkerWatchdogDTO poItem = new ComkerWatchdogDTO(
+                    dbItem.getId(),
+                    dbItem.getUsername(),
+                    dbItem.getMethodName(),
+                    dbItem.getMethodArgs(),
+                    dbItem.getHitTime(),
+                    dbItem.getHitDuration(),
+                    dbItem.getHitState(),
+                    dbItem.getComment());
             loadAggregationRefs(dbItem, poItem);
             poList.add(poItem);
         }
@@ -79,29 +85,46 @@ public class ComkerWatchdogStorageImpl implements ComkerWatchdogStorage {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerWatchdogDTO get(String id) {
         ComkerWatchdogDPO dbItem = getWatchdogDao().get(id);
-        ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
+        ComkerWatchdogDTO poItem = new ComkerWatchdogDTO(
+                dbItem.getId(),
+                dbItem.getUsername(),
+                dbItem.getMethodName(),
+                dbItem.getMethodArgs(),
+                dbItem.getHitTime(),
+                dbItem.getHitDuration(),
+                dbItem.getHitState(),
+                dbItem.getComment());
         loadAggregationRefs(dbItem, poItem);
         return poItem;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdogDTO create(ComkerWatchdogDTO item) {
-        ComkerWatchdogDPO dbItem = new ComkerWatchdogDPO();
-        ComkerDataUtil.copyProperties(item, dbItem);
+    public String create(ComkerWatchdogDTO item) {
+        ComkerWatchdogDPO dbItem = new ComkerWatchdogDPO(
+                item.getUsername(), 
+                item.getMethodName(), 
+                item.getMethodArgs(), 
+                item.getHitTime(), 
+                item.getHitDuration(), 
+                item.getHitState(), 
+                item.getComment());
         saveAggregationRefs(item, dbItem);
-        dbItem = getWatchdogDao().create(dbItem);
-        ComkerWatchdogDTO poItem = new ComkerWatchdogDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        return poItem;
+        return getWatchdogDao().create(dbItem);
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)                                            
     public void update(ComkerWatchdogDTO item) {
         ComkerWatchdogDPO dbItem = getWatchdogDao().get(item.getId());
-        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem.update(
+                item.getUsername(), 
+                item.getMethodName(), 
+                item.getMethodArgs(), 
+                item.getHitTime(), 
+                item.getHitDuration(), 
+                item.getHitState(), 
+                item.getComment());
         saveAggregationRefs(item, dbItem);
         getWatchdogDao().update(dbItem);
     }

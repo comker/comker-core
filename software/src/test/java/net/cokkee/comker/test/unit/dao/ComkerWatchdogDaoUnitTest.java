@@ -69,9 +69,8 @@ public class ComkerWatchdogDaoUnitTest extends ComkerAbstractDaoUnitTest {
 
             item = new ComkerWatchdogDPO(username, "method_" + prefix, "{}",
                     Calendar.getInstance().getTime(), random.nextLong(),
-                    ComkerWatchdogDPO.HIT_STATE_SUCCESS);
+                    ComkerWatchdogDPO.HIT_STATE_SUCCESS, "");
 
-            //item = new ComkerWatchdogDPO(username, "method_" + prefix);
             session.saveOrUpdate(item);
             watchdogIds.add(item.getId());
         }

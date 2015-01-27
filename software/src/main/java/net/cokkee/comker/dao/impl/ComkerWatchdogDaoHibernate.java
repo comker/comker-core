@@ -76,18 +76,16 @@ public class ComkerWatchdogDaoHibernate extends ComkerAbstractDaoHibernate
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdogDPO create(ComkerWatchdogDPO item) {
+    public String create(ComkerWatchdogDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
-        session.saveOrUpdate(item);
-        return item;
+        return String.valueOf(session.save(item));
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerWatchdogDPO update(ComkerWatchdogDPO item) {
+    public void update(ComkerWatchdogDPO item) {
         Session session = this.getSessionFactory().getCurrentSession();
         session.saveOrUpdate(item);
-        return item;
     }
 
     @Override

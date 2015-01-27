@@ -21,7 +21,7 @@ public interface ComkerWatchdogStorage {
 
     ComkerWatchdogDTO get(String id);
 
-    ComkerWatchdogDTO create(ComkerWatchdogDTO item);
+    String create(ComkerWatchdogDTO item);
 
     void update(ComkerWatchdogDTO item);
 
