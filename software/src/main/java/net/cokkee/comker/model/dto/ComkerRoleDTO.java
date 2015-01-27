@@ -85,16 +85,6 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
     }
     
     @XmlRootElement
-    public static class Filter extends ComkerAbstractDTO.Filter {
-        public Filter() {
-            super();
-        }
-        public Filter(String queryString) {
-            super(queryString);
-        }
-    }
-    
-    @XmlRootElement
     public static class Pack {
 
         public Pack() {

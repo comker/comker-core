@@ -23,6 +23,11 @@ public class ComkerSpotDTO extends ComkerAbstractDTO {
         this.name = name;
         this.description = description;
     }
+    
+    public ComkerSpotDTO(String id, String code, String name, String description) {
+        this(code, name, description);
+        this.id = id;
+    }
 
     private String id;
     private String code;
@@ -68,16 +73,6 @@ public class ComkerSpotDTO extends ComkerAbstractDTO {
 
     public void setModuleIds(String[] moduleIds) {
         this.moduleIds = moduleIds;
-    }
-
-    @XmlRootElement
-    public static class Filter extends ComkerAbstractDTO.Filter {
-        public Filter() {
-            super();
-        }
-        public Filter(String queryString) {
-            super(queryString);
-        }
     }
     
     @XmlRootElement

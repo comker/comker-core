@@ -10,6 +10,7 @@ import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,8 @@ public class ComkerAdmSpotController {
             value = "List all of spots",
             notes = "Returns list of spots",
             response = ComkerSpotDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerSpotDTO.Pack getSpotList(
             @ApiParam(value = "The begin position to get Spots", required = false)
             @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
@@ -83,7 +85,8 @@ public class ComkerAdmSpotController {
             response = ComkerSpotDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Spot not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerSpotDTO getSpot(
             @ApiParam(value = "ID of spot that needs to be fetched", required = true) 
             @PathVariable String id) {
@@ -96,12 +99,12 @@ public class ComkerAdmSpotController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.POST, value = "", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerSpotDTO createSpot(
             @ApiParam(value = "Spot object that needs to be added to the store", required = true)
             @RequestBody ComkerSpotDTO item) {
-        return spotStorage.create(item);
+        return spotStorage.get(spotStorage.create(item));
     }
     
     @ApiOperation(
@@ -111,8 +114,8 @@ public class ComkerAdmSpotController {
             @ApiResponse(code = 404, message = "Spot not found"),
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerSpotDTO updateSpot(
             @ApiParam(value = "ID of spot that needs to be updated", required = true)
             @PathVariable String id, 
@@ -130,7 +133,7 @@ public class ComkerAdmSpotController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Spot not found"),
             @ApiResponse(code = 409, message = "Conflict on database updating")})
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerSpotDTO deleteSpot(
             @ApiParam(value = "ID of spot that needs to be deleted", required = true)
             @PathVariable String id) {

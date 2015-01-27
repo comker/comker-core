@@ -23,7 +23,7 @@ public interface ComkerSpotStorage {
 
     ComkerSpotDTO getByCode(String code);
 
-    ComkerSpotDTO create(ComkerSpotDTO item);
+    String create(ComkerSpotDTO item);
 
     void update(ComkerSpotDTO item);
 

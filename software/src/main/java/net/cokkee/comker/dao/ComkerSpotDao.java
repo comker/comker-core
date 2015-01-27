@@ -27,7 +27,7 @@ public interface ComkerSpotDao extends ComkerAbstractDao {
 
     ComkerSpotDPO getByCode(String code);
 
-    ComkerSpotDPO create(ComkerSpotDPO item);
+    String create(ComkerSpotDPO item);
 
     ComkerSpotDPO update(ComkerSpotDPO item);
 

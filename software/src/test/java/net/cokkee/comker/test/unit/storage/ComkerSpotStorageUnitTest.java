@@ -149,13 +149,13 @@ public class ComkerSpotStorageUnitTest {
             }
         });
 
-        doAnswer(new Answer<ComkerSpotDPO>() {
+        doAnswer(new Answer<String>() {
             @Override
-            public ComkerSpotDPO answer(InvocationOnMock invocation) throws Throwable {
+            public String answer(InvocationOnMock invocation) throws Throwable {
                 ComkerSpotDPO spot = (ComkerSpotDPO) invocation.getArguments()[0];
                 spot.setId(UUID.randomUUID().toString());
                 spotIdx.add(spot);
-                return spot;
+                return spot.getId();
             }
         }).when(spotDao).create(any(ComkerSpotDPO.class));
 
@@ -260,7 +260,9 @@ public class ComkerSpotStorageUnitTest {
                 "This is spot " + count);
         param.setModuleIds(new String[] {
             moduleIdx.get(1).getId(), moduleIdx.get(6).getId()});
-        ComkerSpotDTO result = spotStorage.create(param);
+        
+        String resultId = spotStorage.create(param);
+        ComkerSpotDTO result = spotStorage.get(resultId);
 
         assertNotNull(result);
         assertNotNull(result.getId());

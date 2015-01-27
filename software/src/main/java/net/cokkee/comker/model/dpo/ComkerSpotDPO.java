@@ -33,6 +33,13 @@ public class ComkerSpotDPO extends ComkerAbstractDPO {
         this.name = name;
         this.description = description;
     }
+    
+    public ComkerSpotDPO update(String code, String name, String description) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        return this;
+    }
 
     private String id;
     private String code;

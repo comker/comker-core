@@ -16,7 +16,6 @@ import net.cokkee.comker.model.dpo.ComkerModuleDPO;
 import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 import net.cokkee.comker.model.dpo.ComkerSpotJoinModuleDPO;
 import net.cokkee.comker.service.ComkerToolboxService;
-import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerSpotValidator;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -82,11 +81,14 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerSpotDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerSpotDTO> poList = new ArrayList<ComkerSpotDTO>();
-        List dbList = spotDao.findAll(sieve, pager);
-        for(Object dbItem:dbList) {
-            ComkerSpotDTO poItem = new ComkerSpotDTO();
-            ComkerDataUtil.copyProperties(dbItem, poItem);
-            loadAggregationRefs((ComkerSpotDPO)dbItem, poItem);
+        List<ComkerSpotDPO> dbList = spotDao.findAll(sieve, pager);
+        for(ComkerSpotDPO dbItem:dbList) {
+            ComkerSpotDTO poItem = new ComkerSpotDTO(
+                    dbItem.getId(),
+                    dbItem.getCode(),
+                    dbItem.getName(),
+                    dbItem.getDescription());
+            loadAggregationRefs(dbItem, poItem);
             poList.add(poItem);
         }
         return poList;
@@ -96,11 +98,12 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerSpotDTO get(String id) {
         ComkerSpotDPO dbItem = getNotNull(id);
-        ComkerSpotDTO poItem = new ComkerSpotDTO();
-
-        ComkerDataUtil.copyProperties(dbItem, poItem);
+        ComkerSpotDTO poItem = new ComkerSpotDTO(
+                    dbItem.getId(),
+                    dbItem.getCode(),
+                    dbItem.getName(),
+                    dbItem.getDescription());
         loadAggregationRefs(dbItem, poItem);
-
         return poItem;
     }
 
@@ -108,28 +111,24 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerSpotDTO getByCode(String code) {
         ComkerSpotDPO dbItem = getNotNullByCode(code);
-        ComkerSpotDTO poItem = new ComkerSpotDTO();
-
-        ComkerDataUtil.copyProperties(dbItem, poItem);
+        ComkerSpotDTO poItem = new ComkerSpotDTO(
+                    dbItem.getId(),
+                    dbItem.getCode(),
+                    dbItem.getName(),
+                    dbItem.getDescription());
         loadAggregationRefs(dbItem, poItem);
-
         return poItem;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerSpotDTO create(ComkerSpotDTO item) {
+    public String create(ComkerSpotDTO item) {
         invokeValidator(spotValidator, item);
 
         ComkerSpotDPO dbItem = new ComkerSpotDPO();
-        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem.update(item.getCode(), item.getName(), item.getDescription());
         saveAggregationRefs(item, dbItem);
-        dbItem = spotDao.create(dbItem);
-        
-        ComkerSpotDTO poItem = new ComkerSpotDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
-        return poItem;
+        return spotDao.create(dbItem);
     }
 
     @Override
@@ -139,7 +138,7 @@ public class ComkerSpotStorageImpl extends ComkerAbstractStorageImpl
 
         invokeValidator(spotValidator, item);
         
-        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem.update(item.getCode(), item.getName(), item.getDescription());
         saveAggregationRefs(item, dbItem);
         spotDao.update(dbItem);
     }

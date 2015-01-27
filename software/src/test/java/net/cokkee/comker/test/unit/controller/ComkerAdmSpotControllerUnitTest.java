@@ -1,17 +1,13 @@
 package net.cokkee.comker.test.unit.controller;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import net.cokkee.comker.base.ComkerBaseConstant;
-import net.cokkee.comker.controller.ComkerAdmCrewController;
 
+import net.cokkee.comker.base.ComkerBaseConstant;
 import net.cokkee.comker.controller.ComkerAdmSpotController;
-import net.cokkee.comker.exception.ComkerObjectNotFoundException;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
-import net.cokkee.comker.model.error.ComkerExceptionExtension;
 import net.cokkee.comker.model.dto.ComkerSpotDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import net.cokkee.comker.storage.ComkerSpotStorage;
@@ -30,6 +26,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -230,29 +227,39 @@ public class ComkerAdmSpotControllerUnitTest {
             "MODULE_1", "MODULE_2", "MODULE_3", "MODULE_4"
         });
         
-        final String targetId = UUID.randomUUID().toString();
+        final ComkerSpotDTO target = new ComkerSpotDTO(
+                UUID.randomUUID().toString(),
+                source.getCode(),
+                source.getName(),
+                source.getDescription());
+        target.setModuleIds(source.getModuleIds());
         
         Mockito.when(spotStorage.create(Mockito.any(ComkerSpotDTO.class)))
-                .thenAnswer(new Answer<ComkerSpotDTO>() {
+                .thenAnswer(new Answer<String>() {
                     @Override
-                    public ComkerSpotDTO answer(InvocationOnMock invocation) throws Throwable {
+                    public String answer(InvocationOnMock invocation) throws Throwable {
                         ComkerSpotDTO input = (ComkerSpotDTO) invocation.getArguments()[0];
-                        ComkerSpotDTO target = new ComkerSpotDTO(
-                                input.getCode(),
-                                input.getName(),
-                                input.getDescription());
-                        target.setId(targetId);
-                        target.setModuleIds(input.getModuleIds());
-                        return target;
+                        
+                        Assert.assertEquals(source.getCode(), input.getCode());
+                        Assert.assertEquals(source.getName(), input.getName());
+                        Assert.assertEquals(source.getDescription(), input.getDescription());
+                        
+                        for(int i=0; i<source.getModuleIds().length; i++) {
+                            Assert.assertEquals(source.getModuleIds()[i], input.getModuleIds()[i]);
+                        }
+                        
+                        return target.getId();
                     }
                 });
+        
+        Mockito.when(spotStorage.get(target.getId())).thenReturn(target);
         
         mockMvc.perform(post("/comker/adm/spot")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", Matchers.is(targetId)))
+                .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
                 .andExpect(jsonPath("$.code", Matchers.is(source.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(source.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(source.getDescription())))
@@ -263,6 +270,7 @@ public class ComkerAdmSpotControllerUnitTest {
                 .andReturn();
         
         Mockito.verify(spotStorage, Mockito.times(1)).create(Mockito.any(ComkerSpotDTO.class));
+        Mockito.verify(spotStorage, Mockito.times(1)).get(target.getId());
         Mockito.verifyNoMoreInteractions(spotStorage);
     }
     
