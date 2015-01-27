@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -43,10 +42,10 @@ public class ComkerUserDPO extends ComkerAbstractDPO {
     private String username;
     private String password;
     private String fullname;
-    private boolean enabled;
-    private boolean accountExpired;
-    private boolean accountLocked;
-    private boolean passwordExpired;
+    private boolean enabled = true;
+    private boolean accountExpired = false;
+    private boolean accountLocked = false;
+    private boolean passwordExpired = false;
 
     private List<ComkerUserJoinCrewDPO> userJoinCrewList =
             new LinkedList<ComkerUserJoinCrewDPO>();

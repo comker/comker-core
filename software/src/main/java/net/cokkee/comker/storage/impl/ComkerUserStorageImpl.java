@@ -46,7 +46,7 @@ import org.springframework.stereotype.Service;
 public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
         implements ComkerUserStorage {
 
-    private static Logger log = LoggerFactory.getLogger(ComkerUserStorageImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ComkerUserStorageImpl.class);
 
     private ComkerUserValidator userValidator = null;
 
@@ -224,7 +224,7 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerUserDTO create(ComkerUserDTO item) {
+    public String create(ComkerUserDTO item) {
         invokeValidator(userValidator, item);
 
         ComkerUserDPO userDPO = new ComkerUserDPO();
@@ -233,12 +233,7 @@ public class ComkerUserStorageImpl extends ComkerAbstractStorageImpl
             userDPO.setPassword(passwordEncoder.encode(item.getPassword()));
         }
         saveAggregationRefs(item, userDPO);
-        userDPO = userDao.create(userDPO);
-        
-        ComkerUserDTO poItem = new ComkerUserDTO();
-        ComkerDataUtil.copyProperties(userDPO, poItem);
-        loadAggregationRefs(userDPO, poItem);
-        return poItem;
+        return userDao.create(userDPO);
     }
 
     @Override

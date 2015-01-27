@@ -3,8 +3,8 @@ package net.cokkee.comker.test.unit.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import net.cokkee.comker.base.ComkerBaseConstant;
 
+import net.cokkee.comker.base.ComkerBaseConstant;
 import net.cokkee.comker.controller.ComkerAdmUserController;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
@@ -232,30 +232,36 @@ public class ComkerAdmUserControllerUnitTest {
             "CREW_1", "CREW_2", "CREW_3", "CREW_4"
         });
         
-        final String targetId = UUID.randomUUID().toString();
+        final ComkerUserDTO target = new ComkerUserDTO(
+                source.getEmail(),
+                source.getUsername(),
+                source.getPassword(),
+                source.getFullname());
+        target.setId(UUID.randomUUID().toString());
+        target.setCrewIds(source.getCrewIds());
         
         Mockito.when(userStorage.create(Mockito.any(ComkerUserDTO.class)))
-                .thenAnswer(new Answer<ComkerUserDTO>() {
+                .thenAnswer(new Answer<String>() {
                     @Override
-                    public ComkerUserDTO answer(InvocationOnMock invocation) throws Throwable {
+                    public String answer(InvocationOnMock invocation) throws Throwable {
                         ComkerUserDTO input = (ComkerUserDTO) invocation.getArguments()[0];
-                        ComkerUserDTO target = new ComkerUserDTO(
-                                input.getEmail(),
-                                input.getUsername(),
-                                input.getPassword(),
-                                input.getFullname());
-                        target.setId(targetId);
-                        target.setCrewIds(input.getCrewIds());
-                        return target;
+                        
+                        Assert.assertEquals(source.getEmail(), input.getEmail());
+                        Assert.assertEquals(source.getUsername(), input.getUsername());
+                        Assert.assertEquals(source.getFullname(), input.getFullname());
+                        
+                        return target.getId();
                     }
                 });
+        
+        Mockito.when(userStorage.get(target.getId())).thenReturn(target);
         
         mockMvc.perform(post("/comker/adm/user")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", Matchers.is(targetId)))
+                .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
                 .andExpect(jsonPath("$.email", Matchers.is(source.getEmail())))
                 .andExpect(jsonPath("$.username", Matchers.is(source.getUsername())))
                 .andExpect(jsonPath("$.password", Matchers.is(source.getPassword())))
@@ -267,6 +273,7 @@ public class ComkerAdmUserControllerUnitTest {
                 .andReturn();
         
         Mockito.verify(userStorage, Mockito.times(1)).create(Mockito.any(ComkerUserDTO.class));
+        Mockito.verify(userStorage, Mockito.times(1)).get(target.getId());
         Mockito.verifyNoMoreInteractions(userStorage);
     }
     

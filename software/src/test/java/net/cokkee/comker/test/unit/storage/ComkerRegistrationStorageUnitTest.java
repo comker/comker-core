@@ -107,15 +107,16 @@ public class ComkerRegistrationStorageUnitTest {
             }
         }).when(registrationDao).update(Mockito.any(ComkerRegistrationDPO.class));
         
-        Mockito.doAnswer(new Answer<ComkerUserDPO>() {
+        Mockito.doAnswer(new Answer<String>() {
             @Override
-            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
+            public String answer(InvocationOnMock invocation) throws Throwable {
                 ComkerUserDPO item = (ComkerUserDPO) invocation.getArguments()[0];
                 
                 Assert.assertEquals(item.getEmail(), data.getEmail());
                 Assert.assertEquals(item.getPassword(), data.getEncodedPassword());
+                item.setId(UUID.randomUUID().toString());
                 
-                return item;
+                return item.getId();
             }
         }).when(userDao).create(Mockito.any(ComkerUserDPO.class));
         

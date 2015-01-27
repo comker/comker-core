@@ -30,9 +30,9 @@ public interface ComkerUserDao extends ComkerAbstractDao {
 
     ComkerUserDPO getByUsername(String username);
 
-    ComkerUserDPO create(ComkerUserDPO item);
+    String create(ComkerUserDPO item);
 
-    ComkerUserDPO update(ComkerUserDPO item);
+    void update(ComkerUserDPO item);
 
     void delete(ComkerUserDPO item);
 

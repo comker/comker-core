@@ -10,6 +10,7 @@ import net.cokkee.comker.model.dto.ComkerUserDTO;
 import net.cokkee.comker.service.ComkerSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +45,8 @@ public class ComkerAdmUserController {
             value = "List all of users",
             notes = "Returns list of users",
             response = ComkerUserDTO.Pack.class)
-    @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerUserDTO.Pack getUserList(
             @ApiParam(value = "The begin position to get Users", required = false)
             @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
@@ -87,7 +89,8 @@ public class ComkerAdmUserController {
             response = ComkerUserDTO.class)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "User not found")})
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerUserDTO getUser(
             @ApiParam(value = "ID of user that needs to be fetched", required = true) 
             @PathVariable String id) {
@@ -102,12 +105,12 @@ public class ComkerAdmUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.POST, value = "", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerUserDTO createUser(
             @ApiParam(value = "User object that needs to be added to the store", required = true)
             @RequestBody ComkerUserDTO item) {
-        return userStorage.create(item);
+        return userStorage.get(userStorage.create(item));
     }
     
     @ApiOperation(
@@ -117,8 +120,8 @@ public class ComkerAdmUserController {
             @ApiResponse(code = 404, message = "User not found"),
             @ApiResponse(code = 406, message = "Validation error (Duplicated object)")})
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}", 
-            consumes = "application/json", 
-            produces = "application/json")
+            consumes = MediaType.APPLICATION_JSON_VALUE, 
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerUserDTO updateUser(
             @ApiParam(value = "ID of user that needs to be updated", required = true)
             @PathVariable String id, 
@@ -136,7 +139,8 @@ public class ComkerAdmUserController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "User not found"),
             @ApiResponse(code = 409, message = "Conflict on database updating")})
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces="application/json")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", 
+            produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerUserDTO deleteUser(
             @ApiParam(value = "ID of user that needs to be deleted", required = true)
             @PathVariable String id) {

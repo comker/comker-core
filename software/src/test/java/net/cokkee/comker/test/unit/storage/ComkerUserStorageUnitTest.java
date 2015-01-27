@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
 import net.cokkee.comker.dao.ComkerCrewDao;
 import net.cokkee.comker.dao.ComkerRoleDao;
 import net.cokkee.comker.dao.ComkerSpotDao;
@@ -28,14 +29,12 @@ import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.model.dpo.ComkerUserJoinCrewDPO;
 import net.cokkee.comker.util.ComkerDataUtil;
 import net.cokkee.comker.validation.ComkerUserValidator;
+
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
-
 import org.junit.runner.RunWith;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.hasItems;
 
@@ -43,11 +42,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import static org.mockito.Mockito.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -369,14 +369,14 @@ public class ComkerUserStorageUnitTest {
             }
         });
 
-        doAnswer(new Answer<ComkerUserDPO>() {
+        doAnswer(new Answer<String>() {
             @Override
-            public ComkerUserDPO answer(InvocationOnMock invocation) throws Throwable {
+            public String answer(InvocationOnMock invocation) throws Throwable {
                 ComkerUserDPO user = (ComkerUserDPO) invocation.getArguments()[0];
                 user.setId(UUID.randomUUID().toString());
                 userMap.put(user.getId(), user);
                 userIdx.add(user.getId());
-                return user;
+                return user.getId();
             }
         }).when(userDao).create(any(ComkerUserDPO.class));
 
@@ -497,7 +497,8 @@ public class ComkerUserStorageUnitTest {
                 "Duong Thi Trang");
         param.setCrewIds(new String[] {crewIdx.get(1), crewIdx.get(2)});
 
-        ComkerUserDTO result = userStorage.create(param);
+        String resultId = userStorage.create(param);
+        ComkerUserDTO result = userStorage.get(resultId);
 
         Assert.assertNotNull(result);
         Assert.assertNotNull(result.getId());
