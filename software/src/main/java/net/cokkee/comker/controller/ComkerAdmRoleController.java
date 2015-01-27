@@ -2,6 +2,7 @@ package net.cokkee.comker.controller;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
+import net.cokkee.comker.base.ComkerBaseConstant;
 import net.cokkee.comker.exception.ComkerInvalidParameterException;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerRoleStorage;
@@ -48,11 +49,11 @@ public class ComkerAdmRoleController {
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO.Pack getGlobalRoleList(
             @ApiParam(value = "The begin position to get Global Roles", required = false)
-            @RequestParam(value="start", required=false) Integer start,
+            @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
             @ApiParam(value = "How many Global Roles do you want to get?", required = false)
-            @RequestParam(value="limit", required=false) Integer limit,
+            @RequestParam(value=ComkerBaseConstant.PAGER_LIMIT, required=false) Integer limit,
             @ApiParam(value = "The query that role's name should be matched", required = false)
-            @RequestParam(value="q", required=false) String q) {
+            @RequestParam(value=ComkerBaseConstant.QUERY_STRING, required=false) String q) {
 
         Integer total;
         List collection;
@@ -80,11 +81,11 @@ public class ComkerAdmRoleController {
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO.Pack getScopedRoleList(
             @ApiParam(value = "The begin position to get Global Roles", required = false)
-            @RequestParam(value="start", required=false) Integer start,
+            @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
             @ApiParam(value = "How many Global Roles do you want to get?", required = false)
-            @RequestParam(value="limit", required=false) Integer limit,
+            @RequestParam(value=ComkerBaseConstant.PAGER_LIMIT, required=false) Integer limit,
             @ApiParam(value = "The query that role's name should be matched", required = false)
-            @RequestParam(value="q", required=false) String q) {
+            @RequestParam(value=ComkerBaseConstant.QUERY_STRING, required=false) String q) {
 
         Integer total;
         List collection;
@@ -112,11 +113,11 @@ public class ComkerAdmRoleController {
             produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ComkerRoleDTO.Pack getRoleList(
             @ApiParam(value = "The begin position to get Roles", required = false)
-            @RequestParam(value="start", required=false) Integer start,
+            @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
             @ApiParam(value = "How many Roles do you want to get?", required = false)
-            @RequestParam(value="limit", required=false) Integer limit,
+            @RequestParam(value=ComkerBaseConstant.PAGER_LIMIT, required=false) Integer limit,
             @ApiParam(value = "The query that role's name should be matched", required = false)
-            @RequestParam(value="q", required=false) String q) {
+            @RequestParam(value=ComkerBaseConstant.QUERY_STRING, required=false) String q) {
 
         Integer total;
         List collection;

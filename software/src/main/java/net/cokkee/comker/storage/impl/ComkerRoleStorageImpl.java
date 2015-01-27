@@ -80,11 +80,15 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ComkerRoleDTO> findAll(ComkerQuerySieve sieve, ComkerQueryPager pager) {
         List<ComkerRoleDTO> dtoList = new ArrayList<ComkerRoleDTO>();
-        List dpoList = roleDao.findAll(sieve, pager);
-        for(Object dpoItem:dpoList) {
-            ComkerRoleDTO dtoItem = new ComkerRoleDTO();
-            ComkerDataUtil.copyProperties(dpoItem, dtoItem);
-            loadAggregationRefs((ComkerRoleDPO)dpoItem, dtoItem);
+        List<ComkerRoleDPO> dpoList = roleDao.findAll(sieve, pager);
+        for(ComkerRoleDPO dpoItem:dpoList) {
+            ComkerRoleDTO dtoItem = new ComkerRoleDTO(
+                    dpoItem.getId(),
+                    dpoItem.getCode(),
+                    dpoItem.getName(),
+                    dpoItem.getDescription(),
+                    dpoItem.isGlobal());
+            loadAggregationRefs(dpoItem, dtoItem);
             dtoList.add(dtoItem);
         }
         return dtoList;
@@ -94,8 +98,12 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerRoleDTO get(String id) {
         ComkerRoleDPO dpoItem = getNotNull(id);
-        ComkerRoleDTO dtoItem = new ComkerRoleDTO();
-        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
+        ComkerRoleDTO dtoItem = new ComkerRoleDTO(
+                    dpoItem.getId(),
+                    dpoItem.getCode(),
+                    dpoItem.getName(),
+                    dpoItem.getDescription(),
+                    dpoItem.isGlobal());
         loadAggregationRefs(dpoItem, dtoItem);
         return dtoItem;
     }
@@ -103,11 +111,15 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public ComkerRoleDTO getByCode(String code) {
-        ComkerRoleDPO dbItem = getNotNullByCode(code);
-        ComkerRoleDTO poItem = new ComkerRoleDTO();
-        ComkerDataUtil.copyProperties(dbItem, poItem);
-        loadAggregationRefs(dbItem, poItem);
-        return poItem;
+        ComkerRoleDPO dpoItem = getNotNullByCode(code);
+        ComkerRoleDTO dtoItem = new ComkerRoleDTO(
+                    dpoItem.getId(),
+                    dpoItem.getCode(),
+                    dpoItem.getName(),
+                    dpoItem.getDescription(),
+                    dpoItem.isGlobal());
+        loadAggregationRefs(dpoItem, dtoItem);
+        return dtoItem;
     }
 
     @Override
@@ -130,8 +142,11 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
     public ComkerRoleDTO create(ComkerRoleDTO item) {
         invokeValidator(roleValidator, item);
         
-        ComkerRoleDPO dpoItem = new ComkerRoleDPO();
-        ComkerDataUtil.copyProperties(item, dpoItem);
+        ComkerRoleDPO dpoItem = (new ComkerRoleDPO()).update(
+                item.getCode(),
+                item.getName(),
+                item.getDescription(),
+                item.isGlobal());
         saveAggregationRefs(item, dpoItem);
         dpoItem = roleDao.create(dpoItem);
         
@@ -148,7 +163,11 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
 
         invokeValidator(roleValidator, item);
 
-        ComkerDataUtil.copyProperties(item, dbItem);
+        dbItem.update(item.getCode(),
+                item.getName(),
+                item.getDescription(),
+                item.isGlobal());
+        
         saveAggregationRefs(item, dbItem);
         roleDao.update(dbItem);
     }

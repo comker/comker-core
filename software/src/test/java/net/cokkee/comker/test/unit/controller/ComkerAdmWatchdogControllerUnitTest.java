@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+import net.cokkee.comker.base.ComkerBaseConstant;
 
 import net.cokkee.comker.controller.ComkerAdmWatchdogController;
 import net.cokkee.comker.model.ComkerQueryPager;
@@ -139,9 +140,9 @@ public class ComkerAdmWatchdogControllerUnitTest {
         Mockito.when(watchdogStorage.findAll(pager)).thenReturn(list);
  
         ResultActions result = mockMvc.perform(get("/comker/adm/watchdog")
-                .param("start", "1")
-                .param("limit", "10")
-                .param("q", "Watchdog"));
+                .param(ComkerBaseConstant.PAGER_START, "1")
+                .param(ComkerBaseConstant.PAGER_LIMIT, "10")
+                .param(ComkerBaseConstant.QUERY_STRING, "Watchdog"));
         
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));

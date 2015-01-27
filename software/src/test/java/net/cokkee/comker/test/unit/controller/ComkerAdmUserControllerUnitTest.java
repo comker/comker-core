@@ -3,6 +3,7 @@ package net.cokkee.comker.test.unit.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.cokkee.comker.base.ComkerBaseConstant;
 
 import net.cokkee.comker.controller.ComkerAdmUserController;
 import net.cokkee.comker.model.ComkerQueryPager;
@@ -162,9 +163,9 @@ public class ComkerAdmUserControllerUnitTest {
         Mockito.when(userStorage.findAll(pager)).thenReturn(list);
  
         ResultActions result = mockMvc.perform(get("/comker/adm/user")
-                .param("start", "1")
-                .param("limit", "10")
-                .param("q", "User"));
+                .param(ComkerBaseConstant.PAGER_START, "1")
+                .param(ComkerBaseConstant.PAGER_LIMIT, "10")
+                .param(ComkerBaseConstant.QUERY_STRING, "User"));
         
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));

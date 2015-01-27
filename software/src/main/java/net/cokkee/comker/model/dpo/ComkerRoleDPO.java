@@ -35,6 +35,14 @@ public class ComkerRoleDPO extends ComkerAbstractDPO {
         this(code, name, description);
         this.global = global;
     }
+    
+    public ComkerRoleDPO update(String code, String name, String description, Boolean global) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        this.global = global;
+        return this;
+    }
 
     private String id;
     private String code;

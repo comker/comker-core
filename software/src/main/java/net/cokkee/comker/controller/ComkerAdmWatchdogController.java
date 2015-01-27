@@ -2,6 +2,7 @@ package net.cokkee.comker.controller;
 
 import com.wordnik.swagger.annotations.*;
 import java.util.List;
+import net.cokkee.comker.base.ComkerBaseConstant;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.storage.ComkerWatchdogStorage;
 import net.cokkee.comker.model.dto.ComkerWatchdogDTO;
@@ -44,11 +45,11 @@ public class ComkerAdmWatchdogController {
     @RequestMapping(method = RequestMethod.GET, value = "", produces="application/json")
     public @ResponseBody ComkerWatchdogDTO.Pack getWatchdogList(
             @ApiParam(value = "The begin position to get Watchdogs", required = false)
-            @RequestParam(value="start", required=false) Integer start,
+            @RequestParam(value=ComkerBaseConstant.PAGER_START, required=false) Integer start,
             @ApiParam(value = "How many Watchdogs do you want to get?", required = false)
-            @RequestParam(value="limit", required=false) Integer limit,
+            @RequestParam(value=ComkerBaseConstant.PAGER_LIMIT, required=false) Integer limit,
             @ApiParam(value = "The query that watchdog's name should be matched", required = false)
-            @RequestParam(value="q", required=false) String q) {
+            @RequestParam(value=ComkerBaseConstant.QUERY_STRING, required=false) String q) {
 
         Integer total;
         List collection;

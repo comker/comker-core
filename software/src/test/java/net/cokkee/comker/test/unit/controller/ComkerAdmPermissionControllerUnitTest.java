@@ -3,6 +3,7 @@ package net.cokkee.comker.test.unit.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import net.cokkee.comker.base.ComkerBaseConstant;
 
 import net.cokkee.comker.controller.ComkerAdmPermissionController;
 import net.cokkee.comker.model.ComkerQueryPager;
@@ -132,9 +133,9 @@ public class ComkerAdmPermissionControllerUnitTest {
         Mockito.when(permissionStorage.findAll(pager)).thenReturn(list);
  
         ResultActions result = mockMvc.perform(get("/comker/adm/permission")
-                .param("start", "1")
-                .param("limit", "10")
-                .param("q", "Permission"));
+                .param(ComkerBaseConstant.PAGER_START, "1")
+                .param(ComkerBaseConstant.PAGER_LIMIT, "10")
+                .param(ComkerBaseConstant.QUERY_STRING, "Permission"));
         
         result.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
