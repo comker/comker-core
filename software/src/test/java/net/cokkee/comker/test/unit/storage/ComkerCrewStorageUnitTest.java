@@ -126,7 +126,11 @@ public class ComkerCrewStorageUnitTest {
         ComkerRoleDPO role;
 
         for(int i=0; i<7; i++) {
-            role = new ComkerRoleDPO("ROLE_0" + i, "Role 0" + i, "This is role-0" + i);
+            role = new ComkerRoleDPO(
+                    "ROLE_0" + i, 
+                    "Role 0" + i, 
+                    "This is role-0" + i,
+                    Boolean.TRUE);
             role.setId(UUID.randomUUID().toString());
             roleMap.put(role.getId(), role);
             roleIdx.add(role.getId());

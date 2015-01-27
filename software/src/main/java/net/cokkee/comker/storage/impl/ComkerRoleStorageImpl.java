@@ -139,7 +139,7 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    public ComkerRoleDTO create(ComkerRoleDTO item) {
+    public String create(ComkerRoleDTO item) {
         invokeValidator(roleValidator, item);
         
         ComkerRoleDPO dpoItem = (new ComkerRoleDPO()).update(
@@ -148,12 +148,7 @@ public class ComkerRoleStorageImpl extends ComkerAbstractStorageImpl
                 item.getDescription(),
                 item.isGlobal());
         saveAggregationRefs(item, dpoItem);
-        dpoItem = roleDao.create(dpoItem);
-        
-        ComkerRoleDTO dtoItem = new ComkerRoleDTO();
-        ComkerDataUtil.copyProperties(dpoItem, dtoItem);
-        loadAggregationRefs(dpoItem, dtoItem);
-        return dtoItem;
+        return roleDao.create(dpoItem);
     }
 
     @Override

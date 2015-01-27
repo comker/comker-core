@@ -51,7 +51,11 @@ public class ComkerRoleValidatorUnitTest {
         MockitoAnnotations.initMocks(this);
 
         for(int i=0; i<3; i++) {
-            ComkerRoleDPO role = new ComkerRoleDPO("ROLE_" + i, "Role " + i, "This is role " + i);
+            ComkerRoleDPO role = new ComkerRoleDPO(
+                    "ROLE_" + i, 
+                    "Role " + i, 
+                    "This is role " + i,
+                    Boolean.TRUE);
             role.setId(UUID.randomUUID().toString());
             roleList.add(role);
         }

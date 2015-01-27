@@ -91,7 +91,11 @@ public class ComkerRoleStorageUnitTest {
         ComkerRoleDPO role;
 
         for(int i=0; i<4; i++) {
-            role = new ComkerRoleDPO("ROLE_0" + i, "Role 0" + i, "This is role 0" + i);
+            role = new ComkerRoleDPO(
+                    "ROLE_0" + i, 
+                    "Role 0" + i, 
+                    "This is role 0" + i,
+                    Boolean.TRUE);
             role.setId(UUID.randomUUID().toString());
             roleIdx.add(role);
         }
@@ -160,13 +164,13 @@ public class ComkerRoleStorageUnitTest {
             }
         }).when(roleDao).collectPermission(anySet(), any(ComkerRoleDPO.class));
 
-        doAnswer(new Answer<ComkerRoleDPO>() {
+        doAnswer(new Answer<String>() {
             @Override
-            public ComkerRoleDPO answer(InvocationOnMock invocation) throws Throwable {
+            public String answer(InvocationOnMock invocation) throws Throwable {
                 ComkerRoleDPO role = (ComkerRoleDPO) invocation.getArguments()[0];
                 role.setId(UUID.randomUUID().toString());
                 roleIdx.add(role);
-                return role;
+                return role.getId();
             }
         }).when(roleDao).create(any(ComkerRoleDPO.class));
 
@@ -266,7 +270,11 @@ public class ComkerRoleStorageUnitTest {
 
     @Test(expected = ComkerValidationFailedException.class)
     public void test_create_role_object_with_duplicated_code() {
-        ComkerRoleDTO param = new ComkerRoleDTO(roleIdx.get(2).getCode(), "A new role", null);
+        ComkerRoleDTO param = new ComkerRoleDTO(
+                roleIdx.get(2).getCode(), 
+                "A new role", 
+                null,
+                Boolean.TRUE);
         roleStorage.create(param);
     }
 
@@ -276,10 +284,13 @@ public class ComkerRoleStorageUnitTest {
         ComkerRoleDTO param = new ComkerRoleDTO(
                 "ROLE_0" + count,
                 "Role 0" + count,
-                "This is role " + count);
+                "This is role " + count,
+                Boolean.TRUE);
         param.setPermissionIds(new String[] {
             permissionIdx.get(1).getId(), permissionIdx.get(6).getId()});
-        ComkerRoleDTO result = roleStorage.create(param);
+        
+        String resultId = roleStorage.create(param);
+        ComkerRoleDTO result = roleStorage.get(resultId);
 
         assertNotNull(result);
         assertNotNull(result.getId());
@@ -293,7 +304,12 @@ public class ComkerRoleStorageUnitTest {
 
     @Test(expected = ComkerObjectNotFoundException.class)
     public void test_update_role_object_with_invalid_id() {
-        ComkerRoleDTO param = new ComkerRoleDTO("role-not-found", "SOMETHING", "Something - modified", null);
+        ComkerRoleDTO param = new ComkerRoleDTO(
+                "role-not-found", 
+                "SOMETHING", 
+                "Something - modified", 
+                "", 
+                Boolean.TRUE);
         roleStorage.update(param);
     }
 
@@ -302,7 +318,9 @@ public class ComkerRoleStorageUnitTest {
         ComkerRoleDTO param = new ComkerRoleDTO(
                 roleIdx.get(2).getId(),
                 roleIdx.get(2).getCode(),
-                roleIdx.get(2).getName() + " - modified", null);
+                roleIdx.get(2).getName() + " - modified", 
+                roleIdx.get(2).getDescription(),
+                Boolean.TRUE);
         roleStorage.update(param);
         ComkerRoleDTO result = roleStorage.get(roleIdx.get(2).getId());
         assertEquals(result.getName(), param.getName());
@@ -313,7 +331,9 @@ public class ComkerRoleStorageUnitTest {
         ComkerRoleDTO param = new ComkerRoleDTO(
                 roleIdx.get(1).getId(),
                 roleIdx.get(2).getCode(),
-                roleIdx.get(1).getName() + " - modified", null);
+                roleIdx.get(1).getName() + " - modified", 
+                roleIdx.get(1).getDescription(),
+                Boolean.TRUE);
         roleStorage.update(param);
     }
 
@@ -324,7 +344,8 @@ public class ComkerRoleStorageUnitTest {
                 source.getId(),
                 source.getCode(), 
                 source.getName() + " - modified", 
-                null);
+                null,
+                Boolean.TRUE);
         roleStorage.update(param);
         assertEquals(source.getCode(), param.getCode());
         assertEquals(source.getName(), param.getName());
@@ -339,7 +360,8 @@ public class ComkerRoleStorageUnitTest {
                 source.getId(),
                 source.getCode(),
                 source.getName() + " - modified", 
-                source.getDescription() + " - modified");
+                source.getDescription() + " - modified",
+                Boolean.TRUE);
         param.setPermissionIds(new String[] {
             permissionIdx.get(2).getId(),
             permissionIdx.get(5).getId(),
@@ -363,7 +385,8 @@ public class ComkerRoleStorageUnitTest {
                 roleIdx.get(1).getId(),
                 roleIdx.get(1).getCode(), 
                 roleIdx.get(1).getName() + " - modified",
-                "Role 01 description");
+                "Role 01 description",
+                Boolean.TRUE);
         param.setPermissionIds(new String[] {
             permissionIdx.get(1).getId(),
             permissionIdx.get(2).getId(), "permission-not-found"});

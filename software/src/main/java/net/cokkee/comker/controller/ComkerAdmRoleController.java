@@ -168,7 +168,7 @@ public class ComkerAdmRoleController {
     public @ResponseBody ComkerRoleDTO createRole(
             @ApiParam(value = "Role object that needs to be added to the store", required = true)
             @RequestBody ComkerRoleDTO item) {
-        return roleStorage.create(item);
+        return roleStorage.get(roleStorage.create(item));
     }
     
     @ApiOperation(

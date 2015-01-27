@@ -65,8 +65,11 @@ public class ComkerRoleDaoUnitTest extends ComkerAbstractDaoUnitTest {
         
         for(int n=0; n<roles.length; n++) {
             String postfix = "0" + (n + 1);
-            roles[n] = new ComkerRoleDPO("ROLE_" + postfix,
-                    "Role " + postfix, "Description Role " + postfix);
+            roles[n] = new ComkerRoleDPO(
+                    "ROLE_" + postfix,
+                    "Role " + postfix, 
+                    "Description Role " + postfix,
+                    Boolean.TRUE);
         }
         
         for(int i=0; i<permissionIds.length; i++) {
@@ -183,7 +186,11 @@ public class ComkerRoleDaoUnitTest extends ComkerAbstractDaoUnitTest {
         int currentCount = testRoleDao.count(null);
         Assert.assertTrue(currentCount == roles.length);
 
-        ComkerRoleDPO item = new ComkerRoleDPO("ROLE_06", "Role 06", "Description Role 06");
+        ComkerRoleDPO item = new ComkerRoleDPO(
+                "ROLE_06", 
+                "Role 06", 
+                "Description Role 06",
+                Boolean.TRUE);
         item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item, 
                 (ComkerPermissionDPO) session.get(ComkerPermissionDPO.class, permissionIds[0])));
         item.getRoleJoinPermissionList().add(new ComkerRoleJoinPermissionDPO(item,

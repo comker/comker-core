@@ -89,7 +89,11 @@ public class ComkerCrewDaoUnitTest extends ComkerAbstractDaoUnitTest {
         ComkerRoleDPO[] roleObjects = new ComkerRoleDPO[roleIds.length];
         for(int i=0; i<roleIds.length; i++) {
             String prefix = ((i<9)?"0":"") + (i + 1);
-            roleObjects[i] = new ComkerRoleDPO("ROLE_" + prefix, "Role " + prefix, "");
+            roleObjects[i] = new ComkerRoleDPO(
+                    "ROLE_" + prefix, 
+                    "Role " + prefix, 
+                    "",
+                    Boolean.TRUE);
             roleIds[i] = (String) session.save(roleObjects[i]);
         }
 

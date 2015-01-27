@@ -23,16 +23,12 @@ public class ComkerRoleDPO extends ComkerAbstractDPO {
     public ComkerRoleDPO() {
         super();
     }
-
-    public ComkerRoleDPO(String code, String name, String description) {
+    
+    public ComkerRoleDPO(String code, String name, String description, Boolean global) {
         super();
         this.code = code;
         this.name = name;
         this.description = description;
-    }
-    
-    public ComkerRoleDPO(String code, String name, String description, Boolean global) {
-        this(code, name, description);
         this.global = global;
     }
     

@@ -14,22 +14,18 @@ public class ComkerRoleDTO extends ComkerAbstractDTO {
     public ComkerRoleDTO() {
         super();
     }
-
-    public ComkerRoleDTO(String code, String name, String description) {
+    
+    public ComkerRoleDTO(String code, String name, String description, Boolean global) {
         super();
         this.code = code;
         this.name = name;
         this.description = description;
-    }
-    
-    public ComkerRoleDTO(String id, String code, String name, String description) {
-        this(code, name, description);
-        this.id = id;
+        this.global = global;
     }
     
     public ComkerRoleDTO(String id, String code, String name, String description, Boolean global) {
-        this(id, code, name, description);
-        this.global = global;
+        this(code, name, description, global);
+        this.id = id;
     }
     
     private String id;

@@ -29,7 +29,7 @@ public interface ComkerRoleDao extends ComkerAbstractDao {
 
     ComkerRoleDPO getByCode(String code);
 
-    ComkerRoleDPO create(ComkerRoleDPO item);
+    String create(ComkerRoleDPO item);
 
     void update(ComkerRoleDPO item);
 

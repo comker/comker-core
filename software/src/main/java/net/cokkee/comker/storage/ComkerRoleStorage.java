@@ -26,7 +26,7 @@ public interface ComkerRoleStorage {
 
     Set<String> getAuthorities(String id);
 
-    ComkerRoleDTO create(ComkerRoleDTO item);
+    String create(ComkerRoleDTO item);
 
     void update(ComkerRoleDTO item);
 

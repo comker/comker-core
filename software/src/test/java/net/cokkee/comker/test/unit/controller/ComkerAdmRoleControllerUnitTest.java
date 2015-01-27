@@ -101,7 +101,8 @@ public class ComkerAdmRoleControllerUnitTest {
                     UUID.randomUUID().toString(),
                     "ROLE_CODE_" + i,
                     "Role name #" + i,
-                    "Role Description #" + i);
+                    "Role Description #" + i,
+                    Boolean.TRUE);
             switch(i) {
                 case 0:
                     target.setPermissionIds(null);
@@ -196,7 +197,8 @@ public class ComkerAdmRoleControllerUnitTest {
                 UUID.randomUUID().toString(),
                 "ROLE_CODE", 
                 "Role name", 
-                "Role Description");
+                "Role Description",
+                Boolean.TRUE);
         target.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
@@ -247,34 +249,46 @@ public class ComkerAdmRoleControllerUnitTest {
         final ComkerRoleDTO source = new ComkerRoleDTO(
                 "ROLE_1",
                 "Role 1",
-                "Description Role 1");
+                "Description Role 1",
+                Boolean.TRUE);
         source.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
         
-        final String targetId = UUID.randomUUID().toString();
-        
+        final ComkerRoleDTO target = new ComkerRoleDTO(
+                UUID.randomUUID().toString(),
+                source.getCode(),
+                source.getName(),
+                source.getDescription(),
+                Boolean.TRUE);
+        target.setPermissionIds(source.getPermissionIds());
+
         Mockito.when(roleStorage.create(Mockito.any(ComkerRoleDTO.class)))
-                .thenAnswer(new Answer<ComkerRoleDTO>() {
+                .thenAnswer(new Answer<String>() {
                     @Override
-                    public ComkerRoleDTO answer(InvocationOnMock invocation) throws Throwable {
+                    public String answer(InvocationOnMock invocation) throws Throwable {
                         ComkerRoleDTO input = (ComkerRoleDTO) invocation.getArguments()[0];
-                        ComkerRoleDTO target = new ComkerRoleDTO(
-                                targetId,
-                                input.getCode(),
-                                input.getName(),
-                                input.getDescription());
-                        target.setPermissionIds(input.getPermissionIds());
-                        return target;
+                        
+                        Assert.assertEquals(source.getCode(), input.getCode());
+                        Assert.assertEquals(source.getName(), input.getName());
+                        Assert.assertEquals(source.getDescription(), input.getDescription());
+                        Assert.assertEquals(source.isGlobal(), input.isGlobal());
+                        
+                        for(int i=0; i<source.getPermissionIds().length; i++) {
+                            Assert.assertEquals(source.getPermissionIds()[i], input.getPermissionIds()[i]);
+                        }
+                        return target.getId();
                     }
                 });
+        
+        Mockito.when(roleStorage.get(target.getId())).thenReturn(target);
         
         mockMvc.perform(post("/comker/adm/role")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(ComkerDataUtil.convertObjectToJson(source)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", Matchers.is(targetId)))
+                .andExpect(jsonPath("$.id", Matchers.is(target.getId())))
                 .andExpect(jsonPath("$.code", Matchers.is(source.getCode())))
                 .andExpect(jsonPath("$.name", Matchers.is(source.getName())))
                 .andExpect(jsonPath("$.description", Matchers.is(source.getDescription())))
@@ -285,6 +299,7 @@ public class ComkerAdmRoleControllerUnitTest {
                 .andReturn();
         
         Mockito.verify(roleStorage, Mockito.times(1)).create(Mockito.any(ComkerRoleDTO.class));
+        Mockito.verify(roleStorage, Mockito.times(1)).get(target.getId());
         Mockito.verifyNoMoreInteractions(roleStorage);
     }
     
@@ -294,7 +309,8 @@ public class ComkerAdmRoleControllerUnitTest {
                 UUID.randomUUID().toString(),
                 "ROLE_1",
                 "Role 1",
-                "Description Role 1");
+                "Description Role 1",
+                Boolean.TRUE);
         source.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
@@ -303,7 +319,8 @@ public class ComkerAdmRoleControllerUnitTest {
                 source.getId(),
                 source.getCode(),
                 source.getName(),
-                source.getDescription());
+                source.getDescription(),
+                Boolean.TRUE);
         target.setPermissionIds(new String[] {
             "PERMISSION_1", "PERMISSION_2", "PERMISSION_3", "PERMISSION_4"
         });
@@ -350,7 +367,8 @@ public class ComkerAdmRoleControllerUnitTest {
                 UUID.randomUUID().toString(),
                 "ROLE_CODE", 
                 "Role name", 
-                "Role Description");
+                "Role Description",
+                Boolean.TRUE);
         target.setPermissionIds(new String[] {
             "PERMISSION_1"
         });
