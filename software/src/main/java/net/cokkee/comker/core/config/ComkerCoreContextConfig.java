@@ -181,11 +181,13 @@ public class ComkerCoreContextConfig {
     public ComkerRegistrationStorage comkerRegistrationStorage(
             @Qualifier("comkerRegistrationValidator") ComkerRegistrationValidator comkerRegistrationValidator,
             @Qualifier("comkerRegistrationDao") ComkerRegistrationDao comkerRegistrationDao,
-            @Qualifier("comkerUserDao") ComkerUserDao comkerUserDao) {
+            @Qualifier("comkerUserDao") ComkerUserDao comkerUserDao,
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
         ComkerRegistrationStorageImpl bean = new ComkerRegistrationStorageImpl();
         bean.setRegistrationValidator(comkerRegistrationValidator);
         bean.setRegistrationDao(comkerRegistrationDao);
         bean.setUserDao(comkerUserDao);
+        bean.setPasswordEncoder(comkerPasswordEncoder);
         return bean;
     }
     

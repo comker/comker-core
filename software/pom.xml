@@ -79,6 +79,12 @@
         
         <dependency>
             <groupId>net.cokkee.comker</groupId>
+            <artifactId>comker-msg</artifactId>
+            <version>${comker.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.cokkee.comker</groupId>
             <artifactId>comker-test</artifactId>
             <version>${comker.version}</version>
             <scope>test</scope>

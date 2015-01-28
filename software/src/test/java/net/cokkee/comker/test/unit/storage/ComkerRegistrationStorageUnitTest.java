@@ -25,6 +25,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
@@ -49,6 +50,7 @@ public class ComkerRegistrationStorageUnitTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        registrationStorage.setPasswordEncoder(new BCryptPasswordEncoder());
         registrationStorage.setRegistrationValidator(registrationValidator);
     }
 

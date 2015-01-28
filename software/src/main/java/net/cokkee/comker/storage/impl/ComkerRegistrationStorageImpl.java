@@ -12,6 +12,7 @@ import net.cokkee.comker.model.msg.ComkerInformationResponse;
 import net.cokkee.comker.service.ComkerLocalizationService;
 import net.cokkee.comker.storage.ComkerRegistrationStorage;
 import net.cokkee.comker.validation.ComkerRegistrationValidator;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,12 @@ public class ComkerRegistrationStorageImpl extends ComkerAbstractStorageImpl
 
     public void setLocalizationService(ComkerLocalizationService localizationService) {
         this.localizationService = localizationService;
+    }
+    
+    private PasswordEncoder passwordEncoder = null;
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
     
     @Override
@@ -92,7 +99,7 @@ public class ComkerRegistrationStorageImpl extends ComkerAbstractStorageImpl
     }
     
     private String encodePassword(String password) {
-        return password;
+        return this.passwordEncoder.encode(password);
     }
     
     private String generateConfirmationCode(ComkerRegistrationDTO form) {
