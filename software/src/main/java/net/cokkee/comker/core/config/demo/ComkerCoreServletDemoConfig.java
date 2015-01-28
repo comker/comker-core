@@ -1,13 +1,10 @@
 package net.cokkee.comker.core.config.demo;
 
 import net.cokkee.comker.base.ComkerBaseConstant;
-import net.cokkee.comker.base.config.ComkerBaseServletConfig;
-import net.cokkee.comker.core.config.ComkerCoreServletConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
@@ -22,8 +19,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @EnableWebMvc
 @Import({
-    ComkerBaseServletConfig.class,
-    ComkerCoreServletConfig.class
+    net.cokkee.comker.base.config.ComkerBaseServletConfig.class,
+    net.cokkee.comker.msg.config.ComkerMsgServletConfig.class,
+    net.cokkee.comker.core.config.ComkerCoreServletConfig.class
 })
 @Profile(ComkerBaseConstant.PROFILE_DEMO)
 public class ComkerCoreServletDemoConfig extends WebMvcConfigurerAdapter {

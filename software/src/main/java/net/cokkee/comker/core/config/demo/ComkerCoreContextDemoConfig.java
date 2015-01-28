@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.Properties;
 import javax.sql.DataSource;
 import net.cokkee.comker.base.ComkerBaseConstant;
-import net.cokkee.comker.base.config.ComkerBaseContextConfig;
 import net.cokkee.comker.base.service.ComkerBaseInitializationService;
-import net.cokkee.comker.core.config.ComkerCoreContextConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -19,6 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -30,11 +30,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @Import({
-    ComkerBaseContextConfig.class,
-    ComkerCoreContextConfig.class
+    net.cokkee.comker.base.config.ComkerBaseContextConfig.class,
+    net.cokkee.comker.msg.config.ComkerMsgContextConfig.class,
+    net.cokkee.comker.core.config.ComkerCoreContextConfig.class
 })
 @EnableTransactionManagement
-@PropertySource("file:src/main/webapp/WEB-INF/jdbc.properties")
+@PropertySource({
+    "file:src/main/webapp/WEB-INF/jdbc.properties",
+    "file:src/main/webapp/WEB-INF/smtp.properties"
+})
 @Profile(ComkerBaseConstant.PROFILE_DEMO)
 public class ComkerCoreContextDemoConfig {
     
@@ -62,6 +66,72 @@ public class ComkerCoreContextDemoConfig {
         list.add(comkerInitializationSampleData);
         return list;
     }
+    
+    //--------------------------------------------------------------------------
+    // Msg Services
+    //--------------------------------------------------------------------------
+    
+    @Bean
+    public LinkedList<JavaMailSender> comkerJavaMailSenderList(
+            @Qualifier("comkerJavaMailSenderGmail1") JavaMailSender mailSender1,
+            @Qualifier("comkerJavaMailSenderGmail2") JavaMailSender mailSender2,
+            @Qualifier("comkerJavaMailSenderGmail3") JavaMailSender mailSender3) {
+        LinkedList<JavaMailSender> list = new LinkedList<JavaMailSender>();
+        list.add(mailSender1);
+        list.add(mailSender2);
+        list.add(mailSender3);
+        return list;
+    }
+    
+    @Bean
+    public JavaMailSender comkerJavaMailSenderGmail1(
+            @Value("${gmail.host}") String host,
+            @Value("${gmail.port}") String port,
+            @Value("${gmail_1.username}") String username,
+            @Value("${gmail_1.password}") String password) {
+        return createJavaMailSender(host, port, username, password);
+    }
+    
+    @Bean
+    public JavaMailSender comkerJavaMailSenderGmail2(
+            @Value("${gmail.host}") String host,
+            @Value("${gmail.port}") String port,
+            @Value("${gmail_2.username}") String username,
+            @Value("${gmail_2.password}") String password) {
+        return createJavaMailSender(host, port, username, password);
+    }
+    
+    @Bean
+    public JavaMailSender comkerJavaMailSenderGmail3(
+            @Value("${gmail.host}") String host,
+            @Value("${gmail.port}") String port,
+            @Value("${gmail_3.username}") String username,
+            @Value("${gmail_3.password}") String password) {
+        return createJavaMailSender(host, port, username, password);
+    }
+    
+    private JavaMailSender createJavaMailSender(String host, String port, String username, String password) {
+        JavaMailSenderImpl bean = new JavaMailSenderImpl();
+        bean.setHost(host);
+        bean.setPort(Integer.parseInt(port));
+        bean.setUsername(username);
+        bean.setPassword(password);
+        
+        Properties javaMailProperties = new Properties();
+        javaMailProperties.setProperty("mail.smtp.auth", "true");
+        javaMailProperties.setProperty("mail.smtp.socketFactory.port", port);
+        javaMailProperties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        javaMailProperties.setProperty("mail.smtp.socketFactory.fallback", "false");
+        javaMailProperties.setProperty("mail.smtp.debug", "true");
+        
+        bean.setJavaMailProperties(javaMailProperties);
+        
+        return bean;
+    }
+    
+    //--------------------------------------------------------------------------
+    // Common services (be used in all modules)
+    //--------------------------------------------------------------------------
     
     @Bean
     public ThreadPoolTaskExecutor comkerTaskExecutor() {
