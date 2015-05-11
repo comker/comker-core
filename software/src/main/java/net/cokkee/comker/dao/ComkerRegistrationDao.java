@@ -17,6 +17,8 @@ public interface ComkerRegistrationDao extends ComkerAbstractDao {
     
     ComkerRegistrationDPO get(String id);
     
+    ComkerRegistrationDPO getByCode(String code);
+    
     String create(ComkerRegistrationDPO item);
     
     void update(ComkerRegistrationDPO item);

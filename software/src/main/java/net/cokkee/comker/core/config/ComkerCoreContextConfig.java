@@ -22,6 +22,7 @@ import net.cokkee.comker.dao.impl.ComkerSpotDaoHibernate;
 import net.cokkee.comker.dao.impl.ComkerUserDaoHibernate;
 import net.cokkee.comker.dao.impl.ComkerWatchdogDaoHibernate;
 import net.cokkee.comker.interceptor.ComkerWatchdogInterceptor;
+import net.cokkee.comker.msg.service.ComkerMsgSendmailService;
 import net.cokkee.comker.service.ComkerInitializationService;
 import net.cokkee.comker.service.ComkerSecurityContextHolder;
 import net.cokkee.comker.service.ComkerSecurityContextReader;
@@ -182,12 +183,14 @@ public class ComkerCoreContextConfig {
             @Qualifier("comkerRegistrationValidator") ComkerRegistrationValidator comkerRegistrationValidator,
             @Qualifier("comkerRegistrationDao") ComkerRegistrationDao comkerRegistrationDao,
             @Qualifier("comkerUserDao") ComkerUserDao comkerUserDao,
-            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder) {
+            @Qualifier("comkerPasswordEncoder") PasswordEncoder comkerPasswordEncoder,
+            @Qualifier("comkerMsgSendmailService") ComkerMsgSendmailService msgSendmailService) {
         ComkerRegistrationStorageImpl bean = new ComkerRegistrationStorageImpl();
         bean.setRegistrationValidator(comkerRegistrationValidator);
         bean.setRegistrationDao(comkerRegistrationDao);
         bean.setUserDao(comkerUserDao);
         bean.setPasswordEncoder(comkerPasswordEncoder);
+        bean.setMsgSendmailService(msgSendmailService);
         return bean;
     }
     

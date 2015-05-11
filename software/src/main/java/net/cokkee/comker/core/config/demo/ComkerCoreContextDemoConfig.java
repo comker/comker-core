@@ -11,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate3.HibernateTransactionManager;
@@ -143,6 +145,16 @@ public class ComkerCoreContextDemoConfig {
     }
     
     @Bean
+    public MessageSource comkerMessageSource() {
+        ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
+        bean.setBasenames(
+                "classpath:comker-base/messages",
+                "classpath:comker-msg/messages",
+                "classpath:comker-core/messages");
+        return bean;
+    }
+    
+    @Bean
     public HibernateTransactionManager comkerTransactionManager(
             @Qualifier("comkerSessionFactory") SessionFactory sessionFactory) {
         HibernateTransactionManager bean = new HibernateTransactionManager();
@@ -156,6 +168,7 @@ public class ComkerCoreContextDemoConfig {
             @Qualifier("comkerHibernateProperties") Properties hibernateProperties) {
         AnnotationSessionFactoryBean asfb = new AnnotationSessionFactoryBean();
         asfb.setAnnotatedClasses(
+                net.cokkee.comker.model.dpo.ComkerRegistrationDPO.class,
                 net.cokkee.comker.model.dpo.ComkerPermissionDPO.class,
                 net.cokkee.comker.model.dpo.ComkerRoleDPO.class,
                 net.cokkee.comker.model.dpo.ComkerRoleJoinPermissionDPO.class,

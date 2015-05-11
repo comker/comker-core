@@ -8,6 +8,9 @@ import net.cokkee.comker.model.dpo.ComkerRegistrationDPO;
 import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.model.dto.ComkerRegistrationDTO;
 import net.cokkee.comker.model.msg.ComkerInformationResponse;
+import net.cokkee.comker.msg.model.ComkerMsgMailAddress;
+import net.cokkee.comker.msg.model.ComkerMsgMailMessage;
+import net.cokkee.comker.msg.service.ComkerMsgSendmailService;
 import net.cokkee.comker.storage.impl.ComkerRegistrationStorageImpl;
 import net.cokkee.comker.validation.ComkerRegistrationValidator;
 
@@ -47,6 +50,9 @@ public class ComkerRegistrationStorageUnitTest {
     @Mock
     private ComkerUserDao userDao;
     
+    @Mock
+    private ComkerMsgSendmailService msgSendmailService;
+    
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -70,6 +76,14 @@ public class ComkerRegistrationStorageUnitTest {
                 return null;
             }
         }).when(registrationDao).create(Mockito.any(ComkerRegistrationDPO.class));
+        
+        Mockito.doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return null;
+            }
+        }).when(msgSendmailService).sendMail(Mockito.any(ComkerMsgMailAddress.class),
+                Mockito.any(ComkerMsgMailMessage.class));
         
         ComkerInformationResponse resp = registrationStorage.register(dto);
         

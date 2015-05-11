@@ -19,6 +19,7 @@ public interface ComkerAbstractDao {
     public static final String FIELD_DESCRIPTION = "description";
     public static final String FIELD_PARENT = "parent";
     public static final String FIELD_GLOBAL = "global";
+    public static final String FIELD_CONFIRMATION_CODE = "confirmationCode";    
 
     Integer count(String query, Map<String,Object> params);
     

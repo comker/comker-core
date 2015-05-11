@@ -1,11 +1,13 @@
 package net.cokkee.comker.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import net.cokkee.comker.dao.ComkerRegistrationDao;
 import net.cokkee.comker.model.ComkerQueryPager;
 import net.cokkee.comker.model.ComkerQuerySieve;
 import net.cokkee.comker.model.dpo.ComkerRegistrationDPO;
+import net.cokkee.comker.model.dpo.ComkerSpotDPO;
 
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
@@ -48,6 +50,17 @@ public class ComkerRegistrationDaoHibernate extends ComkerAbstractDaoHibernate
         Session session = this.getSessionFactory().getCurrentSession();
         ComkerRegistrationDPO item = (ComkerRegistrationDPO) session.get(ComkerRegistrationDPO.class, id);
         return item;
+    }
+    
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public ComkerRegistrationDPO getByCode(String code) {
+        Session session = this.getSessionFactory().getCurrentSession();
+        Criteria c = session.createCriteria(ComkerRegistrationDPO.class);
+        c.add(Restrictions.eq(FIELD_CONFIRMATION_CODE, code));
+        List result = c.list();
+        if (result.isEmpty()) return null;
+        return (ComkerRegistrationDPO)result.get(0);
     }
 
     @Override

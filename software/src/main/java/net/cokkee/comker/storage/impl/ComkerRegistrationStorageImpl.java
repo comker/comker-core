@@ -9,6 +9,9 @@ import net.cokkee.comker.model.dpo.ComkerUserDPO;
 import net.cokkee.comker.model.dto.ComkerRegistrationDTO;
 import net.cokkee.comker.model.error.ComkerResolvableMessage;
 import net.cokkee.comker.model.msg.ComkerInformationResponse;
+import net.cokkee.comker.msg.model.ComkerMsgMailAddress;
+import net.cokkee.comker.msg.model.ComkerMsgMailMessage;
+import net.cokkee.comker.msg.service.ComkerMsgSendmailService;
 import net.cokkee.comker.service.ComkerLocalizationService;
 import net.cokkee.comker.storage.ComkerRegistrationStorage;
 import net.cokkee.comker.validation.ComkerRegistrationValidator;
@@ -53,6 +56,12 @@ public class ComkerRegistrationStorageImpl extends ComkerAbstractStorageImpl
         this.passwordEncoder = passwordEncoder;
     }
     
+    private ComkerMsgSendmailService msgSendmailService = null;
+
+    public void setMsgSendmailService(ComkerMsgSendmailService msgSendmailService) {
+        this.msgSendmailService = msgSendmailService;
+    }
+    
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public ComkerInformationResponse register(ComkerRegistrationDTO form) {
@@ -64,6 +73,31 @@ public class ComkerRegistrationStorageImpl extends ComkerAbstractStorageImpl
                 generateConfirmationCode(form));
         
         String id = registrationDao.create(dpo);
+        
+        // create the confirmation email content
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>")
+                .append("<body>")
+                .append("<div>")
+                .append("Click to this link <a href='")
+                .append("http://localhost:7777/comker-app/ws/comker/registration/confirm/")
+                .append(dpo.getConfirmationCode())
+                .append("'>here</a> to confirm the registration.")
+                .append("</div>")
+                .append("</body>")
+                .append("</html>");
+        
+        // create the address and message
+        ComkerMsgMailAddress address = new ComkerMsgMailAddress();
+        address.setFrom("contact@comker.com").setTo(form.getEmail());
+        
+        ComkerMsgMailMessage message = new ComkerMsgMailMessage();
+        message.setSubject("Please confirm your registration")
+                .setContent(sb.toString())
+                .setHtmlContentType(true);
+        
+        // send email to confirm the registration
+        msgSendmailService.sendMail(address, message);
         
         String defaultMsg = "A registration email was sent to " + form.getEmail() + 
                 ". follow the instructions contained in the email to complete registration.";
@@ -77,7 +111,7 @@ public class ComkerRegistrationStorageImpl extends ComkerAbstractStorageImpl
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public int confirm(String code) {
-        ComkerRegistrationDPO regDPO = registrationDao.get(code);
+        ComkerRegistrationDPO regDPO = registrationDao.getByCode(code);
         if (regDPO == null) return ComkerRegistrationDTO.CONFIRMATION_NOT_FOUND;
         
         ComkerUserDPO oldUsr = userDao.getByEmail(regDPO.getEmail());
